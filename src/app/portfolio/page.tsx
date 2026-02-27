@@ -4,8 +4,8 @@ import { useRouter } from "next/navigation";
 import { ChevronLeft, Share2, Download } from "@/components/ui";
 import { BottomNav } from "@/components/ui";
 import { motion } from "framer-motion";
-import { MOCK_PORTFOLIO } from "@/lib/mockData";
-import { formatMonthDay } from "@/lib/mockData";
+import { MOCK_PORTFOLIO } from "@/lib/mockUser";
+import { formatMonthDay } from "@/lib/utils/date";
 
 export default function Portfolio() {
     const router = useRouter();

@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { BottomNav, Card, Button } from "@/components/ui";
 import { Clock, Search, SlidersHorizontal, ArrowRight, User } from "lucide-react";
-import { getCategoryColor, formatMonthDay } from "@/lib/mockData";
+import { getCategoryColor } from "@/lib/utils/ui";
+import { formatMonthDay } from "@/lib/utils/date";
 import Link from "next/link";
 
 const CATEGORIES = ["All", "Academic", "Sports", "Cultural", "Workshops", "Competitions"];
@@ -84,8 +85,8 @@ export default function Explore() {
                         key={cat}
                         onClick={() => setActiveCategory(cat)}
                         className={`px-5 py-2 rounded-full text-[13px] font-bold whitespace-nowrap transition-all duration-200 border ${activeCategory === cat
-                                ? "bg-white text-black border-white shadow-md shadow-white/10"
-                                : "bg-[var(--color-surface)] text-[var(--color-text-muted)] border-[var(--color-border)] hover:bg-[var(--color-surface-elevated)] hover:text-white"
+                            ? "bg-white text-black border-white shadow-md shadow-white/10"
+                            : "bg-[var(--color-surface)] text-[var(--color-text-muted)] border-[var(--color-border)] hover:bg-[var(--color-surface-elevated)] hover:text-white"
                             }`}
                     >
                         {cat}
@@ -105,8 +106,8 @@ export default function Explore() {
                             key={sortOption}
                             onClick={() => setActiveSort(sortOption)}
                             className={`px-3 py-1.5 text-[11px] font-bold rounded-md transition-all ${activeSort === sortOption
-                                    ? "bg-[var(--color-surface-elevated)] text-white shadow-sm"
-                                    : "text-[var(--color-text-muted)] hover:text-white"
+                                ? "bg-[var(--color-surface-elevated)] text-white shadow-sm"
+                                : "text-[var(--color-text-muted)] hover:text-white"
                                 }`}
                         >
                             {sortOption}

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { MOCK_PORTFOLIO } from "@/lib/mockData";
+import { MOCK_PORTFOLIO } from "@/lib/mockUser";
 
 export async function GET(request: Request) {
     try {

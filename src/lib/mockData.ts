@@ -1,14 +1,5 @@
 import { getDateRelative } from "../utils/dateUtils";
-import { Event, User, PortfolioItem } from "../types";
-
-export const MOCK_USER: User = {
-    id: "u1",
-    name: "Viyath De silva",
-    email: "viyath@university.edu",
-    role: "student",
-    avatar: "VD",
-    points: 1200,
-};
+import { Event } from "../types";
 
 export const MOCK_EVENTS: Event[] = [
     {
@@ -91,46 +82,3 @@ export const MOCK_EVENTS: Event[] = [
         description: "Network with fellow student entrepreneurs and local startup founders.",
     }
 ];
-
-export const MOCK_PORTFOLIO: PortfolioItem[] = [
-    {
-        id: "p1",
-        title: "Annual Tech Symposium",
-        venue: "Main Auditorium",
-        date: getDateRelative(-30),
-        role: "CORE ATTENDEE",
-        points: 50,
-        roleColor: "#10B981",
-        icon: "📅",
-    },
-    {
-        id: "p2",
-        title: "Volunteer Meetup",
-        venue: "Student Lounge",
-        date: getDateRelative(-45),
-        role: "LEAD VOLUNTEER",
-        points: 120,
-        roleColor: "#F59E0B",
-        icon: "🤝",
-    },
-];
-
-export const CATEGORIES = ["All", "Academic", "Sports", "Cultural", "Workshop", "Competition"];
-
-export const getGreeting = () => {
-    const h = new Date().getHours();
-    if (h < 12) return "Good Morning";
-    if (h < 17) return "Good Afternoon";
-    return "Good Evening";
-};
-
-export const getCategoryColor = (cat: string) => {
-    const map: Record<string, string> = {
-        Academic: "var(--color-accent)",
-        Sports: "var(--color-accent-amber)",
-        Cultural: "var(--color-accent-purple)",
-        Workshop: "var(--color-accent-green)",
-        Competition: "var(--color-accent-green)",
-    };
-    return map[cat] || "var(--color-text-muted)";
-};

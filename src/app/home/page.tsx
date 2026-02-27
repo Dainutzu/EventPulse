@@ -3,7 +3,8 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Bell, Clock, BottomNav, Badge } from "@/components/ui";
-import { MOCK_USER, CATEGORIES, getGreeting, getCategoryColor } from "@/lib/mockData";
+import { MOCK_USER, CATEGORIES } from "@/lib/mockUser";
+import { getGreeting, getCategoryColor } from "@/lib/utils/ui";
 import { formatDateBlock, processEvents } from "@/utils/dateUtils";
 import { useEventState } from "@/state/useEventState";
 import Link from "next/link";
@@ -204,8 +205,8 @@ function EventCard({ event, index, isRegistered, isPast, onToggle }: EventCardPr
                                 onToggle();
                             }}
                             className={`px-6 py-2.5 rounded-xl text-sm font-black transition-all duration-300 active:scale-90 ${isRegistered
-                                    ? "bg-white/5 text-[var(--color-accent)] border border-[var(--color-accent)]/30 hover:bg-white/10"
-                                    : "bg-[var(--color-accent)] text-white shadow-[0_8px_20px_-5px_rgba(59,130,246,0.4)] hover:shadow-[0_8px_25px_-5px_rgba(59,130,246,0.6)] hover:-translate-y-0.5"
+                                ? "bg-white/5 text-[var(--color-accent)] border border-[var(--color-accent)]/30 hover:bg-white/10"
+                                : "bg-[var(--color-accent)] text-white shadow-[0_8px_20px_-5px_rgba(59,130,246,0.4)] hover:shadow-[0_8px_25px_-5px_rgba(59,130,246,0.6)] hover:-translate-y-0.5"
                                 }`}
                         >
                             {isRegistered ? "Unregister" : "Join Now"}

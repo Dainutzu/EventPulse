@@ -5,7 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { ChevronLeft, Calendar, Clock, MapPin, Button } from "@/components/ui";
-import { MOCK_EVENTS, formatDate } from "@/lib/mockData";
+import { MOCK_EVENTS } from "@/lib/mockData";
+import { formatDate } from "@/lib/utils/date";
 import { playSound } from "@/lib/sounds";
 import { useState } from "react";
 

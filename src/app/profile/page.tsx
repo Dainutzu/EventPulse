@@ -5,7 +5,7 @@ import { BottomNav, Button, Badge } from "@/components/ui";
 import { Settings, LogOut, Trash2, Download, AlertCircle, CheckCircle, Award, Calendar, Volume2, VolumeX, Clock } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { isSoundEnabled, toggleSoundSettings } from "@/lib/sounds";
-import { MOCK_USER } from "@/lib/mockData";
+import { MOCK_USER } from "@/lib/mockUser";
 import { useEventState } from "@/state/useEventState";
 import { formatDateBlock } from "@/utils/dateUtils";
 
