@@ -10,6 +10,16 @@ const outfit = Outfit({
 export const metadata: Metadata = {
   title: "EventPulse | Your Campus. Connected.",
   description: "Discover, register, and track campus events. Your campus, connected.",
+  manifest: "/manifest.json",
+  themeColor: "#1C1C1E",
+  appleWebApp: {
+    title: "EventPulse",
+    statusBarStyle: "default",
+    capable: true,
+  },
+  icons: {
+    apple: "/icons/icon-180x180.png",
+  },
 };
 
 export default function RootLayout({
