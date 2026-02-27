@@ -1,4 +1,7 @@
-export const MOCK_USER = {
+import { getDateRelative } from "../utils/dateUtils";
+import { Event, User, PortfolioItem } from "../types";
+
+export const MOCK_USER: User = {
     id: "u1",
     name: "Viyath De silva",
     email: "viyath@university.edu",
@@ -7,12 +10,12 @@ export const MOCK_USER = {
     points: 1200,
 };
 
-export const MOCK_EVENTS = [
+export const MOCK_EVENTS: Event[] = [
     {
         id: "e1",
         title: "AI & Machine Learning Workshop",
         category: "Academic",
-        date: new Date(2025, 9, 12).toISOString(),
+        date: getDateRelative(2),
         timeStart: "14:00",
         timeEnd: "17:00",
         venue: "CS Lab Block A",
@@ -28,7 +31,7 @@ export const MOCK_EVENTS = [
         id: "e2",
         title: "Inter-University Cricket Finals",
         category: "Sports",
-        date: new Date(2025, 9, 15).toISOString(),
+        date: getDateRelative(5),
         timeStart: "09:00",
         timeEnd: "16:00",
         venue: "Main Sports Ground",
@@ -44,7 +47,7 @@ export const MOCK_EVENTS = [
         id: "e3",
         title: "Evening of Jazz & Fusion",
         category: "Cultural",
-        date: new Date(2025, 9, 18).toISOString(),
+        date: getDateRelative(1),
         timeStart: "18:30",
         timeEnd: "21:00",
         venue: "Open Air Theater",
@@ -60,7 +63,7 @@ export const MOCK_EVENTS = [
         id: "e4",
         title: "Future Horizons: AI & Robotics Summit 2024",
         category: "Academic",
-        date: new Date(2025, 10, 15).toISOString(),
+        date: getDateRelative(12),
         timeStart: "09:00",
         timeEnd: "16:30",
         venue: "Main Auditorium, Building 4",
@@ -70,16 +73,31 @@ export const MOCK_EVENTS = [
         banner: null,
         categoryColor: "#3B82F6",
         description:
-            "Join us for an immersive day exploring the boundaries of artificial intelligence and robotics. This year's summit brings together industry leaders, academic researchers, and student innovators to discuss the future of automated systems.\n\nAttendees will have the opportunity to participate in hands-on workshops, witness live robot demonstrations, and network with recruiters from top-tier tech companies. Refreshments and a networking lunch will be provided for all registered participants.",
+            "Join us for an immersive day exploring the boundaries of artificial intelligence and robotics. This year's summit brings together industry leaders, academic researchers, and student innovators to discuss the future of automated systems.",
     },
+    {
+        id: "e5",
+        title: "Startup Founders Networking",
+        category: "Academic",
+        date: getDateRelative(-2), // Past event
+        timeStart: "18:00",
+        timeEnd: "20:00",
+        venue: "Business School Hall",
+        club: "Entrepreneurship Club",
+        maxParticipants: 100,
+        registered: 95,
+        banner: null,
+        categoryColor: "#10B981",
+        description: "Network with fellow student entrepreneurs and local startup founders.",
+    }
 ];
 
-export const MOCK_PORTFOLIO = [
+export const MOCK_PORTFOLIO: PortfolioItem[] = [
     {
         id: "p1",
         title: "Annual Tech Symposium",
         venue: "Main Auditorium",
-        date: new Date(2023, 9, 12).toISOString(),
+        date: getDateRelative(-30),
         role: "CORE ATTENDEE",
         points: 50,
         roleColor: "#10B981",
@@ -89,46 +107,15 @@ export const MOCK_PORTFOLIO = [
         id: "p2",
         title: "Volunteer Meetup",
         venue: "Student Lounge",
-        date: new Date(2023, 8, 28).toISOString(),
+        date: getDateRelative(-45),
         role: "LEAD VOLUNTEER",
         points: 120,
         roleColor: "#F59E0B",
         icon: "🤝",
     },
-    {
-        id: "p3",
-        title: "Hackathon 2023",
-        venue: "IT Lab Block B",
-        date: new Date(2023, 7, 15).toISOString(),
-        role: "FINALIST",
-        points: 300,
-        roleColor: "#8B5CF6",
-        icon: "💻",
-    },
-    {
-        id: "p4",
-        title: "Cultural Fest",
-        venue: "Open Air Theater",
-        date: new Date(2023, 6, 10).toISOString(),
-        role: "PARTICIPANT",
-        points: 25,
-        roleColor: "#6B7280",
-        icon: "🎭",
-    },
 ];
 
 export const CATEGORIES = ["All", "Academic", "Sports", "Cultural", "Workshop", "Competition"];
-
-export const formatDate = (dateString: string) =>
-    new Date(dateString).toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
-
-export const formatMonthDay = (dateString: string) => {
-    const date = new Date(dateString);
-    return {
-        month: date.toLocaleString("en-US", { month: "short" }).toUpperCase(),
-        day: date.getDate(),
-    };
-};
 
 export const getGreeting = () => {
     const h = new Date().getHours();
