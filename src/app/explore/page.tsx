@@ -1,91 +1,92 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { BottomNav, Card, Button } from "@/components/ui";
-import { Clock, Search, SlidersHorizontal, ArrowRight, User } from "lucide-react";
+import { BottomNav, Card, Button, Badge } from "@/components/ui";
+import { Clock, Search, SlidersHorizontal, ArrowRight, User, CheckCircle } from "lucide-react";
 import { getCategoryColor } from "@/lib/utils/ui";
 import { formatMonthDay } from "@/lib/utils/date";
+import { useEventStore } from "@/state/useEventStore";
 import Link from "next/link";
 
-const CATEGORIES = ["All", "Academic", "Sports", "Cultural", "Workshops", "Competitions"];
 const SORT_OPTIONS = ["Upcoming", "Most Popular", "Ending Soon"];
 
 export default function Explore() {
+    const { events: allEvents, registeredEventIds, isRegistered } = useEventStore();
+    const categories = useMemo(() => ["All", ...Array.from(new Set(allEvents.map(e => e.category)))], [allEvents]);
+
     const [activeCategory, setActiveCategory] = useState("All");
     const [activeSort, setActiveSort] = useState("Upcoming");
     const [searchQuery, setSearchQuery] = useState("");
-    const [events, setEvents] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(() => {
-        let isMounted = true;
+    // Filter and Sort Logic (Local for instant feedback, can be synced with API if needed)
+    const filteredEvents = useMemo(() => {
+        let filtered = [...allEvents];
 
-        const fetchEvents = async () => {
-            setIsLoading(true);
-            try {
-                const queryParams = new URLSearchParams();
-                if (activeCategory !== "All") queryParams.append("category", activeCategory);
-                if (activeSort) queryParams.append("sort", activeSort);
-                if (searchQuery) queryParams.append("query", searchQuery);
-
-                const res = await fetch(`/api/events?${queryParams.toString()}`);
-                const data = await res.json();
-
-                // Simulating network delay for realistic skeletons
-                setTimeout(() => {
-                    if (isMounted) {
-                        setEvents(data.events || []);
-                        setIsLoading(false);
-                    }
-                }, 600);
-            } catch (err) {
-                console.error("Error fetching events", err);
-                if (isMounted) setIsLoading(false);
-            }
-        };
-
-        // Debounce the fetch if there's a search query
-        const timer = setTimeout(() => {
-            fetchEvents();
-        }, 300);
-
-        return () => {
-            isMounted = false;
-            clearTimeout(timer);
+        if (activeCategory !== "All") {
+            filtered = filtered.filter(e => e.category === activeCategory);
         }
+
+        if (searchQuery) {
+            const q = searchQuery.toLowerCase();
+            filtered = filtered.filter(e =>
+                e.title.toLowerCase().includes(q) ||
+                e.description.toLowerCase().includes(q) ||
+                e.club.toLowerCase().includes(q)
+            );
+        }
+
+        // Sorting
+        if (activeSort === "Upcoming") {
+            filtered.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+        } else if (activeSort === "Most Popular") {
+            filtered.sort((a, b) => b.registered - a.registered);
+        }
+
+        return filtered;
+    }, [allEvents, activeCategory, activeSort, searchQuery]);
+
+    useEffect(() => {
+        // Realistic simulation of loading state for SaaS feel
+        setIsLoading(true);
+        const timer = setTimeout(() => setIsLoading(false), 500);
+        return () => clearTimeout(timer);
     }, [activeCategory, activeSort, searchQuery]);
 
     return (
         <div className="pb-32 min-h-screen">
-            {/* Header */}
+            {/* Header Area */}
             <header className="px-6 pt-14 pb-4">
-                <h1 className="text-2xl font-black mb-1">Explore Events</h1>
-                <p className="text-sm text-[var(--color-text-muted)]">Discover what&apos;s happening on campus</p>
+                <h1 className="text-2xl font-black mb-1">Explore Hub</h1>
+                <p className="text-sm text-[var(--color-text-muted)] font-medium">Find your next big experience on campus</p>
             </header>
 
-            {/* Search Bar */}
+            {/* Search Bar - Premium Glassmorphism */}
             <div className="px-6 mb-5">
-                <div className="flex items-center bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl px-4 py-3.5 focus-within:border-[var(--color-accent)] focus-within:ring-1 focus-within:ring-[var(--color-accent)] transition-all transition-colors duration-200">
-                    <Search size={20} className="text-[var(--color-text-muted)] mr-3" />
+                <div className="flex items-center bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl px-4 py-3.5 focus-within:border-[var(--color-accent)] focus-within:ring-2 focus-within:ring-[var(--color-accent)]/20 transition-all duration-300 shadow-sm shadow-black/20">
+                    <Search size={20} className="text-[var(--color-text-muted)] mr-3 opacity-70" />
                     <input
                         type="text"
                         placeholder="Search events, clubs, or keywords..."
-                        className="flex-1 bg-transparent border-none text-[15px] outline-none placeholder:text-[var(--color-text-muted)]"
+                        className="flex-1 bg-transparent border-none text-[15px] font-medium outline-none placeholder:text-[var(--color-text-muted)]/60"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                     />
+                    {searchQuery && (
+                        <button onClick={() => setSearchQuery("")} className="text-[10px] font-black uppercase text-[var(--color-text-muted)] hover:text-white px-2">Clear</button>
+                    )}
                 </div>
             </div>
 
-            {/* Categories Horizontal Scroll */}
-            <div className="flex gap-2.5 px-6 pb-5 overflow-x-auto hide-scrollbar">
-                {CATEGORIES.map((cat) => (
+            {/* Categories pills */}
+            <div className="flex gap-2.5 px-6 pb-6 overflow-x-auto hide-scrollbar snap-x">
+                {categories.map((cat) => (
                     <button
                         key={cat}
                         onClick={() => setActiveCategory(cat)}
-                        className={`px-5 py-2 rounded-full text-[13px] font-bold whitespace-nowrap transition-all duration-200 border ${activeCategory === cat
-                            ? "bg-white text-black border-white shadow-md shadow-white/10"
+                        className={`px-6 py-2.5 rounded-full text-[13px] font-black whitespace-nowrap transition-all duration-300 border snap-start ${activeCategory === cat
+                            ? "bg-[var(--color-accent)] text-white border-[var(--color-accent)] shadow-lg shadow-blue-500/30 scale-105"
                             : "bg-[var(--color-surface)] text-[var(--color-text-muted)] border-[var(--color-border)] hover:bg-[var(--color-surface-elevated)] hover:text-white"
                             }`}
                     >
@@ -94,19 +95,19 @@ export default function Explore() {
                 ))}
             </div>
 
-            {/* Sort Options */}
-            <div className="px-6 flex items-center justify-between mb-6">
+            {/* Sort/Filter Bar */}
+            <div className="px-6 flex items-center justify-between mb-8">
                 <div className="flex items-center gap-2 text-[var(--color-text-muted)]">
-                    <SlidersHorizontal size={16} />
-                    <span className="text-[13px] font-semibold uppercase tracking-wider">Sort By:</span>
+                    <SlidersHorizontal size={16} className="opacity-60" />
+                    <span className="text-[12px] font-black uppercase tracking-widest text-[var(--color-text-muted)]/80">Sort Preference</span>
                 </div>
-                <div className="flex bg-[var(--color-surface)] border border-[var(--color-border)] rounded-lg p-1">
+                <div className="flex bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-1 shadow-inner">
                     {SORT_OPTIONS.map((sortOption) => (
                         <button
                             key={sortOption}
                             onClick={() => setActiveSort(sortOption)}
-                            className={`px-3 py-1.5 text-[11px] font-bold rounded-md transition-all ${activeSort === sortOption
-                                ? "bg-[var(--color-surface-elevated)] text-white shadow-sm"
+                            className={`px-4 py-2 text-[11px] font-black uppercase tracking-tighter rounded-lg transition-all ${activeSort === sortOption
+                                ? "bg-[var(--color-surface-elevated)] text-white shadow-md scale-105"
                                 : "text-[var(--color-text-muted)] hover:text-white"
                                 }`}
                         >
@@ -116,117 +117,129 @@ export default function Explore() {
                 </div>
             </div>
 
-            {/* Main Results Container */}
+            {/* Main Content */}
             <div className="px-6 flex flex-col gap-5">
                 <AnimatePresence mode="popLayout">
                     {isLoading ? (
-                        // Skeleton Loader
                         [1, 2, 3].map((i) => (
                             <motion.div
                                 key={`skel-${i}`}
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
-                                className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-4 w-full"
+                                className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-3xl p-5 w-full"
                             >
-                                <div className="w-full h-32 bg-[var(--color-surface-elevated)] rounded-xl animate-pulse mb-4" />
-                                <div className="h-5 bg-[var(--color-surface-elevated)] rounded-full w-3/4 animate-pulse mb-3" />
-                                <div className="flex items-center gap-3">
-                                    <div className="h-8 w-8 bg-[var(--color-surface-elevated)] rounded-full animate-pulse" />
-                                    <div className="h-4 bg-[var(--color-surface-elevated)] rounded-full w-1/2 animate-pulse" />
+                                <div className="w-full h-36 bg-[var(--color-surface-elevated)] rounded-2xl animate-pulse mb-5" />
+                                <div className="h-6 bg-[var(--color-surface-elevated)] rounded-full w-3/4 animate-pulse mb-4" />
+                                <div className="flex items-center justify-between">
+                                    <div className="h-10 w-24 bg-[var(--color-surface-elevated)] rounded-xl animate-pulse" />
+                                    <div className="h-4 bg-[var(--color-surface-elevated)] rounded-full w-1/3 animate-pulse" />
                                 </div>
                             </motion.div>
                         ))
-                    ) : events.length === 0 ? (
-                        // Empty State
+                    ) : filteredEvents.length === 0 ? (
                         <motion.div
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
-                            className="py-16 flex flex-col items-center justify-center text-center bg-[var(--color-surface)] rounded-2xl border border-dashed border-[var(--color-border)]"
+                            className="py-20 flex flex-col items-center justify-center text-center bg-[var(--color-surface)]/30 rounded-[32px] border border-dashed border-[var(--color-border)] backdrop-blur-sm"
                         >
-                            <div className="w-16 h-16 rounded-full bg-[var(--color-surface-elevated)] flex items-center justify-center text-[var(--color-text-muted)] mb-4 shadow-inner">
-                                <Search size={28} />
+                            <div className="w-20 h-20 rounded-full bg-[var(--color-surface-elevated)] flex items-center justify-center text-[var(--color-text-muted)] mb-6 shadow-xl">
+                                <Search size={32} strokeWidth={3} />
                             </div>
-                            <h3 className="text-lg font-bold mb-1">No events found</h3>
-                            <p className="text-[14px] text-[var(--color-text-muted)] max-w-[240px]">
-                                Try adjusting your search or filters to find what you&apos;re looking for.
+                            <h3 className="text-xl font-black mb-2">No results matching filters</h3>
+                            <p className="text-[14px] text-[var(--color-text-muted)] max-w-[260px] font-medium leading-relaxed">
+                                We couldn&apos;t find any events. Try resetting your search or broadening categories.
                             </p>
                             <Button
                                 variant="outline"
                                 size="sm"
-                                className="mt-6"
+                                className="mt-8 rounded-xl px-8"
                                 onClick={() => {
                                     setSearchQuery("");
                                     setActiveCategory("All");
                                 }}
                             >
-                                Clear Filters
+                                Reset Discovery
                             </Button>
                         </motion.div>
                     ) : (
-                        // Event List
-                        events.map((event, i) => {
+                        filteredEvents.map((event, i) => {
                             const dateStr = formatMonthDay(event.date);
-                            const color = getCategoryColor(event.category);
+                            const registered = isRegistered(event.id);
 
                             return (
                                 <motion.div
                                     key={event.id}
-                                    layoutId={`explore-card-${event.id}`}
+                                    layout
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0, scale: 0.9 }}
-                                    transition={{ duration: 0.3, delay: i * 0.05 }}
+                                    transition={{ duration: 0.4, delay: i * 0.03 }}
                                 >
-                                    <Card className="hover:border-white/20 transition-all hover:shadow-xl hover:-translate-y-1">
-                                        {/* Banner Image Placeholder */}
-                                        <div
-                                            className="h-32 w-full relative overflow-hidden"
-                                            style={{ backgroundColor: `color-mix(in srgb, ${color} 20%, #161a22)` }}
-                                        >
-                                            <div className="absolute inset-0 opacity-30 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay" />
-                                            <div className="absolute top-3 left-3 bg-[#0D0F14]/80 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/5 flex items-center gap-2">
-                                                <span className="text-[11px] font-black uppercase tracking-wider text-white">
-                                                    {dateStr.month} {dateStr.day}
-                                                </span>
-                                            </div>
-                                            <div className="absolute top-3 right-3 bg-white/10 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/5">
-                                                <span className="text-[10px] font-bold text-white uppercase">{event.category}</span>
-                                            </div>
-                                        </div>
+                                    <Link href={`/events/${event.id}`}>
+                                        <Card className="hover:border-[var(--color-accent)]/30 transition-all hover:shadow-2xl hover:-translate-y-1.5 overflow-hidden group">
+                                            {/* Preview Header */}
+                                            <div
+                                                className="h-36 w-full relative overflow-hidden"
+                                                style={{ backgroundColor: `color-mix(in srgb, ${event.categoryColor || '#3b82f6'} 20%, #000)` }}
+                                            >
+                                                <div className="absolute inset-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay" />
 
-                                        <div className="p-4.5">
-                                            <h3 className="font-extrabold text-[17px] leading-snug mb-2 pr-4">{event.title}</h3>
-
-                                            <div className="flex items-center justify-between mb-4">
-                                                <div className="flex items-center gap-2">
-                                                    <div className="w-6 h-6 rounded-full bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center border border-[var(--color-border)]">
-                                                        <span className="text-[9px]">🏛️</span>
-                                                    </div>
-                                                    <span className="text-[13px] font-semibold text-[var(--color-text-muted)]">
-                                                        {event.club}
+                                                {/* Date Floating Badge */}
+                                                <div className="absolute top-4 left-4 bg-black/40 backdrop-blur-xl px-4 py-2 rounded-2xl border border-white/10 flex flex-col items-center shadow-lg">
+                                                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/70 leading-none mb-1">
+                                                        {dateStr.month}
+                                                    </span>
+                                                    <span className="text-[20px] font-black text-white leading-none">
+                                                        {dateStr.day}
                                                     </span>
                                                 </div>
 
-                                                <div className="flex items-center gap-1.5 text-[12px] font-semibold text-[var(--color-accent)] bg-blue-500/10 px-2 py-1 rounded-md">
-                                                    <User size={12} />
-                                                    <span>{event.registered} attending</span>
+                                                {/* Category Floating Badge */}
+                                                <div className="absolute top-4 right-4 h-9 flex items-center bg-white/5 backdrop-blur-xl px-4 rounded-xl border border-white/10">
+                                                    <span className="text-[10px] font-black text-white uppercase tracking-wider">{event.category}</span>
                                                 </div>
+
+                                                {registered && (
+                                                    <div className="absolute bottom-0 left-0 w-full bg-emerald-500/90 py-1.5 text-center backdrop-blur-md">
+                                                        <span className="text-[10px] font-black text-white uppercase tracking-[0.1em] flex items-center justify-center gap-1.5">
+                                                            <CheckCircle size={12} /> Spot Secured
+                                                        </span>
+                                                    </div>
+                                                )}
                                             </div>
 
-                                            <div className="flex items-center justify-between border-t border-[var(--color-border)] pt-4 mt-2">
-                                                <div className="flex items-center gap-1.5 text-[13px] text-[var(--color-text-muted)] font-medium">
-                                                    <Clock size={16} />
-                                                    <span>{event.timeStart}</span>
+                                            <div className="p-5">
+                                                <h3 className="font-black text-[18px] leading-tight mb-3 group-hover:text-[var(--color-accent)] transition-colors line-clamp-2">{event.title}</h3>
+
+                                                <div className="flex items-center justify-between mb-5">
+                                                    <div className="flex items-center gap-3">
+                                                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center border border-white/5 text-[10px] shadow-lg">
+                                                            {event.club.charAt(0)}
+                                                        </div>
+                                                        <span className="text-[13px] font-bold text-[var(--color-text-muted)]">
+                                                            {event.club}
+                                                        </span>
+                                                    </div>
+
+                                                    <div className="flex items-center gap-1.5 text-[11px] font-black text-blue-400 bg-blue-500/5 px-3 py-1.5 rounded-lg border border-blue-500/10">
+                                                        <User size={12} />
+                                                        <span>{event.registered} attending</span>
+                                                    </div>
                                                 </div>
-                                                <Link href={`/events/${event.id}`}>
-                                                    <Button variant="ghost" size="sm" className="px-4 bg-[var(--color-surface)] shadow-none">
-                                                        View Details <ArrowRight size={14} className="ml-0.5" />
-                                                    </Button>
-                                                </Link>
+
+                                                <div className="flex items-center justify-between border-t border-white/5 pt-5">
+                                                    <div className="flex items-center gap-2 text-[13px] text-[var(--color-text-muted)] font-bold">
+                                                        <Clock size={16} className="text-[var(--color-accent)] opacity-70" />
+                                                        <span>{event.timeStart}</span>
+                                                    </div>
+                                                    <div className="text-[13px] font-black text-[var(--color-accent)] flex items-center gap-1.5 hover:translate-x-1 transition-transform">
+                                                        Get Ticket <ArrowRight size={16} />
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </Card>
+                                        </Card>
+                                    </Link>
                                 </motion.div>
                             );
                         })

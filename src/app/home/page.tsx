@@ -6,12 +6,13 @@ import { Bell, Clock, BottomNav, Badge } from "@/components/ui";
 import { MOCK_USER, CATEGORIES } from "@/lib/mockUser";
 import { getGreeting, getCategoryColor } from "@/lib/utils/ui";
 import { formatDateBlock, processEvents } from "@/utils/dateUtils";
-import { useEventState } from "@/state/useEventState";
+import { useEventStore } from "@/state/useEventStore";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import Link from "next/link";
 
 export default function HomeFeed() {
     const [activeTab, setActiveTab] = useState("All");
-    const { events, registerEvent, unregisterEvent, isRegistered } = useEventState();
+    const { events, registerEvent, unregisterEvent, isRegistered } = useEventStore();
 
     const filteredEvents = useMemo(() => {
         return activeTab === "All"
@@ -34,14 +35,17 @@ export default function HomeFeed() {
                             {getGreeting()}, {MOCK_USER.name.split(" ")[0]} <span className="inline-block origin-[70%_70%] animate-[wave_2.5s_infinite]">👋</span>
                         </h1>
                         <p className="text-sm text-[var(--color-text-muted)] mt-0.5">
-                            {upcoming.length} upcoming events this week
+                            {upcoming.length} upcoming events
                         </p>
                     </div>
                 </div>
-                <button className="w-11 h-11 bg-[var(--color-surface)] rounded-full flex items-center justify-center border border-[var(--color-border)] hover:bg-[var(--color-surface-elevated)] transition-all hover:scale-105 active:scale-95 relative">
-                    <Bell size={20} className="text-[var(--color-text-muted)]" />
-                    <span className="absolute top-3 right-3 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-[var(--color-surface)]" />
-                </button>
+                <div className="flex items-center gap-3">
+                    <ThemeToggle />
+                    <button className="w-11 h-11 bg-[var(--color-surface)] rounded-full flex items-center justify-center border border-[var(--color-border)] hover:bg-[var(--color-surface-elevated)] transition-all hover:scale-105 active:scale-95 relative shadow-sm">
+                        <Bell size={20} className="text-[var(--color-text-muted)]" />
+                        <span className="absolute top-3 right-3 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-[var(--color-surface)]" />
+                    </button>
+                </div>
             </header>
 
             {/* Category Tabs */}
@@ -70,13 +74,14 @@ export default function HomeFeed() {
             <div className="flex flex-col gap-4 px-6 mb-12">
                 <AnimatePresence mode="popLayout" initial={false}>
                     {upcoming.map((event, index) => (
-                        <EventCard
-                            key={event.id}
-                            event={event}
-                            index={index}
-                            isRegistered={isRegistered(event.id)}
-                            onToggle={() => isRegistered(event.id) ? unregisterEvent(event.id) : registerEvent(event.id)}
-                        />
+                        <Link key={event.id} href={`/events/${event.id}`}>
+                            <EventCard
+                                event={event}
+                                index={index}
+                                isRegistered={isRegistered(event.id)}
+                                onToggle={() => isRegistered(event.id) ? unregisterEvent(event.id) : registerEvent(event.id)}
+                            />
+                        </Link>
                     ))}
                 </AnimatePresence>
 
@@ -96,14 +101,15 @@ export default function HomeFeed() {
                     </div>
                     <div className="flex flex-col gap-4 px-6">
                         {past.map((event, index) => (
-                            <EventCard
-                                key={event.id}
-                                event={event}
-                                index={index}
-                                isRegistered={isRegistered(event.id)}
-                                isPast
-                                onToggle={() => { }}
-                            />
+                            <Link key={event.id} href={`/events/${event.id}`}>
+                                <EventCard
+                                    event={event}
+                                    index={index}
+                                    isRegistered={isRegistered(event.id)}
+                                    isPast
+                                    onToggle={() => { }}
+                                />
+                            </Link>
                         ))}
                     </div>
                 </>

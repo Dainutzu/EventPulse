@@ -1,28 +1,34 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { BottomNav, Button, Badge } from "@/components/ui";
 import { Settings, LogOut, Trash2, Download, AlertCircle, CheckCircle, Award, Calendar, Volume2, VolumeX, Clock } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { isSoundEnabled, toggleSoundSettings } from "@/lib/sounds";
+import { isSoundEnabled, toggleSoundSettings, playSound } from "@/lib/sounds";
 import { MOCK_USER } from "@/lib/mockUser";
-import { useEventState } from "@/state/useEventState";
+import { useEventStore } from "@/state/useEventStore";
 import { formatDateBlock } from "@/utils/dateUtils";
+import Link from "next/link";
 
 export default function Profile() {
     const [soundEnabled, setSoundEnabled] = useState(isSoundEnabled());
-    const { registeredEvents, unregisterEvent } = useEventState();
+    const { events, registeredEventIds, unregisterEvent } = useEventStore();
     const [activeTab, setActiveTab] = useState("registered");
 
+    // Dynamic registered events from store
+    const registeredEvents = useMemo(() =>
+        events.filter(e => registeredEventIds.includes(e.id)),
+        [events, registeredEventIds]);
+
     // Impact Stats calculation
-    const impactStats = {
-        attended: 12, // Mocked base + registered
+    const impactStats = useMemo(() => ({
+        attended: 12, // Mocked base attended
         points: MOCK_USER.points + (registeredEvents.length * 50),
         registrations: registeredEvents.length
-    };
+    }), [registeredEvents]);
 
     return (
-        <div className="pb-32 min-h-screen bg-[#0A0F1E] text-white selection:bg-purple-500/30">
+        <div className="pb-32 min-h-screen selection:bg-purple-500/30">
             {/* Header Area */}
             <header className="px-6 pt-14 pb-8 flex flex-col items-center relative overflow-hidden">
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-40 bg-gradient-to-b from-blue-600/10 to-transparent pointer-events-none" />
@@ -91,22 +97,37 @@ export default function Profile() {
 
                 <div className="flex flex-col gap-4 min-h-[160px]">
                     <AnimatePresence mode="popLayout" initial={false}>
-                        {registeredEvents.length === 0 ? (
+                        {activeTab === "registered" ? (
+                            registeredEvents.length === 0 ? (
+                                <motion.div
+                                    key="empty-reg"
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    className="py-12 text-center text-[var(--color-text-muted)] bg-[var(--color-surface)]/30 border border-dashed border-[var(--color-border)] rounded-3xl"
+                                >
+                                    <p className="font-bold text-sm px-10 leading-relaxed">No events registered yet. Explore and join the community!</p>
+                                </motion.div>
+                            ) : (
+                                registeredEvents.map((event) => (
+                                    <RegisteredEventCard
+                                        key={event.id}
+                                        event={event}
+                                        onCancel={() => {
+                                            unregisterEvent(event.id);
+                                            playSound("notification");
+                                        }}
+                                    />
+                                ))
+                            )
+                        ) : (
                             <motion.div
+                                key="empty-saved"
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 className="py-12 text-center text-[var(--color-text-muted)] bg-[var(--color-surface)]/30 border border-dashed border-[var(--color-border)] rounded-3xl"
                             >
-                                <p className="font-bold text-sm px-10 leading-relaxed">You haven't registered for any events yet. Explore and join the community!</p>
+                                <p className="font-bold text-sm px-10 leading-relaxed">Your saved events list is empty.</p>
                             </motion.div>
-                        ) : (
-                            registeredEvents.map((event) => (
-                                <RegisteredEventCard
-                                    key={event.id}
-                                    event={event}
-                                    onCancel={() => unregisterEvent(event.id)}
-                                />
-                            ))
                         )}
                     </AnimatePresence>
                 </div>
@@ -138,7 +159,7 @@ export default function Profile() {
 
                     <div className="flex items-center justify-between p-5">
                         <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 rounded-xl bg-gray-800/50 flex items-center justify-center border border-white/5">
+                            <div className="w-10 h-10 rounded-xl bg-[var(--color-surface-elevated)] flex items-center justify-center border border-white/5 shadow-sm">
                                 {soundEnabled ? <Volume2 size={18} className="text-blue-400" /> : <VolumeX size={18} className="text-gray-400" />}
                             </div>
                             <span className="font-bold text-[15px]">In-App Sounds</span>
@@ -148,6 +169,7 @@ export default function Profile() {
                                 const newState = !soundEnabled;
                                 setSoundEnabled(newState);
                                 toggleSoundSettings(newState);
+                                if (newState) playSound("notification");
                             }}
                             className={`w-14 h-7.5 rounded-full transition-all duration-300 flex items-center px-1.5 shadow-inner ${soundEnabled ? 'bg-blue-600' : 'bg-gray-700'}`}
                         >
@@ -161,10 +183,10 @@ export default function Profile() {
 
                     <button className="w-full flex items-center justify-between p-5 hover:bg-red-500/5 transition-colors text-left group">
                         <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center border border-red-500/20">
+                            <div className="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center border border-red-500/20 shadow-sm">
                                 <LogOut size={18} className="text-red-400" />
                             </div>
-                            <span className="font-bold text-[15px] text-red-100 group-hover:text-red-400 transition-colors">Logout Session</span>
+                            <span className="font-bold text-[15px] group-hover:text-red-400 transition-colors">Logout Session</span>
                         </div>
                     </button>
                 </div>
@@ -193,31 +215,37 @@ function RegisteredEventCard({ event, onCancel }: { event: any, onCancel: () => 
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
-            className="bg-[var(--color-surface)]/80 backdrop-blur-sm p-4.5 rounded-[22px] border border-[var(--color-border)] shadow-md group border-l-4"
+            className="bg-[var(--color-surface)]/80 backdrop-blur-sm p-4.5 rounded-[22px] border border-[var(--color-border)] shadow-md group border-l-4 transition-all hover:bg-[var(--color-surface-elevated)]"
             style={{ borderLeftColor: event.categoryColor }}
         >
             <div className="flex gap-4">
-                <div className="w-14 h-14 bg-white/5 rounded-2xl flex flex-col items-center justify-center border border-white/5 shrink-0">
-                    <span className="text-[10px] font-black text-blue-400 uppercase leading-none">{dateStr.month}</span>
-                    <span className="text-[20px] font-black mt-0.5 leading-none">{dateStr.day}</span>
-                </div>
-                <div className="flex-1 pr-2">
-                    <div className="flex items-center gap-2 mb-1">
-                        <Badge variant="success" className="text-[8px] py-0 px-2 font-black leading-tight border-emerald-500/30">Confirmed</Badge>
+                <Link href={`/events/${event.id}`} className="flex-1 flex gap-4 pr-2 overflow-hidden">
+                    <div className="w-13 h-13 bg-[var(--color-bg)] rounded-xl flex flex-col items-center justify-center border border-[var(--color-border)] shrink-0 shadow-inner">
+                        <span className="text-[10px] font-black text-blue-400 uppercase leading-none">{dateStr.month}</span>
+                        <span className="text-[18px] font-black mt-0.5 leading-none">{dateStr.day}</span>
                     </div>
-                    <h4 className="font-black text-[15px] leading-snug mb-2 group-hover:text-blue-400 transition-colors">{event.title}</h4>
-                    <div className="flex items-center gap-3 text-[11px] font-bold text-[var(--color-text-muted)]">
-                        <div className="flex items-center gap-1">
-                            <Clock size={12} className="opacity-50" />
-                            <span>{event.timeStart}</span>
+                    <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                            <Badge variant="success" className="text-[8px] py-0 px-2 font-black leading-tight border-emerald-500/30">Confirmed</Badge>
                         </div>
-                        <div className="w-1 h-1 rounded-full bg-white/10" />
-                        <span className="text-blue-400/80">{event.venue}</span>
+                        <h4 className="font-black text-[15px] leading-snug mb-2 group-hover:text-blue-400 transition-colors truncate">{event.title}</h4>
+                        <div className="flex items-center gap-3 text-[11px] font-bold text-[var(--color-text-muted)]">
+                            <div className="flex items-center gap-1">
+                                <Clock size={12} className="opacity-50" />
+                                <span>{event.timeStart}</span>
+                            </div>
+                            <div className="w-1 h-1 rounded-full bg-white/10" />
+                            <span className="text-blue-400/80 truncate">{event.venue}</span>
+                        </div>
                     </div>
-                </div>
+                </Link>
                 <button
-                    onClick={onCancel}
-                    className="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center self-center hover:bg-red-500/20 transition-all border border-red-500/20 active:scale-90"
+                    onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        onCancel();
+                    }}
+                    className="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center self-center hover:bg-red-500/20 transition-all border border-red-500/20 active:scale-90 shadow-sm"
                 >
                     <Trash2 size={16} className="text-red-400" />
                 </button>
@@ -230,7 +258,7 @@ function SettingsItem({ icon, label }: { icon: React.ReactNode, label: string })
     return (
         <button className="w-full flex items-center justify-between p-5 hover:bg-white/5 transition-colors text-left group">
             <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-xl bg-gray-800/50 flex items-center justify-center border border-white/5 group-hover:bg-gray-700 transition-colors">
+                <div className="w-10 h-10 rounded-xl bg-[var(--color-surface-elevated)] flex items-center justify-center border border-white/5 group-hover:bg-gray-700 transition-colors shadow-sm">
                     <div className="text-gray-300 group-hover:text-blue-400 transition-colors">
                         {icon}
                     </div>
