@@ -7,29 +7,31 @@ type Theme = "light" | "dark";
 interface ThemeContextType {
     theme: Theme;
     toggleTheme: () => void;
+    setTheme: (theme: Theme) => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
     const [theme, setTheme] = useState<Theme>("dark");
-    const [isHydrated, setIsHydrated] = useState(false);
+    const [isMounted, setIsMounted] = useState(false);
 
-    // Initial hydration
+    // Initial hydration and system preference check
     useEffect(() => {
+        setIsMounted(true);
         const stored = localStorage.getItem("app_theme") as Theme | null;
+
         if (stored) {
             setTheme(stored);
-        } else if (window.matchMedia("(prefers-color-scheme: light)").matches) {
-            // Uncomment if you want to default to system theme if no storage
-            // setTheme("light");
+        } else {
+            const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+            setTheme(prefersDark ? "dark" : "light");
         }
-        setIsHydrated(true);
     }, []);
 
-    // Apply theme to document
+    // Sync theme with HTML class and LocalStorage
     useEffect(() => {
-        if (!isHydrated) return;
+        if (!isMounted) return;
 
         const root = window.document.documentElement;
         if (theme === "dark") {
@@ -38,16 +40,16 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
             root.classList.remove("dark");
         }
         localStorage.setItem("app_theme", theme);
-    }, [theme, isHydrated]);
+    }, [theme, isMounted]);
 
     const toggleTheme = () => {
         setTheme((prev) => (prev === "light" ? "dark" : "light"));
     };
 
     return (
-        <ThemeContext.Provider value={{ theme, toggleTheme }}>
-            {/* Prevent flash move logic to layout if needed, but this works for most cases */}
-            <div className={isHydrated ? "" : "invisible"}>
+        <ThemeContext.Provider value={{ theme, toggleTheme, setTheme }}>
+            {/* The wrapper div helps prevent layout shifts during hydration */}
+            <div className={isMounted ? "opacity-100" : "opacity-0"} style={{ transition: "opacity 0.2s ease" }}>
                 {children}
             </div>
         </ThemeContext.Provider>

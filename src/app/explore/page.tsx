@@ -4,6 +4,8 @@ import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { BottomNav, Card, Button, Badge } from "@/components/ui";
 import { Clock, Search, SlidersHorizontal, ArrowRight, User, CheckCircle } from "lucide-react";
+import { BrandLogo } from "@/components/BrandLogo";
+import { BrandingFooter } from "@/components/BrandingFooter";
 import { getCategoryColor } from "@/lib/utils/ui";
 import { formatMonthDay } from "@/lib/utils/date";
 import { useEventStore } from "@/state/useEventStore";
@@ -57,9 +59,12 @@ export default function Explore() {
     return (
         <div className="pb-32 min-h-screen">
             {/* Header Area */}
-            <header className="px-6 pt-14 pb-4">
-                <h1 className="text-2xl font-black mb-1">Explore Hub</h1>
-                <p className="text-sm text-[var(--color-text-muted)] font-medium">Find your next big experience on campus</p>
+            <header className="px-6 pt-14 pb-4 flex items-center justify-between">
+                <div>
+                    <h1 className="text-2xl font-black mb-1">Explore Hub</h1>
+                    <p className="text-sm text-[var(--color-text-muted)] font-medium">Find your next big experience on campus</p>
+                </div>
+                <BrandLogo size={44} rounded="rounded-xl" />
             </header>
 
             {/* Search Bar - Premium Glassmorphism */}
@@ -246,6 +251,8 @@ export default function Explore() {
                     )}
                 </AnimatePresence>
             </div>
+
+            <BrandingFooter />
 
             <BottomNav />
         </div>

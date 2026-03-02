@@ -4,6 +4,7 @@ import Link from "next/link";
 import { User, Users, PartyPopper } from "lucide-react";
 import { Button, Card } from "@/components/ui";
 import { motion } from "framer-motion";
+import { BrandLogo } from "@/components/BrandLogo";
 
 export default function Splash() {
   return (
@@ -26,11 +27,12 @@ export default function Splash() {
       </div>
 
       <motion.div
-        className="text-center z-10"
+        className="text-center z-10 flex flex-col items-center"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
+        <BrandLogo size={80} className="mb-6 shadow-2xl" />
         <h1 className="text-4xl font-extrabold tracking-tight mb-2">Event Pulse</h1>
         <p className="text-[var(--color-text-muted)] text-base">Your Campus. Connected.</p>
       </motion.div>

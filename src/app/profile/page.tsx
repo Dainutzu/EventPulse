@@ -2,12 +2,15 @@
 
 import { useMemo, useState } from "react";
 import { BottomNav, Button, Badge } from "@/components/ui";
-import { Settings, LogOut, Trash2, Download, AlertCircle, CheckCircle, Award, Calendar, Volume2, VolumeX, Clock } from "lucide-react";
+import { Settings, LogOut, Trash2, Download, AlertCircle, CheckCircle, Award, Calendar, Volume2, VolumeX, Clock, Sun } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { isSoundEnabled, toggleSoundSettings, playSound } from "@/lib/sounds";
 import { MOCK_USER } from "@/lib/mockUser";
 import { useEventStore } from "@/state/useEventStore";
 import { formatDateBlock } from "@/utils/dateUtils";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { BrandLogo } from "@/components/BrandLogo";
+import { BrandingFooter } from "@/components/BrandingFooter";
 import Link from "next/link";
 
 export default function Profile() {
@@ -30,13 +33,17 @@ export default function Profile() {
     return (
         <div className="pb-32 min-h-screen selection:bg-purple-500/30">
             {/* Header Area */}
-            <header className="px-6 pt-14 pb-8 flex flex-col items-center relative overflow-hidden">
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-40 bg-gradient-to-b from-blue-600/10 to-transparent pointer-events-none" />
+            <header className="px-6 pt-14 pb-8 flex flex-col items-center relative overflow-hidden transition-colors duration-300">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-40 bg-gradient-to-b from-blue-600/5 to-transparent pointer-events-none" />
+
+                <div className="mb-6 z-10">
+                    <BrandLogo size={64} />
+                </div>
 
                 <motion.div
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    className="w-26 h-26 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 shadow-[0_10px_40px_rgba(37,99,235,0.4)] flex items-center justify-center text-4xl font-black mb-5 border-4 border-[var(--color-bg)] text-white relative z-10"
+                    className="w-24 h-24 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 shadow-xl flex items-center justify-center text-4xl font-black mb-5 border-4 border-[var(--color-surface)] text-white relative z-10"
                 >
                     {MOCK_USER.avatar}
                 </motion.div>
@@ -48,11 +55,11 @@ export default function Profile() {
                 >
                     {MOCK_USER.name}
                 </motion.h1>
-                <p className="text-[14px] text-[var(--color-text-muted)] font-medium mb-4 mt-1 z-10 opacity-80">
+                <p className="text-[14px] text-[var(--color-text-muted)] font-bold mb-4 mt-1 z-10">
                     {MOCK_USER.email}
                 </p>
 
-                <Badge variant="default" className="bg-indigo-500/10 border-indigo-500/20 text-indigo-400 font-black px-4 py-1.5 z-10">
+                <Badge variant="default" className="bg-blue-500/10 border-blue-500/20 text-blue-400 font-bold px-4 py-1.5 z-10">
                     {MOCK_USER.role.toUpperCase()} ACCOUNT
                 </Badge>
             </header>
@@ -153,16 +160,32 @@ export default function Profile() {
 
             {/* Settings Area */}
             <div className="px-6 mb-12">
-                <h2 className="text-[16px] font-black mb-5">Account Settings</h2>
-                <div className="bg-[var(--color-surface)]/80 backdrop-blur-sm border border-[var(--color-border)] rounded-[24px] overflow-hidden divide-y divide-[var(--color-border)] shadow-xl">
-                    <SettingsItem icon={<Settings size={18} />} label="Security & Privacy" />
+                <h2 className="text-[16px] font-black mb-5">Interface & Preferences</h2>
+                <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[32px] overflow-hidden divide-y divide-[var(--color-border)] shadow-sm">
 
-                    <div className="flex items-center justify-between p-5">
+                    {/* Theme Toggle Integration */}
+                    <div className="flex items-center justify-between p-5 px-6">
                         <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 rounded-xl bg-[var(--color-surface-elevated)] flex items-center justify-center border border-white/5 shadow-sm">
-                                {soundEnabled ? <Volume2 size={18} className="text-blue-400" /> : <VolumeX size={18} className="text-gray-400" />}
+                            <div className="w-10 h-10 rounded-2xl bg-[var(--color-surface-elevated)] flex items-center justify-center border border-[var(--color-border)]">
+                                <Sun size={18} className="text-[var(--color-accent)]" />
                             </div>
-                            <span className="font-bold text-[15px]">In-App Sounds</span>
+                            <div className="flex flex-col">
+                                <span className="font-bold text-[15px]">Visual Theme</span>
+                                <span className="text-[11px] text-[var(--color-text-muted)] font-medium">Switch between Light/Dark</span>
+                            </div>
+                        </div>
+                        <ThemeToggle />
+                    </div>
+
+                    <div className="flex items-center justify-between p-5 px-6">
+                        <div className="flex items-center gap-4">
+                            <div className="w-10 h-10 rounded-2xl bg-[var(--color-surface-elevated)] flex items-center justify-center border border-[var(--color-border)]">
+                                {soundEnabled ? <Volume2 size={18} className="text-emerald-400" /> : <VolumeX size={18} className="text-[var(--color-text-muted)]" />}
+                            </div>
+                            <div className="flex flex-col">
+                                <span className="font-bold text-[15px]">Sound Effects</span>
+                                <span className="text-[11px] text-[var(--color-text-muted)] font-medium">Auditory feedback on actions</span>
+                            </div>
                         </div>
                         <button
                             onClick={() => {
@@ -171,19 +194,19 @@ export default function Profile() {
                                 toggleSoundSettings(newState);
                                 if (newState) playSound("notification");
                             }}
-                            className={`w-14 h-7.5 rounded-full transition-all duration-300 flex items-center px-1.5 shadow-inner ${soundEnabled ? 'bg-blue-600' : 'bg-gray-700'}`}
+                            className={`w-14 h-7.5 rounded-full transition-all duration-300 flex items-center px-1.5 shadow-inner ${soundEnabled ? 'bg-emerald-500 shadow-emerald-500/30' : 'bg-gray-400 dark:bg-gray-700'}`}
                         >
                             <motion.div
-                                className="w-5 h-5 bg-white rounded-full shadow-lg"
+                                className="w-5 h-5 bg-white rounded-full shadow-md"
                                 animate={{ x: soundEnabled ? 24 : 0 }}
                                 transition={{ type: "spring", stiffness: 500, damping: 30 }}
                             />
                         </button>
                     </div>
 
-                    <button className="w-full flex items-center justify-between p-5 hover:bg-red-500/5 transition-colors text-left group">
+                    <button className="w-full flex items-center justify-between p-5 px-6 hover:bg-red-500/5 transition-colors text-left group">
                         <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center border border-red-500/20 shadow-sm">
+                            <div className="w-10 h-10 rounded-2xl bg-red-500/10 flex items-center justify-center border border-red-500/20">
                                 <LogOut size={18} className="text-red-400" />
                             </div>
                             <span className="font-bold text-[15px] group-hover:text-red-400 transition-colors">Logout Session</span>
@@ -192,6 +215,7 @@ export default function Profile() {
                 </div>
             </div>
 
+            <BrandingFooter />
             <BottomNav />
         </div>
     );

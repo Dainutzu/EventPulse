@@ -8,6 +8,8 @@ import { getGreeting, getCategoryColor } from "@/lib/utils/ui";
 import { formatDateBlock, processEvents } from "@/utils/dateUtils";
 import { useEventStore } from "@/state/useEventStore";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { BrandLogo } from "@/components/BrandLogo";
+import { BrandingFooter } from "@/components/BrandingFooter";
 import Link from "next/link";
 
 export default function HomeFeed() {
@@ -27,6 +29,7 @@ export default function HomeFeed() {
             {/* Header */}
             <header className="px-6 pt-12 pb-5 flex items-center justify-between">
                 <div className="flex items-center gap-3.5">
+                    <BrandLogo size={44} rounded="rounded-xl" />
                     <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold text-lg shadow-[0_4px_16px_rgba(37,99,235,0.4)] border-2 border-[var(--color-bg)]">
                         {MOCK_USER.avatar}
                     </div>
@@ -115,6 +118,7 @@ export default function HomeFeed() {
                 </>
             )}
 
+            <BrandingFooter />
             <BottomNav />
         </div>
     );

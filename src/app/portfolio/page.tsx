@@ -3,6 +3,8 @@
 import { useRouter } from "next/navigation";
 import { ChevronLeft, Share2, Download } from "@/components/ui";
 import { BottomNav } from "@/components/ui";
+import { BrandLogo } from "@/components/BrandLogo";
+import { BrandingFooter } from "@/components/BrandingFooter";
 import { motion } from "framer-motion";
 import { MOCK_PORTFOLIO } from "@/lib/mockUser";
 import { formatMonthDay } from "@/lib/utils/date";
@@ -20,7 +22,10 @@ export default function Portfolio() {
                 >
                     <ChevronLeft size={24} className="text-white" />
                 </button>
-                <span className="font-extrabold text-[18px]">Participation Portfolio</span>
+                <div className="flex flex-col items-center">
+                    <BrandLogo size={32} rounded="rounded-lg" className="mb-1" />
+                    <span className="font-extrabold text-[15px]">Portfolio</span>
+                </div>
                 <button className="w-10 h-10 rounded-full flex items-center justify-center transition-colors hover:bg-[var(--color-surface)]">
                     <Share2 size={20} className="text-white" />
                 </button>
@@ -108,6 +113,7 @@ export default function Portfolio() {
                 <p className="text-[12px] text-center text-[var(--color-text-muted)] leading-relaxed px-4">
                     A certified PDF of your accomplishments will be generated for your academic records.
                 </p>
+                <BrandingFooter />
             </div>
         </div>
     );

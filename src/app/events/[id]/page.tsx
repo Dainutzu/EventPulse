@@ -9,6 +9,8 @@ import { formatDate } from "@/lib/utils/date";
 import { playSound } from "@/lib/sounds";
 import { useEventStore } from "@/state/useEventStore";
 import { User, Info, CheckCircle, AlertCircle } from "lucide-react";
+import { BrandLogo } from "@/components/BrandLogo";
+import { BrandingFooter } from "@/components/BrandingFooter";
 
 export default function EventDetail({ params }: { params: Promise<{ id: string }> }) {
     const router = useRouter();
@@ -64,7 +66,10 @@ export default function EventDetail({ params }: { params: Promise<{ id: string }
                 >
                     <ChevronLeft size={20} className="text-white" />
                 </button>
-                <span className="font-bold text-[15px] text-white/90">Event Details</span>
+                <div className="flex flex-col items-center">
+                    <BrandLogo size={28} rounded="rounded-lg" className="mb-0.5" />
+                    <span className="font-bold text-[12px] text-white/90">Details</span>
+                </div>
                 <div className="w-10" />
             </header>
 
@@ -180,6 +185,8 @@ export default function EventDetail({ params }: { params: Promise<{ id: string }
                         ))}
                     </div>
                 </div>
+
+                <BrandingFooter />
             </div>
 
             {/* Sticky Action Footer */}
