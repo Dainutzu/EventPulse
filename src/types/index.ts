@@ -1,7 +1,9 @@
+export type AttendanceStatus = "none" | "registered" | "attended";
+
 export interface Event {
     id: string;
     title: string;
-    category: string;
+    category: "Academic" | "Tech" | "Sports" | "Cultural" | "Career";
     date: string;
     timeStart: string;
     timeEnd: string;
@@ -12,15 +14,19 @@ export interface Event {
     banner: string | null;
     categoryColor: string;
     description: string;
+    trending?: boolean;
+    reminderSet?: boolean;
 }
 
 export interface User {
     id: string;
     name: string;
     email: string;
-    role: string;
+    role: "student" | "admin" | "organizer";
     avatar: string;
     points: number;
+    engagementScore: number;
+    streak: number;
 }
 
 export interface PortfolioItem {

@@ -8,20 +8,34 @@ import { ChevronLeft, Calendar, Clock, MapPin, Button } from "@/components/ui";
 import { formatDate } from "@/lib/utils/date";
 import { playSound } from "@/lib/sounds";
 import { useEventStore } from "@/state/useEventStore";
-import { User, Info, CheckCircle, AlertCircle } from "lucide-react";
+import { User, Info, CheckCircle, AlertCircle, Bell, QrCode } from "lucide-react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { BrandingFooter } from "@/components/BrandingFooter";
+import { MOCK_USER } from "@/lib/mockUser";
 
 export default function EventDetail({ params }: { params: Promise<{ id: string }> }) {
     const router = useRouter();
     const { id } = use(params);
-    const { events, registerEvent, unregisterEvent, isRegistered } = useEventStore();
+    const {
+        events,
+        registerEvent,
+        unregisterEvent,
+        isRegistered,
+        getAttendanceStatus,
+        updateAttendance,
+        toggleReminder,
+        hasReminder
+    } = useEventStore();
+
     const [isProcessing, setIsProcessing] = useState(false);
+    const [showQr, setShowQr] = useState(false);
 
     const event = events.find((e) => e.id === id);
     const registered = isRegistered(id);
+    const attendanceStatus = getAttendanceStatus(id);
+    const reminderSet = hasReminder(id);
+    const isAdmin = MOCK_USER.role === "admin" || MOCK_USER.role === "organizer";
 
-    // Fallback/Not Found
     if (!event) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center">
@@ -41,9 +55,7 @@ export default function EventDetail({ params }: { params: Promise<{ id: string }
 
     const handleToggleRegistration = () => {
         if (isProcessing) return;
-
         setIsProcessing(true);
-        // Simulate minor delay for premium feel
         setTimeout(() => {
             if (registered) {
                 unregisterEvent(id);
@@ -56,13 +68,23 @@ export default function EventDetail({ params }: { params: Promise<{ id: string }
         }, 600);
     };
 
+    const handleSimulateAttendance = () => {
+        setIsProcessing(true);
+        setTimeout(() => {
+            updateAttendance(id, "attended");
+            playSound("scan");
+            setTimeout(() => playSound("achievement"), 800);
+            setIsProcessing(false);
+        }, 1500);
+    };
+
     return (
-        <div className="pb-32 min-h-screen relative">
+        <div className="pb-40 min-h-screen relative overflow-x-hidden">
             {/* Header */}
             <header className="absolute top-0 w-full z-10 px-6 pt-12 pb-4 flex items-center justify-between bg-gradient-to-b from-black/80 to-transparent">
                 <button
                     onClick={() => router.back()}
-                    className="w-10 h-10 rounded-full bg-[var(--color-surface)]/80 backdrop-blur-md border border-[var(--color-border)] flex items-center justify-center transition-colors hover:bg-[var(--color-surface-elevated)]"
+                    className="w-10 h-10 rounded-full bg-[var(--color-surface)]/80 backdrop-blur-md border border-[var(--color-border)] flex items-center justify-center transition-all hover:bg-[var(--color-surface-elevated)] active:scale-95"
                 >
                     <ChevronLeft size={20} className="text-white" />
                 </button>
@@ -70,7 +92,15 @@ export default function EventDetail({ params }: { params: Promise<{ id: string }
                     <BrandLogo size={28} rounded="rounded-lg" className="mb-0.5" />
                     <span className="font-bold text-[12px] text-white/90">Details</span>
                 </div>
-                <div className="w-10" />
+                <button
+                    onClick={() => {
+                        toggleReminder(id);
+                        playSound("notification");
+                    }}
+                    className={`w-10 h-10 rounded-full backdrop-blur-md border flex items-center justify-center transition-all active:scale-95 ${reminderSet ? 'bg-amber-500 border-amber-400' : 'bg-[var(--color-surface)]/80 border-[var(--color-border)]'}`}
+                >
+                    <Bell size={20} className={reminderSet ? "text-white" : "text-white/60"} fill={reminderSet ? "currentColor" : "none"} />
+                </button>
             </header>
 
             {/* Hero Banner */}
@@ -88,11 +118,19 @@ export default function EventDetail({ params }: { params: Promise<{ id: string }
                     </h2>
                 )}
                 <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-[var(--color-bg)] to-transparent" />
+
+                {attendanceStatus === "attended" && (
+                    <div className="absolute bottom-12 right-6 rotate-12 z-20">
+                        <div className="border-4 border-emerald-500/50 text-emerald-500/80 px-4 py-1 rounded-xl font-black text-2xl uppercase tracking-tighter backdrop-blur-sm">
+                            Verified
+                        </div>
+                    </div>
+                )}
             </div>
 
             <div className="px-6 relative -mt-8">
-                {/* Category Chip */}
-                <div className="mb-4">
+                {/* Status Chips */}
+                <div className="flex gap-2 mb-4">
                     <span
                         className="px-4 py-1.5 rounded-full text-[11px] font-black uppercase tracking-wider shadow-lg border"
                         style={{
@@ -103,6 +141,11 @@ export default function EventDetail({ params }: { params: Promise<{ id: string }
                     >
                         {event.category}
                     </span>
+                    {event.trending && (
+                        <span className="px-4 py-1.5 rounded-full text-[11px] font-black uppercase tracking-wider shadow-lg bg-orange-500/20 text-orange-400 border border-orange-500/30 flex items-center gap-1.5 animate-pulse">
+                            🔥 Trending
+                        </span>
+                    )}
                 </div>
 
                 <h1 className="text-2xl font-black leading-tight mb-6">
@@ -149,12 +192,16 @@ export default function EventDetail({ params }: { params: Promise<{ id: string }
                             <div className="flex-1">
                                 <div className="flex items-center justify-between mb-1">
                                     <p className="font-bold text-[15px]">{event.registered} / {event.maxParticipants}</p>
-                                    <p className="text-[11px] font-black text-emerald-500">{Math.round((event.registered / event.maxParticipants) * 100)}% FULL</p>
+                                    <p className="text-[11px] font-black text-emerald-500 tracking-tighter">
+                                        {event.registered >= event.maxParticipants ? "FULL CAPACITY" : `${event.maxParticipants - event.registered} SEATS LEFT`}
+                                    </p>
                                 </div>
                                 <div className="w-full bg-[var(--color-surface-elevated)] h-1.5 rounded-full overflow-hidden">
-                                    <div
+                                    <motion.div
                                         className="h-full bg-emerald-500 rounded-full"
-                                        style={{ width: `${(event.registered / event.maxParticipants) * 100}%` }}
+                                        initial={{ width: 0 }}
+                                        animate={{ width: `${(event.registered / event.maxParticipants) * 100}%` }}
+                                        transition={{ duration: 1, ease: "easeOut" }}
                                     />
                                 </div>
                             </div>
@@ -162,19 +209,55 @@ export default function EventDetail({ params }: { params: Promise<{ id: string }
                     )}
                 </div>
 
-                {/* Organizer */}
-                <div className="mb-8 p-4 bg-gradient-to-r from-[var(--color-surface)] to-transparent rounded-2xl border border-[var(--color-border)] flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center text-xl shadow-lg border border-white/5">
-                        {event.club.charAt(0)}
+                {/* Organizer & QR Action */}
+                <div className="flex flex-col gap-3 mb-8">
+                    <div className="p-4 bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] flex items-center justify-between shadow-sm">
+                        <div className="flex items-center gap-4">
+                            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center text-xl shadow-lg border border-white/5">
+                                {event.club.charAt(0)}
+                            </div>
+                            <div>
+                                <h4 className="font-bold text-[16px]">{event.club}</h4>
+                                <p className="text-[11px] text-[var(--color-text-muted)] font-black uppercase tracking-wider">Host Organization</p>
+                            </div>
+                        </div>
+                        {isAdmin && (
+                            <button
+                                onClick={() => setShowQr(!showQr)}
+                                className="w-12 h-12 rounded-xl bg-[var(--color-accent)]/10 text-[var(--color-accent)] border border-[var(--color-accent)]/20 flex items-center justify-center hover:bg-[var(--color-accent)]/20 transition-all"
+                            >
+                                <QrCode size={24} />
+                            </button>
+                        )}
                     </div>
-                    <div>
-                        <h4 className="font-bold text-[16px]">{event.club}</h4>
-                        <p className="text-[11px] text-[var(--color-text-muted)] font-black uppercase tracking-wider">Host Organization</p>
-                    </div>
+
+                    <AnimatePresence>
+                        {showQr && isAdmin && (
+                            <motion.div
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: "auto" }}
+                                exit={{ opacity: 0, height: 0 }}
+                                className="overflow-hidden"
+                            >
+                                <div className="p-6 bg-[var(--color-surface-elevated)] border border-[var(--color-border)] rounded-2xl flex flex-col items-center text-center shadow-inner mb-4">
+                                    <div className="w-48 h-48 bg-white p-4 rounded-xl mb-4 shadow-2xl">
+                                        {/* Mock Minimalist QR */}
+                                        <div className="w-full h-full border-4 border-black grid grid-cols-4 grid-rows-4 gap-1 p-1">
+                                            {[...Array(16)].map((_, i) => (
+                                                <div key={i} className={`rounded-sm ${Math.random() > 0.4 ? 'bg-black' : 'bg-transparent'}`} />
+                                            ))}
+                                        </div>
+                                    </div>
+                                    <p className="text-[13px] font-bold mb-1">Check-in Terminal</p>
+                                    <p className="text-[11px] text-[var(--color-text-muted)] uppercase tracking-widest font-black">Scan to mark attendance</p>
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 </div>
 
                 {/* Description */}
-                <div className="mb-8">
+                <div className="mb-12">
                     <div className="flex items-center gap-2 mb-4">
                         <Info size={18} className="text-[var(--color-accent)]" />
                         <h3 className="text-lg font-black tracking-tight">Overview</h3>
@@ -190,30 +273,52 @@ export default function EventDetail({ params }: { params: Promise<{ id: string }
             </div>
 
             {/* Sticky Action Footer */}
-            <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] p-6 pb-10 bg-gradient-to-t from-[var(--color-bg)] via-[var(--color-bg)]/98 to-transparent z-50">
+            <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] p-6 pb-12 bg-gradient-to-t from-[var(--color-bg)] via-[var(--color-bg)]/98 to-transparent z-50">
                 <AnimatePresence mode="wait">
-                    {registered ? (
+                    {attendanceStatus === "attended" ? (
+                        <motion.div
+                            key="attended"
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="bg-emerald-500/10 border border-emerald-500/30 rounded-2xl p-4 flex items-center justify-center gap-3"
+                        >
+                            <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-500">
+                                <CheckCircle size={18} />
+                            </div>
+                            <span className="font-black text-[13px] uppercase tracking-[0.1em] text-emerald-500">Attendance Confirmed</span>
+                        </motion.div>
+                    ) : registered ? (
                         <motion.div
                             key="unreg"
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -10 }}
+                            exit={{ opacity: 0, scale: 0.95 }}
                             className="flex flex-col gap-3"
                         >
-                            <div className="flex items-center justify-center gap-2 text-emerald-500 font-black text-[13px] uppercase tracking-wider mb-1">
-                                <CheckCircle size={16} />
-                                You are attending this event
-                            </div>
                             <Button
                                 fullWidth
-                                variant="outline"
+                                variant="default"
                                 size="lg"
+                                onClick={handleSimulateAttendance}
+                                disabled={isProcessing}
+                                className="h-14 rounded-2xl bg-indigo-600 hover:bg-indigo-500 shadow-[0_12px_24px_-8px_rgba(79,70,229,0.4)]"
+                            >
+                                {isProcessing ? (
+                                    <span className="animate-pulse">Validating Presence...</span>
+                                ) : (
+                                    <div className="flex items-center gap-2">
+                                        <QrCode size={20} />
+                                        <span>Verify Presence</span>
+                                    </div>
+                                )}
+                            </Button>
+                            <button
                                 onClick={handleToggleRegistration}
                                 disabled={isProcessing}
-                                className="border-red-500/30 text-red-500 hover:bg-red-500/10 h-14 rounded-2xl"
+                                className="text-[12px] font-black uppercase tracking-widest text-red-500/60 hover:text-red-500 transition-colors py-2"
                             >
-                                {isProcessing ? "Processing..." : "Leave Event"}
-                            </Button>
+                                {isProcessing ? "Processing..." : "Cancel Registration"}
+                            </button>
                         </motion.div>
                     ) : (
                         <motion.button
@@ -222,11 +327,16 @@ export default function EventDetail({ params }: { params: Promise<{ id: string }
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -10 }}
                             onClick={handleToggleRegistration}
-                            disabled={isProcessing}
-                            className="w-full h-14 bg-[var(--color-accent)] text-white font-black rounded-2xl flex items-center justify-center gap-3 shadow-[0_12px_24px_-8px_rgba(59,130,246,0.5)] active:scale-[0.98] transition-all disabled:opacity-70 hover:shadow-[0_12px_30px_-5px_rgba(59,130,246,0.6)]"
+                            disabled={isProcessing || event.registered >= event.maxParticipants}
+                            className={`w-full h-14 font-black rounded-2xl flex items-center justify-center gap-3 transition-all disabled:opacity-50 ${event.registered >= event.maxParticipants
+                                ? "bg-gray-600 text-gray-300 cursor-not-allowed"
+                                : "bg-[var(--color-accent)] text-white shadow-[0_12px_24px_-8px_rgba(59,130,246,0.5)] active:scale-[0.98] hover:shadow-[0_12px_30px_-5px_rgba(59,130,246,0.6)]"
+                                }`}
                         >
                             {isProcessing ? (
                                 <span className="animate-pulse">Securing Spot...</span>
+                            ) : event.registered >= event.maxParticipants ? (
+                                "Waitlist Full"
                             ) : (
                                 <>Register Now</>
                             )}

@@ -13,9 +13,11 @@ import Link from "next/link";
 
 const SORT_OPTIONS = ["Upcoming", "Most Popular", "Ending Soon"];
 
+import { CATEGORIES } from "@/lib/mockUser";
+
 export default function Explore() {
-    const { events: allEvents, registeredEventIds, isRegistered } = useEventStore();
-    const categories = useMemo(() => ["All", ...Array.from(new Set(allEvents.map(e => e.category)))], [allEvents]);
+    const { events: allEvents, isRegistered } = useEventStore();
+    const categories = ["All", ...CATEGORIES];
 
     const [activeCategory, setActiveCategory] = useState("All");
     const [activeSort, setActiveSort] = useState("Upcoming");

@@ -53,7 +53,7 @@ export default function HomeFeed() {
 
             {/* Category Tabs */}
             <div className="flex gap-2.5 px-6 pb-6 overflow-x-auto hide-scrollbar snap-x snap-mandatory">
-                {CATEGORIES.map((cat) => (
+                {["All", ...CATEGORIES].map((cat) => (
                     <button
                         key={cat}
                         onClick={() => setActiveTab(cat)}

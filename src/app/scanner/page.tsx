@@ -5,27 +5,29 @@ import { useRouter } from "next/navigation";
 import { ChevronLeft, CheckCircle, Calendar } from "@/components/ui";
 import { BottomNav } from "@/components/ui";
 import { motion, AnimatePresence } from "framer-motion";
-import { MOCK_EVENTS } from "@/lib/mockData";
 import { playSound } from "@/lib/sounds";
+import { useEventStore } from "@/state/useEventStore";
 
 export default function QRScanner() {
     const router = useRouter();
+    const { events, updateAttendance } = useEventStore();
     const [scanState, setScanState] = useState<"scanning" | "success">("scanning");
-    const [scannedEvent, setScannedEvent] = useState(MOCK_EVENTS[3]); // Mock scanned event
 
-    // Mock scan success after 3 seconds for demonstration
+    // For demo, we'll scan the first upcoming tech event
+    const eventToScan = events.find(e => e.category === "Tech") || events[0];
+
     useEffect(() => {
         if (scanState === "scanning") {
             const timer = setTimeout(() => {
                 setScanState("success");
+                updateAttendance(eventToScan.id, "attended");
                 playSound("scan");
 
-                // Simulate points earned shortly after scan
                 setTimeout(() => playSound("achievement"), 800);
             }, 3000);
             return () => clearTimeout(timer);
         }
-    }, [scanState]);
+    }, [scanState, eventToScan.id, updateAttendance]);
 
     return (
         <div className="min-h-screen pb-28 relative flex flex-col">
@@ -103,7 +105,7 @@ export default function QRScanner() {
                             </h2>
 
                             <p className="text-[15px] text-[var(--color-text-muted)] text-center w-full max-w-[300px] leading-relaxed mx-auto mb-10">
-                                Your presence at the <span className="text-[var(--color-accent)] font-bold">{scannedEvent.title}</span> has been securely logged.
+                                Your presence at the <span className="text-[var(--color-accent)] font-bold">{eventToScan.title}</span> has been securely logged.
                             </p>
 
                             {/* Session Details Card */}
@@ -116,7 +118,7 @@ export default function QRScanner() {
                                         Today&apos;s Session
                                     </p>
                                     <p className="font-bold text-[16px]">
-                                        {scannedEvent.timeStart}
+                                        {eventToScan.timeStart}
                                     </p>
                                 </div>
                             </div>

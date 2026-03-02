@@ -5,9 +5,11 @@ export const MOCK_USER: User = {
     id: "u1",
     name: "Viyath De silva",
     email: "viyath@university.edu",
-    role: "student",
+    role: "admin",
     avatar: "VD",
-    points: 1200,
+    points: 1250,
+    engagementScore: 85,
+    streak: 4,
 };
 
 export const MOCK_PORTFOLIO: PortfolioItem[] = [
@@ -33,4 +35,4 @@ export const MOCK_PORTFOLIO: PortfolioItem[] = [
     },
 ];
 
-export const CATEGORIES = ["All", "Academic", "Sports", "Cultural", "Workshop", "Competition"];
+export const CATEGORIES = ["Academic", "Tech", "Sports", "Cultural", "Career"];
