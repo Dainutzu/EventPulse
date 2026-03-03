@@ -12,9 +12,10 @@ import ExploreSection from "@/components/spa/ExploreSection";
 import PortfolioSection from "@/components/spa/PortfolioSection";
 import ProfileSection from "@/components/spa/ProfileSection";
 import ScannerSection from "@/components/spa/ScannerSection";
+import EventDetailsSection from "@/components/spa/EventDetailsSection";
 
 export default function Page() {
-  const { activeTab, setActiveTab, isHydrated } = useEventStore();
+  const { activeTab, setActiveTab, selectedEventId, setSelectedEventId, isHydrated } = useEventStore();
   const [showSplash, setShowSplash] = useState(true);
 
   // Initial state handling
@@ -62,6 +63,12 @@ export default function Page() {
             {activeTab === "profile" && <ProfileSection />}
           </motion.div>
         </AnimatePresence>
+
+        <AnimatePresence>
+          {selectedEventId && (
+            <EventDetailsSection />
+          )}
+        </AnimatePresence>
       </main>
 
       <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
@@ -72,13 +79,22 @@ export default function Page() {
 // Wrapper to hijack SplashContent's Link behavior
 function SplashContainer({ onEnter }: { onEnter: () => void }) {
   return (
-    <div className="flex flex-col items-center justify-between h-screen py-16 px-7 relative bg-black text-white">
-      <div className="text-center z-10 flex flex-col items-center pt-20">
-        <div className="w-20 h-20 bg-blue-600 rounded-3xl flex items-center justify-center mb-6 shadow-2xl">
-          <span className="text-4xl">⚡</span>
-        </div>
-        <h1 className="text-4xl font-extrabold tracking-tight mb-2">EventPulse</h1>
-        <p className="text-gray-400 text-base">Your Campus. Connected.</p>
+    <div className="flex flex-col items-center justify-between h-screen py-16 px-7 relative bg-white dark:bg-black text-[var(--color-text-main)] transition-colors duration-300">
+      <div className="text-center z-10 flex flex-col items-center pt-24">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="mb-8"
+        >
+          <img
+            src="/icons/icon-512x512.png"
+            alt="University Logo"
+            className="w-[120px] h-auto object-contain"
+          />
+        </motion.div>
+        <h1 className="text-4xl font-black tracking-tight mb-2">EventPulse</h1>
+        <p className="text-[var(--color-text-muted)] text-base font-medium">Your Campus. Connected.</p>
       </div>
 
       <div className="w-full h-40 flex items-center justify-center">

@@ -31,6 +31,8 @@ interface EventContextType {
     isHydrated: boolean;
     activeTab: string;
     setActiveTab: (tab: string) => void;
+    selectedEventId: string | null;
+    setSelectedEventId: (id: string | null) => void;
 }
 
 const EventContext = createContext<EventContextType | undefined>(undefined);
@@ -40,6 +42,7 @@ export function EventProvider({ children }: { children: React.ReactNode }) {
     const [registrations, setRegistrations] = useState<Record<string, RegistrationState>>({});
     const [interests, setInterestsState] = useState<string[]>([]);
     const [activeTab, setActiveTab] = useState("home");
+    const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
     const [isHydrated, setIsHydrated] = useState(false);
 
     // Initial hydration
@@ -146,7 +149,9 @@ export function EventProvider({ children }: { children: React.ReactNode }) {
         attendedCategories,
         isHydrated,
         activeTab,
-        setActiveTab
+        setActiveTab,
+        selectedEventId,
+        setSelectedEventId
     };
 
     return <EventContext.Provider value={value}>{children}</EventContext.Provider>;

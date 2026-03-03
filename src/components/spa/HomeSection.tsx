@@ -20,7 +20,7 @@ interface HomeSectionProps {
 
 export default function HomeSection({ initialEvents }: HomeSectionProps) {
     const [activeCategory, setActiveCategory] = useState("All");
-    const { events, registerEvent, unregisterEvent, isRegistered, interests, setInterests, isHydrated } = useEventStore();
+    const { events, registerEvent, unregisterEvent, isRegistered, interests, setInterests, isHydrated, setSelectedEventId } = useEventStore();
     const [showInterestPicker, setShowInterestPicker] = useState(false);
 
     useEffect(() => {
@@ -92,6 +92,7 @@ export default function HomeSection({ initialEvents }: HomeSectionProps) {
                             index={index}
                             isRegistered={isRegistered(event.id)}
                             onToggle={() => isRegistered(event.id) ? unregisterEvent(event.id) : registerEvent(event.id)}
+                            onSelect={() => setSelectedEventId(event.id)}
                         />
                     ))}
                 </AnimatePresence>
@@ -119,6 +120,7 @@ export default function HomeSection({ initialEvents }: HomeSectionProps) {
                                 isRegistered={isRegistered(event.id)}
                                 isPast
                                 onToggle={() => { }}
+                                onSelect={() => setSelectedEventId(event.id)}
                             />
                         ))}
                     </div>
@@ -188,7 +190,7 @@ export default function HomeSection({ initialEvents }: HomeSectionProps) {
     );
 }
 
-function EventCard({ event, index, isRegistered, isPast, onToggle }: any) {
+function EventCard({ event, index, isRegistered, isPast, onToggle, onSelect }: any) {
     const dateStr = formatDateBlock(event.date);
 
     return (
@@ -199,6 +201,7 @@ function EventCard({ event, index, isRegistered, isPast, onToggle }: any) {
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.4, delay: index * 0.04 }}
             className="w-full"
+            onClick={onSelect}
         >
             <div className={`bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-4 cursor-pointer transition-all duration-300 group relative overflow-hidden ${isPast ? 'opacity-70 grayscale-[0.3]' : ''}`}>
                 <div className="flex gap-6">

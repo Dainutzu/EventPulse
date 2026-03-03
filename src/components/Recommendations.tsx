@@ -15,7 +15,7 @@ interface RecommendationsProps {
 }
 
 export function Recommendations({ initialEvents }: RecommendationsProps) {
-    const { events, interests, attendedCategories, isRegistered, registerEvent, unregisterEvent, isHydrated } = useEventStore();
+    const { events, interests, attendedCategories, isRegistered, registerEvent, unregisterEvent, isHydrated, setSelectedEventId } = useEventStore();
     const [isLoaded, setIsLoaded] = useState(false);
 
     // Use current events from store if available, otherwise fallback to server-passed events
@@ -55,21 +55,20 @@ export function Recommendations({ initialEvents }: RecommendationsProps) {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.4, delay: index * 0.05 }}
                             className="w-full"
+                            onClick={() => setSelectedEventId(event.id)}
                         >
-                            <Link href={`/events/${event.id}`}>
-                                <div className="relative group">
-                                    <EventCardSmall
-                                        event={event}
-                                        isRegistered={isRegistered(event.id)}
-                                        onToggle={() => isRegistered(event.id) ? unregisterEvent(event.id) : registerEvent(event.id)}
-                                    />
-                                    <div className="absolute top-4 left-4 z-20">
-                                        <span className="bg-blue-600/90 backdrop-blur-md text-white text-[10px] font-black px-2.5 py-1 rounded-lg uppercase tracking-wider shadow-lg">
-                                            ✨ {interests.includes(event.category) ? "Match" : "Trending"}
-                                        </span>
-                                    </div>
+                            <div className="relative group">
+                                <EventCardSmall
+                                    event={event}
+                                    isRegistered={isRegistered(event.id)}
+                                    onToggle={() => isRegistered(event.id) ? unregisterEvent(event.id) : registerEvent(event.id)}
+                                />
+                                <div className="absolute top-4 left-4 z-20">
+                                    <span className="bg-blue-600/90 backdrop-blur-md text-white text-[10px] font-black px-2.5 py-1 rounded-lg uppercase tracking-wider shadow-lg">
+                                        ✨ {interests.includes(event.category) ? "Match" : "Trending"}
+                                    </span>
                                 </div>
-                            </Link>
+                            </div>
                         </motion.div>
                     ))}
                 </AnimatePresence>

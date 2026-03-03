@@ -32,6 +32,7 @@ export const formatDateBlock = (dateString: string) => {
     return {
         month: date.toLocaleString("en-US", { month: "short" }).toUpperCase(),
         day: date.getDate(),
+        weekday: date.toLocaleString("en-US", { weekday: "long" }),
     };
 };
 

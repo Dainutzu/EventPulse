@@ -1,4 +1,5 @@
 import React from "react";
+import { motion } from "framer-motion";
 
 interface BrandLogoProps {
     size?: number;
@@ -16,11 +17,14 @@ export const BrandLogo = ({
     className = "",
     rounded = "rounded-2xl"
 }: BrandLogoProps) => {
-    const padding = Math.round(size * 0.15); // 15% safe margin padding
+    const padding = Math.round(size * 0.12); // Slightly tighter padding for better logo visibility
 
     return (
-        <div
-            className={`relative bg-[#1C1C1E] ${rounded} overflow-hidden flex items-center justify-center border border-white/10 shadow-xl ${className}`}
+        <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
+            className={`relative bg-white ${rounded} overflow-hidden flex items-center justify-center border border-[var(--color-border)] shadow-xl ${className}`}
             style={{
                 width: size,
                 height: size,
@@ -29,9 +33,9 @@ export const BrandLogo = ({
         >
             <img
                 src="/icons/icon-512x512.png"
-                alt="Event Pulse"
+                alt="University Logo"
                 className="w-full h-full object-contain"
             />
-        </div>
+        </motion.div>
     );
 };

@@ -27,7 +27,7 @@ import { MOCK_USER, CATEGORIES } from "@/lib/mockUser";
 
 export default function ProfileSection() {
     const [soundEnabled, setSoundEnabled] = useState(isSoundEnabled());
-    const { events, registrations, unregisterEvent, engagementScore, getAttendanceStatus, interests, setInterests } = useEventStore();
+    const { events, registrations, unregisterEvent, engagementScore, getAttendanceStatus, interests, setInterests, setSelectedEventId } = useEventStore();
     const [activeTab, setActiveTab] = useState("registered");
     const [isEditingInterests, setIsEditingInterests] = useState(false);
 
@@ -214,6 +214,7 @@ export default function ProfileSection() {
                                             unregisterEvent(event.id);
                                             playSound("notification");
                                         }}
+                                        onSelect={() => setSelectedEventId(event.id)}
                                     />
                                 ))
                             ) : (
@@ -317,7 +318,7 @@ function StatCard({ label, value, color }: { label: string, value: number, color
     );
 }
 
-function RegisteredEventCard({ event, status, onCancel }: any) {
+function RegisteredEventCard({ event, status, onCancel, onSelect }: any) {
     const dateStr = formatDateBlock(event.date);
     const isAttended = status === "attended";
 
@@ -327,7 +328,8 @@ function RegisteredEventCard({ event, status, onCancel }: any) {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
-            className={`bg-[var(--color-surface)] p-4.5 rounded-2xl border border-[var(--color-border)] shadow-sm group border-l-4 transition-all ${isAttended ? 'border-emerald-500/30' : ''}`}
+            className={`bg-[var(--color-surface)] p-4.5 rounded-2xl border border-[var(--color-border)] shadow-sm group border-l-4 transition-all cursor-pointer ${isAttended ? 'border-emerald-500/30' : ''}`}
+            onClick={onSelect}
             style={{ borderLeftColor: isAttended ? '#10b981' : event.categoryColor }}
         >
             <div className="flex gap-4">

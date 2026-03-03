@@ -7,10 +7,12 @@ import { CATEGORIES } from "@/lib/mockUser";
 import { motion, AnimatePresence } from "framer-motion";
 import { getCategoryColor } from "@/lib/utils/ui";
 import { formatDateBlock } from "@/utils/dateUtils";
+import { useEventStore } from "@/state/useEventStore";
 
 export default function ExploreSection() {
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("All");
+    const { setSelectedEventId } = useEventStore();
 
     const filteredEvents = useMemo(() => {
         return MOCK_EVENTS.filter(event => {
@@ -59,7 +61,12 @@ export default function ExploreSection() {
             <div className="flex flex-col gap-6">
                 <AnimatePresence mode="popLayout">
                     {filteredEvents.map((event, index) => (
-                        <ExploreCard key={event.id} event={event} index={index} />
+                        <ExploreCard
+                            key={event.id}
+                            event={event}
+                            index={index}
+                            onSelect={() => setSelectedEventId(event.id)}
+                        />
                     ))}
                 </AnimatePresence>
 
@@ -73,7 +80,7 @@ export default function ExploreSection() {
     );
 }
 
-function ExploreCard({ event, index }: any) {
+function ExploreCard({ event, index, onSelect }: any) {
     const dateStr = formatDateBlock(event.date);
 
     return (
@@ -83,6 +90,7 @@ function ExploreCard({ event, index }: any) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.05 }}
             className="group"
+            onClick={onSelect}
         >
             <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all active:scale-[0.98]">
                 <div className="relative h-48 bg-[var(--color-surface-elevated)]">
