@@ -61,39 +61,64 @@ export default function Explore() {
     return (
         <div className="pb-32 min-h-screen">
             {/* Header Area */}
-            <header className="px-6 pt-14 pb-4 flex items-center justify-between">
+            <header className="px-6 pt-14 pb-4 flex items-center justify-between lg:px-0 lg:pt-16">
                 <div>
-                    <h1 className="text-2xl font-black mb-1">Explore Hub</h1>
-                    <p className="text-sm text-[var(--color-text-muted)] font-medium">Find your next big experience on campus</p>
+                    <h1 className="text-2xl lg:text-3xl font-black mb-1">Explore Hub</h1>
+                    <p className="text-sm lg:text-base text-[var(--color-text-muted)] font-medium">Find your next big experience on campus</p>
                 </div>
-                <BrandLogo size={44} rounded="rounded-xl" />
+                <div className="lg:hidden">
+                    <BrandLogo size={44} rounded="rounded-xl" />
+                </div>
             </header>
 
-            {/* Search Bar - Premium Glassmorphism */}
-            <div className="px-6 mb-5">
-                <div className="flex items-center bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl px-4 py-3.5 focus-within:border-[var(--color-accent)] focus-within:ring-2 focus-within:ring-[var(--color-accent)]/20 transition-all duration-300 shadow-sm shadow-black/20">
-                    <Search size={20} className="text-[var(--color-text-muted)] mr-3 opacity-70" />
-                    <input
-                        type="text"
-                        placeholder="Search events, clubs, or keywords..."
-                        className="flex-1 bg-transparent border-none text-[15px] font-medium outline-none placeholder:text-[var(--color-text-muted)]/60"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                    />
-                    {searchQuery && (
-                        <button onClick={() => setSearchQuery("")} className="text-[10px] font-black uppercase text-[var(--color-text-muted)] hover:text-white px-2">Clear</button>
-                    )}
+            {/* Search Bar & Filters Area - Desktop Optimized */}
+            <div className="lg:flex lg:items-center lg:gap-4 lg:mb-10 px-6 lg:px-0">
+                <div className="flex-1 mb-5 lg:mb-0">
+                    <div className="flex items-center bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl px-4 py-3.5 focus-within:border-[var(--color-accent)] focus-within:ring-2 focus-within:ring-[var(--color-accent)]/20 transition-all duration-300 shadow-sm shadow-black/20">
+                        <Search size={20} className="text-[var(--color-text-muted)] mr-3 opacity-70" />
+                        <input
+                            type="text"
+                            placeholder="Search events, clubs, or keywords..."
+                            className="flex-1 bg-transparent border-none text-[15px] font-medium outline-none placeholder:text-[var(--color-text-muted)]/60"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+                        {searchQuery && (
+                            <button onClick={() => setSearchQuery("")} className="text-[10px] font-black uppercase text-[var(--color-text-muted)] hover:text-white px-2">Clear</button>
+                        )}
+                    </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                    <div className="hidden lg:flex items-center gap-2 text-[var(--color-text-muted)] mr-2">
+                        <SlidersHorizontal size={14} className="opacity-60" />
+                        <span className="text-[10px] font-black uppercase tracking-widest opacity-60">Sort</span>
+                    </div>
+                    <div className="flex bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-1 shadow-inner">
+                        {SORT_OPTIONS.map((sortOption) => (
+                            <button
+                                key={sortOption}
+                                onClick={() => setActiveSort(sortOption)}
+                                className={`px-4 py-2 text-[11px] font-black uppercase tracking-tighter rounded-lg transition-all ${activeSort === sortOption
+                                    ? "bg-[var(--color-surface-elevated)] text-white shadow-md scale-105"
+                                    : "text-[var(--color-text-muted)] hover:text-white"
+                                    }`}
+                            >
+                                {sortOption}
+                            </button>
+                        ))}
+                    </div>
                 </div>
             </div>
 
             {/* Categories pills */}
-            <div className="flex gap-2.5 px-6 pb-6 overflow-x-auto hide-scrollbar snap-x">
+            <div className="flex gap-3 px-6 lg:px-0 pb-8 overflow-x-auto hide-scrollbar snap-x">
                 {categories.map((cat) => (
                     <button
                         key={cat}
                         onClick={() => setActiveCategory(cat)}
-                        className={`px-6 py-2.5 rounded-full text-[13px] font-black whitespace-nowrap transition-all duration-300 border snap-start ${activeCategory === cat
-                            ? "bg-[var(--color-accent)] text-white border-[var(--color-accent)] shadow-lg shadow-blue-500/30 scale-105"
+                        className={`px-6 py-2.5 lg:px-8 lg:py-3.5 rounded-2xl text-[13px] lg:text-[14px] font-black whitespace-nowrap transition-all duration-300 border snap-start ${activeCategory === cat
+                            ? "bg-blue-600 text-white border-blue-500 shadow-lg shadow-blue-500/30 scale-105"
                             : "bg-[var(--color-surface)] text-[var(--color-text-muted)] border-[var(--color-border)] hover:bg-[var(--color-surface-elevated)] hover:text-white"
                             }`}
                     >
@@ -102,73 +127,26 @@ export default function Explore() {
                 ))}
             </div>
 
-            {/* Sort/Filter Bar */}
-            <div className="px-6 flex items-center justify-between mb-8">
-                <div className="flex items-center gap-2 text-[var(--color-text-muted)]">
-                    <SlidersHorizontal size={16} className="opacity-60" />
-                    <span className="text-[12px] font-black uppercase tracking-widest text-[var(--color-text-muted)]/80">Sort Preference</span>
-                </div>
-                <div className="flex bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-1 shadow-inner">
-                    {SORT_OPTIONS.map((sortOption) => (
-                        <button
-                            key={sortOption}
-                            onClick={() => setActiveSort(sortOption)}
-                            className={`px-4 py-2 text-[11px] font-black uppercase tracking-tighter rounded-lg transition-all ${activeSort === sortOption
-                                ? "bg-[var(--color-surface-elevated)] text-white shadow-md scale-105"
-                                : "text-[var(--color-text-muted)] hover:text-white"
-                                }`}
-                        >
-                            {sortOption}
-                        </button>
-                    ))}
-                </div>
-            </div>
-
-            {/* Main Content */}
-            <div className="px-6 flex flex-col gap-5">
+            {/* Main Content - Desktop Grid */}
+            <div className="px-6 lg:px-0 grid grid-cols-1 lg:grid-cols-2 gap-6 xl:gap-8 mb-16">
                 <AnimatePresence mode="popLayout">
                     {isLoading ? (
-                        [1, 2, 3].map((i) => (
+                        [1, 2, 3, 4].map((i) => (
                             <motion.div
                                 key={`skel-${i}`}
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
-                                className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-3xl p-5 w-full"
+                                className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[32px] p-6 w-full"
                             >
-                                <div className="w-full h-36 bg-[var(--color-surface-elevated)] rounded-2xl animate-pulse mb-5" />
-                                <div className="h-6 bg-[var(--color-surface-elevated)] rounded-full w-3/4 animate-pulse mb-4" />
-                                <div className="flex items-center justify-between">
-                                    <div className="h-10 w-24 bg-[var(--color-surface-elevated)] rounded-xl animate-pulse" />
-                                    <div className="h-4 bg-[var(--color-surface-elevated)] rounded-full w-1/3 animate-pulse" />
+                                <div className="w-full h-40 bg-[var(--color-surface-elevated)] rounded-2xl animate-pulse mb-6" />
+                                <div className="h-7 bg-[var(--color-surface-elevated)] rounded-full w-3/4 animate-pulse mb-5" />
+                                <div className="flex items-center justify-between mt-auto">
+                                    <div className="h-12 w-28 bg-[var(--color-surface-elevated)] rounded-xl animate-pulse" />
+                                    <div className="h-5 bg-[var(--color-surface-elevated)] rounded-full w-1/4 animate-pulse" />
                                 </div>
                             </motion.div>
                         ))
-                    ) : filteredEvents.length === 0 ? (
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.95 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            className="py-20 flex flex-col items-center justify-center text-center bg-[var(--color-surface)]/30 rounded-[32px] border border-dashed border-[var(--color-border)] backdrop-blur-sm"
-                        >
-                            <div className="w-20 h-20 rounded-full bg-[var(--color-surface-elevated)] flex items-center justify-center text-[var(--color-text-muted)] mb-6 shadow-xl">
-                                <Search size={32} strokeWidth={3} />
-                            </div>
-                            <h3 className="text-xl font-black mb-2">No results matching filters</h3>
-                            <p className="text-[14px] text-[var(--color-text-muted)] max-w-[260px] font-medium leading-relaxed">
-                                We couldn&apos;t find any events. Try resetting your search or broadening categories.
-                            </p>
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                className="mt-8 rounded-xl px-8"
-                                onClick={() => {
-                                    setSearchQuery("");
-                                    setActiveCategory("All");
-                                }}
-                            >
-                                Reset Discovery
-                            </Button>
-                        </motion.div>
                     ) : (
                         filteredEvents.map((event, i) => {
                             const dateStr = formatMonthDay(event.date);
@@ -184,64 +162,64 @@ export default function Explore() {
                                     transition={{ duration: 0.4, delay: i * 0.03 }}
                                 >
                                     <Link href={`/events/${event.id}`}>
-                                        <Card className="hover:border-[var(--color-accent)]/30 transition-all hover:shadow-2xl hover:-translate-y-1.5 overflow-hidden group">
+                                        <Card className="hover:border-[var(--color-accent)]/40 transition-all duration-500 hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.3)] hover:-translate-y-2 lg:hover:-translate-y-3 overflow-hidden group rounded-[32px]">
                                             {/* Preview Header */}
                                             <div
-                                                className="h-36 w-full relative overflow-hidden"
+                                                className="h-44 lg:h-52 w-full relative overflow-hidden"
                                                 style={{ backgroundColor: `color-mix(in srgb, ${event.categoryColor || '#3b82f6'} 20%, #000)` }}
                                             >
                                                 <div className="absolute inset-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay" />
 
                                                 {/* Date Floating Badge */}
-                                                <div className="absolute top-4 left-4 bg-black/40 backdrop-blur-xl px-4 py-2 rounded-2xl border border-white/10 flex flex-col items-center shadow-lg">
+                                                <div className="absolute top-5 left-5 bg-black/50 backdrop-blur-xl px-5 py-2.5 rounded-2xl border border-white/10 flex flex-col items-center shadow-2xl">
                                                     <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/70 leading-none mb-1">
                                                         {dateStr.month}
                                                     </span>
-                                                    <span className="text-[20px] font-black text-white leading-none">
+                                                    <span className="text-[24px] font-black text-white leading-none">
                                                         {dateStr.day}
                                                     </span>
                                                 </div>
 
                                                 {/* Category Floating Badge */}
-                                                <div className="absolute top-4 right-4 h-9 flex items-center bg-white/5 backdrop-blur-xl px-4 rounded-xl border border-white/10">
-                                                    <span className="text-[10px] font-black text-white uppercase tracking-wider">{event.category}</span>
+                                                <div className="absolute top-5 right-5 h-10 flex items-center bg-black/30 backdrop-blur-xl px-5 rounded-xl border border-white/10">
+                                                    <span className="text-[11px] font-black text-white uppercase tracking-wider">{event.category}</span>
                                                 </div>
 
                                                 {registered && (
-                                                    <div className="absolute bottom-0 left-0 w-full bg-emerald-500/90 py-1.5 text-center backdrop-blur-md">
-                                                        <span className="text-[10px] font-black text-white uppercase tracking-[0.1em] flex items-center justify-center gap-1.5">
-                                                            <CheckCircle size={12} /> Spot Secured
+                                                    <div className="absolute bottom-0 left-0 w-full bg-emerald-500/90 py-2 text-center backdrop-blur-md">
+                                                        <span className="text-[11px] font-black text-white uppercase tracking-[0.1em] flex items-center justify-center gap-2">
+                                                            <CheckCircle size={14} /> Spot Secured
                                                         </span>
                                                     </div>
                                                 )}
                                             </div>
 
-                                            <div className="p-5">
-                                                <h3 className="font-black text-[18px] leading-tight mb-3 group-hover:text-[var(--color-accent)] transition-colors line-clamp-2">{event.title}</h3>
+                                            <div className="p-6 lg:p-8">
+                                                <h3 className="font-black text-[20px] lg:text-[22px] leading-tight mb-4 group-hover:text-blue-500 transition-colors line-clamp-2">{event.title}</h3>
 
-                                                <div className="flex items-center justify-between mb-5">
-                                                    <div className="flex items-center gap-3">
-                                                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center border border-white/5 text-[10px] shadow-lg">
+                                                <div className="flex items-center justify-between mb-6">
+                                                    <div className="flex items-center gap-3.5">
+                                                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center border border-white/10 text-[11px] font-black shadow-xl">
                                                             {event.club.charAt(0)}
                                                         </div>
-                                                        <span className="text-[13px] font-bold text-[var(--color-text-muted)]">
+                                                        <span className="text-[14px] font-black text-[var(--color-text-muted)]">
                                                             {event.club}
                                                         </span>
                                                     </div>
 
-                                                    <div className="flex items-center gap-1.5 text-[11px] font-black text-blue-400 bg-blue-500/5 px-3 py-1.5 rounded-lg border border-blue-500/10">
-                                                        <User size={12} />
+                                                    <div className="flex items-center gap-2 text-[12px] font-black text-blue-400 bg-blue-500/10 px-4 py-2 rounded-xl border border-blue-500/20">
+                                                        <User size={14} />
                                                         <span>{event.registered} attending</span>
                                                     </div>
                                                 </div>
 
-                                                <div className="flex items-center justify-between border-t border-white/5 pt-5">
-                                                    <div className="flex items-center gap-2 text-[13px] text-[var(--color-text-muted)] font-bold">
-                                                        <Clock size={16} className="text-[var(--color-accent)] opacity-70" />
+                                                <div className="flex items-center justify-between border-t border-[var(--color-border)] pt-6">
+                                                    <div className="flex items-center gap-2.5 text-[14px] text-[var(--color-text-muted)] font-black">
+                                                        <Clock size={18} className="text-blue-500" />
                                                         <span>{event.timeStart}</span>
                                                     </div>
-                                                    <div className="text-[13px] font-black text-[var(--color-accent)] flex items-center gap-1.5 hover:translate-x-1 transition-transform">
-                                                        Get Ticket <ArrowRight size={16} />
+                                                    <div className="text-[14px] font-black text-blue-500 flex items-center gap-2 hover:translate-x-1.5 transition-transform">
+                                                        View Details <ArrowRight size={18} />
                                                     </div>
                                                 </div>
                                             </div>
@@ -252,6 +230,33 @@ export default function Explore() {
                         })
                     )}
                 </AnimatePresence>
+
+                {/* Empty State */}
+                {!isLoading && filteredEvents.length === 0 && (
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="col-span-full py-24 flex flex-col items-center justify-center text-center bg-[var(--color-surface)]/30 rounded-[40px] border border-dashed border-[var(--color-border)] backdrop-blur-sm"
+                    >
+                        <div className="w-24 h-24 rounded-full bg-[var(--color-surface-elevated)] flex items-center justify-center text-[var(--color-text-muted)] mb-8 shadow-[0_20px_40px_rgba(0,0,0,0.2)]">
+                            <Search size={40} strokeWidth={3} />
+                        </div>
+                        <h3 className="text-2xl font-black mb-3">No matching events</h3>
+                        <p className="text-[16px] text-[var(--color-text-muted)] max-w-[320px] font-bold leading-relaxed mb-10">
+                            We couldn&apos;t find any events. Try resetting your search or broadening categories.
+                        </p>
+                        <Button
+                            variant="primary"
+                            className="rounded-2xl px-10 py-4 shadow-2xl"
+                            onClick={() => {
+                                setSearchQuery("");
+                                setActiveCategory("All");
+                            }}
+                        >
+                            Reset Discovery
+                        </Button>
+                    </motion.div>
+                )}
             </div>
 
             <BrandingFooter />

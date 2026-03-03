@@ -21,6 +21,8 @@ export {
     Share2,
     Download,
     CheckCircle,
+    Users,
+    TrendingUp,
 } from "lucide-react";
 
 // --- Button ---

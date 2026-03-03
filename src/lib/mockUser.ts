@@ -10,6 +10,7 @@ export const MOCK_USER: User = {
     points: 1250,
     engagementScore: 85,
     streak: 4,
+    interests: ["Tech", "Career"],
 };
 
 export const MOCK_PORTFOLIO: PortfolioItem[] = [

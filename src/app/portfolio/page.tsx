@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import { ChevronLeft, Share2, Download } from "@/components/ui";
-import { BottomNav } from "@/components/ui";
 import { BrandLogo } from "@/components/BrandLogo";
 import { BrandingFooter } from "@/components/BrandingFooter";
 import { motion } from "framer-motion";
@@ -14,36 +13,39 @@ export default function Portfolio() {
 
     return (
         <div className="min-h-screen pb-32">
-            {/* Header */}
-            <header className="px-6 pt-12 pb-6 flex items-center justify-between">
+            {/* Header Area - Desktop Optimized */}
+            <header className="px-6 pt-12 pb-6 flex items-center justify-between lg:px-0 lg:pt-16">
                 <button
                     onClick={() => router.back()}
-                    className="w-10 h-10 -ml-2 rounded-full flex items-center justify-center transition-colors hover:bg-[var(--color-surface)]"
+                    className="w-10 h-10 -ml-2 rounded-full flex items-center justify-center transition-colors hover:bg-[var(--color-surface)] group"
                 >
-                    <ChevronLeft size={24} className="text-white" />
+                    <ChevronLeft size={24} className="text-white group-hover:-translate-x-1 transition-transform" />
                 </button>
-                <div className="flex flex-col items-center">
+                <div className="flex flex-col items-center lg:hidden">
                     <BrandLogo size={32} rounded="rounded-lg" className="mb-1" />
                     <span className="font-extrabold text-[15px]">Portfolio</span>
+                </div>
+                <div className="hidden lg:block">
+                    <h1 className="text-2xl font-black">Campus Portfolio</h1>
                 </div>
                 <button className="w-10 h-10 rounded-full flex items-center justify-center transition-colors hover:bg-[var(--color-surface)]">
                     <Share2 size={20} className="text-white" />
                 </button>
             </header>
 
-            {/* Stats Grid */}
-            <div className="grid grid-cols-3 gap-3 px-5 pb-8">
-                <div className="bg-[var(--color-accent)]/15 border border-[var(--color-accent)]/30 rounded-2xl py-4 flex flex-col items-center">
-                    <span className="text-3xl font-black text-[var(--color-accent)]">24</span>
-                    <span className="text-[10px] font-bold tracking-widest text-[var(--color-text-muted)] mt-1 uppercase">Attended</span>
+            {/* Stats Grid - Large Screens */}
+            <div className="grid grid-cols-3 gap-4 lg:gap-8 px-5 lg:px-0 pb-12">
+                <div className="bg-blue-500/10 border border-blue-500/20 rounded-[32px] py-8 lg:py-10 flex flex-col items-center shadow-lg">
+                    <span className="text-4xl lg:text-5xl font-black text-blue-500 mb-2">24</span>
+                    <span className="text-[10px] lg:text-[12px] font-black tracking-[0.2em] text-[var(--color-text-muted)] uppercase">Attended</span>
                 </div>
-                <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl py-4 flex flex-col items-center">
-                    <span className="text-3xl font-black">05</span>
-                    <span className="text-[10px] font-bold tracking-widest text-[var(--color-text-muted)] mt-1 uppercase">Organized</span>
+                <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[32px] py-8 lg:py-10 flex flex-col items-center shadow-md">
+                    <span className="text-4xl lg:text-5xl font-black mb-2">05</span>
+                    <span className="text-[10px] lg:text-[12px] font-black tracking-[0.2em] text-[var(--color-text-muted)] uppercase">Organized</span>
                 </div>
-                <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl py-4 flex flex-col items-center">
-                    <span className="text-3xl font-black">1.2k</span>
-                    <span className="text-[10px] font-bold tracking-widest text-[var(--color-text-muted)] mt-1 uppercase">Points</span>
+                <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[32px] py-8 lg:py-10 flex flex-col items-center shadow-md">
+                    <span className="text-4xl lg:text-5xl font-black mb-2">1.2k</span>
+                    <span className="text-[10px] lg:text-[12px] font-black tracking-[0.2em] text-[var(--color-text-muted)] uppercase">Points</span>
                 </div>
             </div>
 
@@ -104,17 +106,31 @@ export default function Portfolio() {
                 </div>
             </div>
 
-            {/* Sticky Bottom Actions */}
-            <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] p-5 pb-8 bg-[#0D0F14]/95 backdrop-blur-xl border-t border-[var(--color-border)] z-50">
-                <button className="w-full py-4.5 bg-[var(--color-accent)] text-white font-bold rounded-2xl flex items-center justify-center gap-2.5 transition-transform hover:-translate-y-0.5 active:scale-95 shadow-[0_8px_24px_rgba(59,130,246,0.3)] mb-3 text-[16px]">
-                    <Download size={20} />
-                    Download Participation Summary
-                </button>
-                <p className="text-[12px] text-center text-[var(--color-text-muted)] leading-relaxed px-4">
-                    A certified PDF of your accomplishments will be generated for your academic records.
-                </p>
-                <BrandingFooter />
+            {/* Bottom Actions - Desktop Responsive */}
+            <div className="lg:mt-12 mb-20 px-6 lg:px-0">
+                <div className="p-8 lg:p-14 bg-gradient-to-br from-blue-900/40 to-indigo-900/30 backdrop-blur-3xl border border-white/10 rounded-[40px] shadow-2xl relative overflow-hidden text-center lg:text-left">
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/20 blur-[100px] rounded-full -translate-y-1/2 translate-x-1/2" />
+
+                    <div className="max-w-2xl relative z-10">
+                        <h2 className="text-2xl lg:text-3xl font-black mb-4">Export Official Record</h2>
+                        <p className="text-[15px] lg:text-[17px] text-white/70 leading-relaxed font-medium mb-10">
+                            Generate a certified PDF summary of your university engagements, skills acquired, and impact points. Perfect for internships and job applications.
+                        </p>
+                        <div className="flex flex-col sm:flex-row gap-4">
+                            <button className="flex-1 py-5 bg-blue-600 text-white font-black rounded-[24px] flex items-center justify-center gap-3 transition-all hover:bg-blue-500 hover:-translate-y-1 shadow-[0_20px_40px_rgba(37,99,235,0.4)]">
+                                <Download size={22} />
+                                Download PDF Portrait
+                            </button>
+                            <button className="flex-1 py-5 bg-white/10 text-white font-black rounded-[24px] flex items-center justify-center gap-3 transition-all hover:bg-white/20">
+                                <Share2 size={22} />
+                                Share Public Link
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+            <BrandingFooter />
         </div>
     );
 }

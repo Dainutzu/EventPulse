@@ -27,6 +27,7 @@ export interface User {
     points: number;
     engagementScore: number;
     streak: number;
+    interests: string[];
 }
 
 export interface PortfolioItem {

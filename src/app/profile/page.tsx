@@ -1,34 +1,54 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { BottomNav, Button, Badge } from "@/components/ui";
-import { Settings, LogOut, Trash2, Download, AlertCircle, CheckCircle, Award, Calendar, Volume2, VolumeX, Clock, Sun } from "lucide-react";
+import {
+    LogOut,
+    Trash2,
+    Download,
+    CheckCircle,
+    Award,
+    Calendar,
+    Volume2,
+    VolumeX,
+    Clock,
+    Sun,
+    LayoutGrid,
+    ChevronLeft,
+    ArrowRight
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { isSoundEnabled, toggleSoundSettings, playSound } from "@/lib/sounds";
-import { MOCK_USER } from "@/lib/mockUser";
 import { useEventStore } from "@/state/useEventStore";
 import { formatDateBlock } from "@/utils/dateUtils";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { BrandLogo } from "@/components/BrandLogo";
 import { BrandingFooter } from "@/components/BrandingFooter";
+import { MOCK_USER, CATEGORIES } from "@/lib/mockUser";
+import { Event } from "@/types";
 import Link from "next/link";
 
 export default function Profile() {
+    const router = useRouter();
     const [soundEnabled, setSoundEnabled] = useState(isSoundEnabled());
-    const { events, registeredEventIds, unregisterEvent } = useEventStore();
+    const { events, registrations, unregisterEvent, engagementScore, getAttendanceStatus, interests, setInterests } = useEventStore();
     const [activeTab, setActiveTab] = useState("registered");
+    const [isEditingInterests, setIsEditingInterests] = useState(false);
 
     // Dynamic registered events from store
     const registeredEvents = useMemo(() =>
-        events.filter(e => registeredEventIds.includes(e.id)),
-        [events, registeredEventIds]);
+        events.filter(e => !!registrations[e.id]),
+        [events, registrations]);
 
-    // Impact Stats calculation
-    const impactStats = useMemo(() => ({
-        attended: 12, // Mocked base attended
-        points: MOCK_USER.points + (registeredEvents.length * 50),
-        registrations: registeredEvents.length
-    }), [registeredEvents]);
+    const impactStats = useMemo(() => {
+        const attendedCount = Object.values(registrations).filter(r => r.status === "attended").length;
+        return {
+            attended: attendedCount,
+            points: MOCK_USER.points + (Object.keys(registrations).length * 50) + (attendedCount * 100),
+            registrations: Object.keys(registrations).length
+        };
+    }, [registrations]);
 
     return (
         <div className="pb-32 min-h-screen selection:bg-purple-500/30">
@@ -36,17 +56,58 @@ export default function Profile() {
             <header className="px-6 pt-14 pb-8 flex flex-col items-center relative overflow-hidden transition-colors duration-300">
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-40 bg-gradient-to-b from-blue-600/5 to-transparent pointer-events-none" />
 
-                <div className="mb-6 z-10">
-                    <BrandLogo size={64} />
+                <div className="mb-6 z-10 flex flex-col items-center lg:hidden">
+                    <BrandLogo size={44} className="mb-2" />
+                    <span className="text-[10px] font-black tracking-[0.3em] uppercase opacity-30">University Ecosystem</span>
                 </div>
 
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="w-24 h-24 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 shadow-xl flex items-center justify-center text-4xl font-black mb-5 border-4 border-[var(--color-surface)] text-white relative z-10"
-                >
-                    {MOCK_USER.avatar}
-                </motion.div>
+                <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-14 mb-8 z-10">
+                    {/* circular engagement score */}
+                    <div className="relative flex items-center justify-center scale-110 lg:scale-[1.25]">
+                        <svg className="w-24 h-24 transform -rotate-90">
+                            <circle
+                                cx="48"
+                                cy="48"
+                                r="42"
+                                stroke="currentColor"
+                                strokeWidth="6"
+                                fill="transparent"
+                                className="text-[var(--color-surface-elevated)]"
+                            />
+                            <motion.circle
+                                cx="48"
+                                cy="48"
+                                r="42"
+                                stroke="currentColor"
+                                strokeWidth="6"
+                                fill="transparent"
+                                strokeDasharray={264}
+                                initial={{ strokeDashoffset: 264 }}
+                                animate={{ strokeDashoffset: 264 - (264 * engagementScore) / 100 }}
+                                transition={{ duration: 1.5, ease: "easeOut" }}
+                                className="text-blue-500"
+                                strokeLinecap="round"
+                            />
+                        </svg>
+                        <div className="absolute flex flex-col items-center">
+                            <span className="text-xl font-black">{engagementScore}</span>
+                            <span className="text-[8px] font-black uppercase tracking-tighter opacity-50">Score</span>
+                        </div>
+                    </div>
+
+                    <div className="flex flex-col items-center lg:items-start">
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            className="w-24 h-24 lg:w-32 lg:h-32 rounded-[40px] bg-gradient-to-tr from-blue-600 to-indigo-600 shadow-2xl flex items-center justify-center text-4xl lg:text-5xl font-black border-4 border-[var(--color-surface)] text-white relative mb-4 lg:mb-0"
+                        >
+                            {MOCK_USER.avatar}
+                            <div className="absolute -bottom-1 -right-1 w-8 h-8 lg:w-10 lg:h-10 bg-emerald-500 rounded-full border-4 border-[var(--color-surface)] flex items-center justify-center">
+                                <CheckCircle size={14} className="text-white lg:scale-125" />
+                            </div>
+                        </motion.div>
+                    </div>
+                </div>
 
                 <motion.h1
                     initial={{ opacity: 0, y: 10 }}
@@ -64,127 +125,206 @@ export default function Profile() {
                 </Badge>
             </header>
 
-            {/* Stats Section */}
-            <div className="px-6 mb-10">
-                <h2 className="text-[16px] font-black mb-5 flex items-center gap-2.5">
-                    <Award size={18} className="text-indigo-400" /> Your Impact
-                </h2>
-                <div className="grid grid-cols-2 gap-4">
-                    <StatCard label="Events Joined" value={impactStats.registrations} color="blue" />
-                    <StatCard label="Total Points" value={impactStats.points} color="purple" />
-                </div>
-            </div>
+            {/* Content Split - Desktop Only */}
+            <div className="lg:grid lg:grid-cols-2 lg:gap-12 px-6 lg:px-0 mb-12">
+                <div>
+                    {/* Stats Section */}
+                    <div className="mb-10">
+                        <h2 className="text-[16px] lg:text-[18px] font-black mb-5 flex items-center gap-2.5">
+                            <Award size={18} className="text-indigo-400" /> Your Engagement
+                        </h2>
+                        <div className="grid grid-cols-2 gap-4">
+                            <StatCard label="Events Joined" value={impactStats.registrations} color="blue" />
+                            <StatCard label="Attended" value={impactStats.attended} color="purple" />
+                        </div>
+                    </div>
 
-            {/* My Activity Section */}
-            <div className="px-6 mb-12">
-                <h2 className="text-[16px] font-black mb-5 flex items-center gap-2.5">
-                    <Calendar size={18} className="text-blue-400" /> My Activity
-                </h2>
-
-                <div className="flex bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-1.5 mb-6 shadow-inner">
-                    <button
-                        onClick={() => setActiveTab("registered")}
-                        className={`flex-1 py-2.5 text-[12px] font-black uppercase tracking-widest rounded-xl transition-all duration-300 ${activeTab === "registered"
-                            ? "bg-[var(--color-surface-elevated)] text-white shadow-lg scale-[1.02]"
-                            : "text-[var(--color-text-muted)] hover:text-white"
-                            }`}
-                    >
-                        Registered ({registeredEvents.length})
-                    </button>
-                    <button
-                        onClick={() => setActiveTab("bookmarks")}
-                        className={`flex-1 py-2.5 text-[12px] font-black uppercase tracking-widest rounded-xl transition-all duration-300 ${activeTab === "bookmarks"
-                            ? "bg-[var(--color-surface-elevated)] text-white shadow-lg scale-[1.02]"
-                            : "text-[var(--color-text-muted)] hover:text-white"
-                            }`}
-                    >
-                        Saved
-                    </button>
-                </div>
-
-                <div className="flex flex-col gap-4 min-h-[160px]">
-                    <AnimatePresence mode="popLayout" initial={false}>
-                        {activeTab === "registered" ? (
-                            registeredEvents.length === 0 ? (
-                                <motion.div
-                                    key="empty-reg"
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    className="py-12 text-center text-[var(--color-text-muted)] bg-[var(--color-surface)]/30 border border-dashed border-[var(--color-border)] rounded-3xl"
-                                >
-                                    <p className="font-bold text-sm px-10 leading-relaxed">No events registered yet. Explore and join the community!</p>
-                                </motion.div>
-                            ) : (
-                                registeredEvents.map((event) => (
-                                    <RegisteredEventCard
-                                        key={event.id}
-                                        event={event}
-                                        onCancel={() => {
-                                            unregisterEvent(event.id);
-                                            playSound("notification");
-                                        }}
-                                    />
-                                ))
-                            )
-                        ) : (
-                            <motion.div
-                                key="empty-saved"
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                className="py-12 text-center text-[var(--color-text-muted)] bg-[var(--color-surface)]/30 border border-dashed border-[var(--color-border)] rounded-3xl"
+                    {/* Your Interests Section */}
+                    <div className="mb-10">
+                        <div className="flex items-center justify-between mb-5">
+                            <h2 className="text-[16px] lg:text-[18px] font-black flex items-center gap-2.5">
+                                <Award size={18} className="text-emerald-400" /> Your Interests
+                            </h2>
+                            <button
+                                onClick={() => setIsEditingInterests(!isEditingInterests)}
+                                className="text-[11px] font-black uppercase tracking-widest text-[var(--color-accent)] bg-blue-500/10 px-3 py-1.5 rounded-lg border border-blue-500/20 active:scale-95 transition-all"
                             >
-                                <p className="font-bold text-sm px-10 leading-relaxed">Your saved events list is empty.</p>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
+                                {isEditingInterests ? "Save Profile" : "Edit Preferences"}
+                            </button>
+                        </div>
+
+                        <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[28px] p-6 shadow-sm">
+                            <div className="flex flex-wrap gap-2.5">
+                                {isEditingInterests ? (
+                                    CATEGORIES.map(cat => {
+                                        const selected = interests.includes(cat);
+                                        return (
+                                            <button
+                                                key={cat}
+                                                onClick={() => {
+                                                    if (selected) {
+                                                        setInterests(interests.filter(i => i !== cat));
+                                                    } else {
+                                                        setInterests([...interests, cat]);
+                                                    }
+                                                }}
+                                                className={`px-4 py-2 rounded-xl text-[12px] font-bold border transition-all ${selected
+                                                    ? "bg-blue-600 border-blue-500 text-white shadow-md"
+                                                    : "bg-[var(--color-bg)] border-[var(--color-border)] text-[var(--color-text-muted)]"
+                                                    }`}
+                                            >
+                                                {cat}
+                                            </button>
+                                        );
+                                    })
+                                ) : (
+                                    interests.map(interest => (
+                                        <Badge key={interest} variant="outline" className="px-4 py-1.5 rounded-xl border-blue-500/30 text-blue-400 bg-blue-500/5 normal-case font-bold">
+                                            {interest}
+                                        </Badge>
+                                    ))
+                                )}
+                                {!isEditingInterests && interests.length === 0 && (
+                                    <p className="text-[13px] text-[var(--color-text-muted)] font-medium">No interests selected yet. Add some to get better recommendations!</p>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="flex flex-col">
+                    {/* My Activity Section */}
+                    <div className="mb-12">
+                        <h2 className="text-[16px] lg:text-[18px] font-black mb-5 flex items-center gap-2.5">
+                            <Calendar size={18} className="text-blue-400" /> Event Activity
+                        </h2>
+
+                        <div className="flex bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-1.5 mb-6 shadow-inner">
+                            <button
+                                onClick={() => setActiveTab("registered")}
+                                className={`flex-1 py-2.5 text-[12px] font-black uppercase tracking-widest rounded-xl transition-all duration-300 ${activeTab === "registered"
+                                    ? "bg-[var(--color-surface-elevated)] text-white shadow-lg scale-[1.02]"
+                                    : "text-[var(--color-text-muted)] hover:text-white"
+                                    }`}
+                            >
+                                Joined ({registeredEvents.length})
+                            </button>
+                            <button
+                                onClick={() => setActiveTab("attended")}
+                                className={`flex-1 py-2.5 text-[12px] font-black uppercase tracking-widest rounded-xl transition-all duration-300 ${activeTab === "attended"
+                                    ? "bg-[var(--color-surface-elevated)] text-white shadow-lg scale-[1.02]"
+                                    : "text-[var(--color-text-muted)] hover:text-white"
+                                    }`}
+                            >
+                                History
+                            </button>
+                        </div>
+
+                        <div className="flex flex-col gap-4 min-h-[160px]">
+                            <AnimatePresence mode="popLayout" initial={false}>
+                                {activeTab === "registered" ? (
+                                    registeredEvents.length === 0 ? (
+                                        <motion.div
+                                            key="empty-reg"
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            className="py-12 text-center text-[var(--color-text-muted)] bg-[var(--color-surface)]/30 border border-dashed border-[var(--color-border)] rounded-3xl"
+                                        >
+                                            <p className="font-bold text-sm px-10 leading-relaxed">No active registrations. Discover events to grow your engagement!</p>
+                                        </motion.div>
+                                    ) : (
+                                        registeredEvents.map((event) => (
+                                            <RegisteredEventCard
+                                                key={event.id}
+                                                event={event}
+                                                status={getAttendanceStatus(event.id)}
+                                                onCancel={() => {
+                                                    unregisterEvent(event.id);
+                                                    playSound("notification");
+                                                }}
+                                            />
+                                        ))
+                                    )
+                                ) : (
+                                    <motion.div
+                                        key="history"
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        className="py-12 text-center text-[var(--color-text-muted)] bg-[var(--color-surface)]/30 border border-dashed border-[var(--color-border)] rounded-3xl"
+                                    >
+                                        <p className="font-bold text-sm px-10 leading-relaxed font-black uppercase tracking-widest opacity-30">No Past Records</p>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             {/* Official Portfolio Area */}
-            <div className="px-6 mb-12">
-                <div className="bg-gradient-to-br from-indigo-900/30 to-blue-900/20 border border-indigo-500/20 rounded-[28px] p-7 relative overflow-hidden shadow-2xl">
-                    <div className="absolute top-0 right-0 transform translate-x-1/4 -translate-y-1/4 w-40 h-40 bg-blue-500/10 blur-3xl rounded-full" />
+            <div className="px-6 lg:px-0 mb-12">
+                <div className="bg-gradient-to-br from-indigo-900/30 to-blue-900/20 border border-indigo-500/20 rounded-[40px] p-8 lg:p-12 relative overflow-hidden shadow-2xl">
+                    <div className="absolute top-0 right-0 transform translate-x-1/4 -translate-y-1/4 w-60 h-60 bg-blue-500/10 blur-[100px] rounded-full" />
 
-                    <h3 className="font-black text-[18px] mb-2 flex items-center gap-2.5">
-                        <CheckCircle size={20} className="text-indigo-400" />
-                        Verified Record
-                    </h3>
-                    <p className="text-[13px] text-[var(--color-text-muted)] leading-relaxed mb-6 pr-6 font-medium">
-                        Access your official campus participation portfolio. This certified digital record validates your achievements.
-                    </p>
-                    <Button fullWidth className="py-4 rounded-2xl bg-indigo-600 hover:bg-indigo-500 shadow-[0_8px_25px_rgba(79,70,229,0.3)]">
-                        <Download size={20} className="mr-2 opacity-90" /> Download Certified PDF
-                    </Button>
+                    <div className="max-w-xl">
+                        <h3 className="font-black text-[22px] lg:text-[26px] mb-3 flex items-center gap-3">
+                            <Award size={28} className="text-indigo-400" />
+                            Campus Passport
+                        </h3>
+                        <p className="text-[14px] lg:text-[16px] text-[var(--color-text-muted)] leading-relaxed mb-8 pr-6 font-medium">
+                            Your engagement at university determines your career readiness. Track every verified attendance and skill badge here. Build an investor-grade digital identity.
+                        </p>
+                        <Button className="py-4 lg:py-5 px-10 rounded-2xl bg-indigo-600 hover:bg-indigo-500 shadow-[0_15px_35px_rgba(79,70,229,0.4)] text-[15px] font-black">
+                            <Download size={20} className="mr-3 opacity-90" /> Export Digital Profile
+                        </Button>
+                    </div>
                 </div>
             </div>
 
             {/* Settings Area */}
-            <div className="px-6 mb-12">
-                <h2 className="text-[16px] font-black mb-5">Interface & Preferences</h2>
-                <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[32px] overflow-hidden divide-y divide-[var(--color-border)] shadow-sm">
+            <div className="px-6 lg:px-0 mb-20 max-w-2xl mx-auto w-full">
+                <h2 className="text-[18px] font-black mb-6 text-center lg:text-left">Interface & Preferences</h2>
+                <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[40px] overflow-hidden divide-y divide-[var(--color-border)] shadow-xl">
+                    {/* ... (Theme Toggle, Admin, Sound, Logout) ... */}
+                    {/* (Keeping existing items but ensuring they look good in global layout) */}
+                    {/* Note: I'll actually just wrap the existing items in the new container for brevity but keep the logic */}
 
-                    {/* Theme Toggle Integration */}
-                    <div className="flex items-center justify-between p-5 px-6">
+                    <div className="flex items-center justify-between p-6 px-8">
                         <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 rounded-2xl bg-[var(--color-surface-elevated)] flex items-center justify-center border border-[var(--color-border)]">
-                                <Sun size={18} className="text-[var(--color-accent)]" />
+                            <div className="w-12 h-12 rounded-2xl bg-[var(--color-surface-elevated)] flex items-center justify-center border border-[var(--color-border)]">
+                                <Sun size={20} className="text-[var(--color-accent)]" />
                             </div>
                             <div className="flex flex-col">
-                                <span className="font-bold text-[15px]">Visual Theme</span>
-                                <span className="text-[11px] text-[var(--color-text-muted)] font-medium">Switch between Light/Dark</span>
+                                <span className="font-bold text-[16px]">Visual Theme</span>
+                                <span className="text-[12px] text-[var(--color-text-muted)] font-medium">Switch between Light/Dark</span>
                             </div>
                         </div>
                         <ThemeToggle />
                     </div>
 
-                    <div className="flex items-center justify-between p-5 px-6">
+                    {(MOCK_USER.role === "admin" || MOCK_USER.role === "organizer") && (
+                        <button onClick={() => router.push("/admin")} className="w-full flex items-center justify-between p-6 px-8 hover:bg-indigo-500/10 transition-colors text-left group">
+                            <div className="flex items-center gap-4">
+                                <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 flex items-center justify-center border border-indigo-500/20">
+                                    <LayoutGrid size={20} className="text-indigo-400" />
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="font-bold text-[16px] group-hover:text-indigo-400 transition-colors">Admin Dashboard</span>
+                                    <span className="text-[12px] text-[var(--color-text-muted)] font-medium">Manage events & campus analytics</span>
+                                </div>
+                            </div>
+                            <ArrowRight size={18} className="text-[var(--color-text-muted)] lg:opacity-0 lg:group-hover:opacity-100 transition-all" />
+                        </button>
+                    )}
+
+                    <div className="flex items-center justify-between p-6 px-8">
                         <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 rounded-2xl bg-[var(--color-surface-elevated)] flex items-center justify-center border border-[var(--color-border)]">
-                                {soundEnabled ? <Volume2 size={18} className="text-emerald-400" /> : <VolumeX size={18} className="text-[var(--color-text-muted)]" />}
+                            <div className="w-12 h-12 rounded-2xl bg-[var(--color-surface-elevated)] flex items-center justify-center border border-[var(--color-border)]">
+                                {soundEnabled ? <Volume2 size={20} className="text-emerald-400" /> : <VolumeX size={20} className="text-[var(--color-text-muted)]" />}
                             </div>
                             <div className="flex flex-col">
-                                <span className="font-bold text-[15px]">Sound Effects</span>
-                                <span className="text-[11px] text-[var(--color-text-muted)] font-medium">Auditory feedback on actions</span>
+                                <span className="font-bold text-[16px]">Sound Effects</span>
+                                <span className="text-[12px] text-[var(--color-text-muted)] font-medium">Auditory feedback on actions</span>
                             </div>
                         </div>
                         <button
@@ -194,7 +334,7 @@ export default function Profile() {
                                 toggleSoundSettings(newState);
                                 if (newState) playSound("notification");
                             }}
-                            className={`w-14 h-7.5 rounded-full transition-all duration-300 flex items-center px-1.5 shadow-inner ${soundEnabled ? 'bg-emerald-500 shadow-emerald-500/30' : 'bg-gray-400 dark:bg-gray-700'}`}
+                            className={`w-14 h-8 rounded-full transition-all duration-300 flex items-center px-1.5 shadow-inner ${soundEnabled ? 'bg-emerald-500 shadow-emerald-500/30' : 'bg-gray-400 dark:bg-gray-700'}`}
                         >
                             <motion.div
                                 className="w-5 h-5 bg-white rounded-full shadow-md"
@@ -204,19 +344,18 @@ export default function Profile() {
                         </button>
                     </div>
 
-                    <button className="w-full flex items-center justify-between p-5 px-6 hover:bg-red-500/5 transition-colors text-left group">
+                    <button className="w-full flex items-center justify-between p-6 px-8 hover:bg-red-500/10 transition-colors text-left group">
                         <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 rounded-2xl bg-red-500/10 flex items-center justify-center border border-red-500/20">
-                                <LogOut size={18} className="text-red-400" />
+                            <div className="w-12 h-12 rounded-2xl bg-red-500/10 flex items-center justify-center border border-red-500/20">
+                                <LogOut size={20} className="text-red-400" />
                             </div>
-                            <span className="font-bold text-[15px] group-hover:text-red-400 transition-colors">Logout Session</span>
+                            <span className="font-bold text-[16px] group-hover:text-red-400 transition-colors">Logout Session</span>
                         </div>
                     </button>
                 </div>
             </div>
 
             <BrandingFooter />
-            <BottomNav />
         </div>
     );
 }
@@ -231,16 +370,18 @@ function StatCard({ label, value, color }: { label: string, value: number, color
     );
 }
 
-function RegisteredEventCard({ event, onCancel }: { event: any, onCancel: () => void }) {
+function RegisteredEventCard({ event, status, onCancel }: { event: Event, status: string, onCancel: () => void }) {
     const dateStr = formatDateBlock(event.date);
+    const isAttended = status === "attended";
+
     return (
         <motion.div
             layout
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
-            className="bg-[var(--color-surface)]/80 backdrop-blur-sm p-4.5 rounded-[22px] border border-[var(--color-border)] shadow-md group border-l-4 transition-all hover:bg-[var(--color-surface-elevated)]"
-            style={{ borderLeftColor: event.categoryColor }}
+            className={`bg-[var(--color-surface)]/80 backdrop-blur-sm p-4.5 rounded-[22px] border border-[var(--color-border)] shadow-md group border-l-4 transition-all hover:bg-[var(--color-surface-elevated)] ${isAttended ? 'border-emerald-500/30' : ''}`}
+            style={{ borderLeftColor: isAttended ? '#10b981' : event.categoryColor }}
         >
             <div className="flex gap-4">
                 <Link href={`/events/${event.id}`} className="flex-1 flex gap-4 pr-2 overflow-hidden">
@@ -250,7 +391,11 @@ function RegisteredEventCard({ event, onCancel }: { event: any, onCancel: () => 
                     </div>
                     <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                            <Badge variant="success" className="text-[8px] py-0 px-2 font-black leading-tight border-emerald-500/30">Confirmed</Badge>
+                            {isAttended ? (
+                                <Badge variant="success" className="text-[8px] py-0 px-2 font-black leading-tight border-emerald-500/30">Verified & Attended</Badge>
+                            ) : (
+                                <Badge variant="default" className="text-[8px] py-0 px-2 font-black leading-tight border-blue-500/30">Spot Secured</Badge>
+                            )}
                         </div>
                         <h4 className="font-black text-[15px] leading-snug mb-2 group-hover:text-blue-400 transition-colors truncate">{event.title}</h4>
                         <div className="flex items-center gap-3 text-[11px] font-bold text-[var(--color-text-muted)]">
@@ -263,32 +408,20 @@ function RegisteredEventCard({ event, onCancel }: { event: any, onCancel: () => 
                         </div>
                     </div>
                 </Link>
-                <button
-                    onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        onCancel();
-                    }}
-                    className="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center self-center hover:bg-red-500/20 transition-all border border-red-500/20 active:scale-90 shadow-sm"
-                >
-                    <Trash2 size={16} className="text-red-400" />
-                </button>
+                {!isAttended && (
+                    <button
+                        onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            onCancel();
+                        }}
+                        className="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center self-center hover:bg-red-500/20 transition-all border border-red-500/20 active:scale-90 shadow-sm"
+                    >
+                        <Trash2 size={16} className="text-red-400" />
+                    </button>
+                )}
             </div>
         </motion.div>
     );
 }
 
-function SettingsItem({ icon, label }: { icon: React.ReactNode, label: string }) {
-    return (
-        <button className="w-full flex items-center justify-between p-5 hover:bg-white/5 transition-colors text-left group">
-            <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-xl bg-[var(--color-surface-elevated)] flex items-center justify-center border border-white/5 group-hover:bg-gray-700 transition-colors shadow-sm">
-                    <div className="text-gray-300 group-hover:text-blue-400 transition-colors">
-                        {icon}
-                    </div>
-                </div>
-                <span className="font-bold text-[15px] group-hover:text-blue-400 transition-colors">{label}</span>
-            </div>
-        </button>
-    );
-}

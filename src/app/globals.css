@@ -73,3 +73,54 @@ body {
 .hide-scrollbar::-webkit-scrollbar {
   display: none; /* Chrome, Safari and Opera */
 }
+
+/* Desktop-Mobile layout adjustments */
+@media (min-width: 1024px) {
+  /* Increase typography scaling for desktop */
+  html {
+    font-size: 17px;
+  }
+  
+  body {
+    line-height: 1.6;
+  }
+
+  /* Desktop-only shadows and effects */
+  .desktop-card-shadow {
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
+  }
+}
+
+@media (max-width: 1023px) {
+  /* Ensure mobile content doesn't feel squashed in the new layout */
+  .mobile-container-padding {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+/* Page transitions */
+.page-fade-enter {
+  opacity: 0;
+}
+.page-fade-enter-active {
+  opacity: 1;
+  transition: opacity 150ms ease-in;
+}
+.page-fade-exit {
+  opacity: 1;
+}
+.page-fade-exit-active {
+  opacity: 0;
+  transition: opacity 150ms ease-out;
+}
+
+/* Custom progress bar */
+#nprogress .bar {
+  background: var(--color-accent) !important;
+  height: 3px !important;
+}
+
+#nprogress .spinner {
+  display: none !important;
+}

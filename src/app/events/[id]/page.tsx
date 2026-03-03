@@ -297,7 +297,7 @@ export default function EventDetail({ params }: { params: Promise<{ id: string }
                         >
                             <Button
                                 fullWidth
-                                variant="default"
+                                variant="primary"
                                 size="lg"
                                 onClick={handleSimulateAttendance}
                                 disabled={isProcessing}
