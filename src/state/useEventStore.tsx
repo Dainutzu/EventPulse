@@ -1,3 +1,5 @@
+"use client";
+
 import React, { createContext, useContext, useEffect, useState, useMemo } from "react";
 import { MOCK_EVENTS } from "@/lib/mockData";
 import { Event, AttendanceStatus } from "@/types";

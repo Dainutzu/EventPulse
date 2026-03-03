@@ -1,25 +1,20 @@
-"use client";
-
 import type { Metadata, Viewport } from "next";
 import { Outfit } from "next/font/google";
 import "./globals.css";
-import { EventProvider } from "@/state/useEventStore";
-import { ThemeProvider } from "@/state/useThemeStore";
-import { DesktopSidebar } from "@/components/DesktopSidebar";
-import { AnalyticsPanel } from "@/components/AnalyticsPanel";
-import { KeyboardShortcuts } from "@/components/KeyboardShortcuts";
-import { BottomNav } from "@/components/ui";
-import { AnimatePresence, motion } from "framer-motion";
-import { usePathname } from "next/navigation";
+import { Providers } from "@/components/Providers";
+import { ClientShell } from "@/components/ClientShell";
 
 const outfit = Outfit({
-  variable: "--font-outfit",
   subsets: ["latin"],
+  display: "swap",
+  variable: "--font-outfit",
 });
 
 export const metadata: Metadata = {
   title: "EventPulse | Your Campus. Connected.",
   description: "Discover, register, and track campus events. Your campus, connected.",
+  metadataBase: new URL("https://eventpulse.netlify.app"), // Replace with actual URL
+  keywords: ["campus events", "university", "student life", "event tracking"],
   manifest: "/manifest.json",
   appleWebApp: {
     title: "EventPulse",
@@ -42,6 +37,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: "#1C1C1E",
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({
@@ -49,22 +46,17 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const pathname = usePathname();
-
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className={outfit.variable}>
       <head>
+        {/* Anti-FOUC Script */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
                 try {
-                  var theme = localStorage.getItem('app_theme');
-                  var supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                  if (!theme && supportDarkMode) theme = 'dark';
-                  if (!theme) theme = 'dark';
-                  
-                  if (theme === 'dark') {
+                  var theme = localStorage.getItem('app_theme') || 'dark';
+                  if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                     document.documentElement.classList.add('dark');
                   } else {
                     document.documentElement.classList.remove('dark');
@@ -75,46 +67,12 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${outfit.variable} antialiased selection:bg-blue-500/30 bg-[var(--color-bg)] transition-colors duration-300`}>
-        <ThemeProvider>
-          <EventProvider>
-            <KeyboardShortcuts />
-            {/* Main Application Container */}
-            <div className="min-h-screen flex relative">
-              {/* Desktop Sidebar */}
-              <div id="desktop-sidebar-container" className="hidden lg:block">
-                <DesktopSidebar />
-              </div>
-
-              {/* Main Content Area */}
-              <main className="flex-1 flex flex-col min-w-0">
-                <div className="mx-auto w-full max-w-[430px] lg:max-w-[1200px] xl:max-w-[1400px] min-h-screen bg-[var(--color-bg)] text-[var(--color-text-main)] relative shadow-2xl lg:shadow-none shadow-black/50 overflow-x-hidden transition-all duration-300 px-0 lg:px-12">
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={pathname}
-                      initial={{ opacity: 0, y: 5 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -5 }}
-                      transition={{ duration: 0.15 }}
-                      className="w-full"
-                    >
-                      {children}
-                    </motion.div>
-                  </AnimatePresence>
-
-                  <div className="lg:hidden">
-                    <BottomNav />
-                  </div>
-                </div>
-              </main>
-
-              {/* Analytics Panel */}
-              <div id="analytics-panel-container" className="hidden xl:block w-[360px] shrink-0 border-l border-[var(--color-border)] p-10">
-                <AnalyticsPanel />
-              </div>
-            </div>
-          </EventProvider>
-        </ThemeProvider>
+      <body className="antialiased selection:bg-blue-500/30 bg-[var(--color-bg)] transition-colors duration-300 min-h-screen">
+        <Providers>
+          <ClientShell>
+            {children}
+          </ClientShell>
+        </Providers>
       </body>
     </html>
   );
