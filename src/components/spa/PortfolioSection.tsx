@@ -93,7 +93,13 @@ export default function PortfolioSection() {
     );
 }
 
-function TimelineItem({ event, status, index }: any) {
+interface TimelineItemProps {
+    event: any;
+    status: string | null;
+    index: number;
+}
+
+function TimelineItem({ event, status, index }: TimelineItemProps) {
     const isAttended = status === "attended";
     const dateStr = formatDateBlock(event.date);
 

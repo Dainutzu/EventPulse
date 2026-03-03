@@ -82,13 +82,17 @@ export const Badge = ({
     className,
     variant = "default",
     children,
+    style,
+    ...rest
 }: {
     className?: string;
     variant?: "default" | "success" | "warning" | "purple" | "outline";
     children: React.ReactNode;
-}) => {
+    style?: React.CSSProperties;
+} & Omit<React.HTMLAttributes<HTMLSpanElement>, "children">) => {
     return (
         <span
+            style={style}
             className={cn(
                 "inline-flex items-center rounded-lg px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider border",
                 {
@@ -101,11 +105,13 @@ export const Badge = ({
                 },
                 className
             )}
+            {...rest}
         >
             {children}
         </span>
     );
 };
+
 
 // --- Bottom Navigation ---
 import Link from "next/link";

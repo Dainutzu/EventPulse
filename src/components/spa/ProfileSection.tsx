@@ -24,6 +24,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { BrandLogo } from "@/components/BrandLogo";
 import { BrandingFooter } from "@/components/BrandingFooter";
 import { MOCK_USER, CATEGORIES } from "@/lib/mockUser";
+import { Event } from "@/types";
 
 export default function ProfileSection() {
     const [soundEnabled, setSoundEnabled] = useState(isSoundEnabled());
@@ -36,7 +37,7 @@ export default function ProfileSection() {
         [events, registrations]);
 
     const impactStats = useMemo(() => {
-        const attendedCount = Object.values(registrations).filter(r => (r as any).status === "attended").length;
+        const attendedCount = Object.values(registrations).filter(r => (r as { status: string }).status === "attended").length;
         return {
             attended: attendedCount,
             points: MOCK_USER.points + (Object.keys(registrations).length * 50) + (attendedCount * 100),
@@ -318,7 +319,14 @@ function StatCard({ label, value, color }: { label: string, value: number, color
     );
 }
 
-function RegisteredEventCard({ event, status, onCancel, onSelect }: any) {
+interface RegisteredEventCardProps {
+    event: Event;
+    status: string | null;
+    onCancel: () => void;
+    onSelect: () => void;
+}
+
+function RegisteredEventCard({ event, status, onCancel, onSelect }: RegisteredEventCardProps) {
     const dateStr = formatDateBlock(event.date);
     const isAttended = status === "attended";
 

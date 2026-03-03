@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { getCategoryColor } from "@/lib/utils/ui";
 import { formatDateBlock } from "@/utils/dateUtils";
 import { useEventStore } from "@/state/useEventStore";
+import { Event } from "@/types";
 
 export default function ExploreSection() {
     const [searchQuery, setSearchQuery] = useState("");
@@ -80,7 +81,13 @@ export default function ExploreSection() {
     );
 }
 
-function ExploreCard({ event, index, onSelect }: any) {
+interface ExploreCardProps {
+    event: Event;
+    index: number;
+    onSelect: () => void;
+}
+
+function ExploreCard({ event, index, onSelect }: ExploreCardProps) {
     const dateStr = formatDateBlock(event.date);
 
     return (

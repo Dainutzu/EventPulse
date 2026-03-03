@@ -99,3 +99,40 @@ body {
 #nprogress .spinner {
   display: none !important;
 }
+
+/* ── Mobile-first touch utilities ─────────────────────────────────── */
+
+/* Safe bottom padding for iPhone notch */
+.pb-safe-bottom {
+  padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+}
+
+/* Smooth momentum scrolling on iOS */
+.scroll-smooth-ios {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  overscroll-behavior-y: contain;
+}
+
+/* Remove default tap highlight on mobile */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Touch pan vertical only (prevent accidental horizontal swipes) */
+.touch-pan-y {
+  touch-action: pan-y;
+}
+
+/* Prevent text selection during rapid taps */
+.select-none-mobile {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Wave animation for emoji */
+@keyframes wave {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(20deg); }
+  75% { transform: rotate(-10deg); }
+}

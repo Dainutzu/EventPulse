@@ -12,10 +12,10 @@ import { BrandLogo } from "@/components/BrandLogo";
 import { BrandingFooter } from "@/components/BrandingFooter";
 import { Recommendations } from "@/components/Recommendations";
 import { RecommendationsSkeleton } from "@/components/RecommendationsSkeleton";
-import Link from "next/link";
+import { Event } from "@/types";
 
 interface HomeSectionProps {
-    initialEvents: any[];
+    initialEvents: Event[];
 }
 
 export default function HomeSection({ initialEvents }: HomeSectionProps) {
@@ -190,7 +190,16 @@ export default function HomeSection({ initialEvents }: HomeSectionProps) {
     );
 }
 
-function EventCard({ event, index, isRegistered, isPast, onToggle, onSelect }: any) {
+interface EventCardProps {
+    event: Event;
+    index: number;
+    isRegistered: boolean;
+    isPast?: boolean;
+    onToggle: () => void;
+    onSelect: () => void;
+}
+
+function EventCard({ event, index, isRegistered, isPast, onToggle, onSelect }: EventCardProps) {
     const dateStr = formatDateBlock(event.date);
 
     return (
