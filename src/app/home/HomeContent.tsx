@@ -10,29 +10,32 @@ import { useEventStore } from "@/state/useEventStore";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { BrandLogo } from "@/components/BrandLogo";
 import { BrandingFooter } from "@/components/BrandingFooter";
-import { getRecommendedEvents } from "@/utils/recommendations";
+import { Suspense } from "react";
 import Link from "next/link";
+import { Recommendations } from "@/components/Recommendations";
+import { RecommendationsSkeleton } from "@/components/RecommendationsSkeleton";
 
-export default function HomeContent() {
+interface HomeContentProps {
+    initialEvents: any[];
+}
+
+export default function HomeContent({ initialEvents }: HomeContentProps) {
     const [activeTab, setActiveTab] = useState("All");
-    const { events, registerEvent, unregisterEvent, isRegistered, interests, setInterests, attendedCategories } = useEventStore();
+    const { events, registerEvent, unregisterEvent, isRegistered, interests, setInterests, attendedCategories, isHydrated } = useEventStore();
     const [showInterestPicker, setShowInterestPicker] = useState(false);
 
     useEffect(() => {
-        if (interests.length === 0) {
+        if (isHydrated && interests.length === 0) {
             setShowInterestPicker(true);
         }
-    }, [interests]);
-
-    const recommendedEvents = useMemo(() => {
-        return getRecommendedEvents(events, interests, attendedCategories);
-    }, [events, interests, attendedCategories]);
+    }, [interests, isHydrated]);
 
     const filteredEvents = useMemo(() => {
+        const currentEvents = isHydrated && events.length > 0 ? events : initialEvents;
         return activeTab === "All"
-            ? events
-            : events.filter((e) => e.category === activeTab);
-    }, [events, activeTab]);
+            ? currentEvents
+            : currentEvents.filter((e) => e.category === activeTab);
+    }, [events, initialEvents, activeTab, isHydrated]);
 
     const { upcoming, past } = useMemo(() => processEvents(filteredEvents), [filteredEvents]);
 
@@ -62,37 +65,9 @@ export default function HomeContent() {
                 </div>
             </header>
 
-            {recommendedEvents.length > 0 && (
-                <div className="mb-10 -mx-6">
-                    <div className="flex items-baseline justify-between px-6 mb-4">
-                        <div>
-                            <h2 className="text-xl font-black tracking-tight">Recommended For You</h2>
-                            <p className="text-[12px] text-[var(--color-text-muted)] font-bold">Based on your interests and activity</p>
-                        </div>
-                    </div>
-                    <div className="flex gap-4 px-6 overflow-x-auto hide-scrollbar snap-x pb-4">
-                        {recommendedEvents.map((event, index) => (
-                            <div key={`rec-${event.id}`} className="snap-start shrink-0 w-[280px]">
-                                <Link href={`/events/${event.id}`}>
-                                    <div className="relative group">
-                                        <EventCard
-                                            event={event}
-                                            index={index}
-                                            isRegistered={isRegistered(event.id)}
-                                            onToggle={() => isRegistered(event.id) ? unregisterEvent(event.id) : registerEvent(event.id)}
-                                        />
-                                        <div className="absolute top-4 left-4 z-20">
-                                            <span className="bg-blue-600/90 backdrop-blur-md text-white text-[10px] font-black px-2.5 py-1 rounded-lg uppercase tracking-wider shadow-lg">
-                                                ✨ For You
-                                            </span>
-                                        </div>
-                                    </div>
-                                </Link>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            )}
+            <Suspense fallback={<RecommendationsSkeleton />}>
+                <Recommendations initialEvents={initialEvents} />
+            </Suspense>
 
             <div className="flex gap-3 -mx-6 px-6 pb-8 overflow-x-auto hide-scrollbar snap-x snap-mandatory">
                 {["All", ...CATEGORIES].map((cat) => (

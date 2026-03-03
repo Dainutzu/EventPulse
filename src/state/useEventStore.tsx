@@ -28,6 +28,9 @@ interface EventContextType {
     interests: string[];
     setInterests: (interests: string[]) => void;
     attendedCategories: string[];
+    isHydrated: boolean;
+    activeTab: string;
+    setActiveTab: (tab: string) => void;
 }
 
 const EventContext = createContext<EventContextType | undefined>(undefined);
@@ -36,6 +39,7 @@ export function EventProvider({ children }: { children: React.ReactNode }) {
     const [events, setEvents] = useState<Event[]>(MOCK_EVENTS);
     const [registrations, setRegistrations] = useState<Record<string, RegistrationState>>({});
     const [interests, setInterestsState] = useState<string[]>([]);
+    const [activeTab, setActiveTab] = useState("home");
     const [isHydrated, setIsHydrated] = useState(false);
 
     // Initial hydration
@@ -139,7 +143,10 @@ export function EventProvider({ children }: { children: React.ReactNode }) {
         engagementScore,
         interests,
         setInterests,
-        attendedCategories
+        attendedCategories,
+        isHydrated,
+        activeTab,
+        setActiveTab
     };
 
     return <EventContext.Provider value={value}>{children}</EventContext.Provider>;

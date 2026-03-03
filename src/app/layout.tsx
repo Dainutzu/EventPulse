@@ -67,11 +67,13 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="antialiased selection:bg-blue-500/30 bg-[var(--color-bg)] transition-colors duration-300 min-h-screen">
+      <body className="antialiased selection:bg-blue-500/30 bg-black transition-colors duration-300 min-h-screen flex justify-center overflow-x-hidden">
         <Providers>
-          <ClientShell>
-            {children}
-          </ClientShell>
+          <div className="w-full max-w-[430px] bg-[var(--color-bg)] min-h-screen relative shadow-[0_0_100px_rgba(0,0,0,0.5)] overflow-x-hidden">
+            <ClientShell>
+              {children}
+            </ClientShell>
+          </div>
         </Providers>
       </body>
     </html>

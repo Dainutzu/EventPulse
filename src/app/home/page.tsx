@@ -1,12 +1,17 @@
-import { Metadata } from "next";
-import HomeContent from "./HomeContent";
+"use client";
 
-export const metadata: Metadata = {
-    title: "Home Feed | EventPulse",
-    description: "Discover upcoming campus events, trending activities, and personalized recommendations.",
-};
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useEventStore } from "@/state/useEventStore";
 
-export default function HomePage() {
-    return <HomeContent />;
+export default function HomeRedirect() {
+    const router = useRouter();
+    const { setActiveTab } = useEventStore();
+
+    useEffect(() => {
+        setActiveTab("home");
+        router.replace("/");
+    }, [router, setActiveTab]);
+
+    return null;
 }
-

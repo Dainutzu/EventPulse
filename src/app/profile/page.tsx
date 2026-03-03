@@ -1,12 +1,17 @@
-import { Metadata } from "next";
-import ProfileContent from "./ProfileContent";
+"use client";
 
-export const metadata: Metadata = {
-    title: "Your Profile | EventPulse",
-    description: "Manage your campus engagement, interests, and event activity.",
-};
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useEventStore } from "@/state/useEventStore";
 
-export default function ProfilePage() {
-    return <ProfileContent />;
+export default function ProfileRedirect() {
+    const router = useRouter();
+    const { setActiveTab } = useEventStore();
+
+    useEffect(() => {
+        setActiveTab("profile");
+        router.replace("/");
+    }, [router, setActiveTab]);
+
+    return null;
 }
-
