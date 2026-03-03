@@ -54,13 +54,13 @@ export default function ProfileContent() {
             <header className="px-0 pt-14 pb-8 flex flex-col items-center relative overflow-hidden transition-colors duration-300">
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-40 bg-gradient-to-b from-blue-600/5 to-transparent pointer-events-none" />
 
-                <div className="mb-6 z-10 flex flex-col items-center lg:hidden">
+                <div className="mb-6 z-10 flex flex-col items-center">
                     <BrandLogo size={44} className="mb-2" />
                     <span className="text-[10px] font-black tracking-[0.3em] uppercase opacity-30">University Ecosystem</span>
                 </div>
 
-                <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-14 mb-8 z-10">
-                    <div className="relative flex items-center justify-center scale-110 lg:scale-[1.25]">
+                <div className="flex flex-col items-center gap-10 mb-8 z-10">
+                    <div className="relative flex items-center justify-center scale-110">
                         <svg className="w-24 h-24 transform -rotate-90">
                             <circle
                                 cx="48"
@@ -92,15 +92,15 @@ export default function ProfileContent() {
                         </div>
                     </div>
 
-                    <div className="flex flex-col items-center lg:items-start">
+                    <div className="flex flex-col items-center">
                         <motion.div
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
-                            className="w-24 h-24 lg:w-32 lg:h-32 rounded-[40px] bg-gradient-to-tr from-blue-600 to-indigo-600 shadow-2xl flex items-center justify-center text-4xl lg:text-5xl font-black border-4 border-[var(--color-surface)] text-white relative mb-4 lg:mb-0"
+                            className="w-24 h-24 rounded-[40px] bg-gradient-to-tr from-blue-600 to-indigo-600 shadow-2xl flex items-center justify-center text-4xl font-black border-4 border-[var(--color-surface)] text-white relative mb-4"
                         >
                             {MOCK_USER.avatar}
-                            <div className="absolute -bottom-1 -right-1 w-8 h-8 lg:w-10 lg:h-10 bg-emerald-500 rounded-full border-4 border-[var(--color-surface)] flex items-center justify-center">
-                                <CheckCircle size={14} className="text-white lg:scale-125" />
+                            <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-emerald-500 rounded-full border-4 border-[var(--color-surface)] flex items-center justify-center">
+                                <CheckCircle size={14} className="text-white" />
                             </div>
                         </motion.div>
                     </div>
@@ -122,10 +122,10 @@ export default function ProfileContent() {
                 </Badge>
             </header>
 
-            <div className="lg:grid lg:grid-cols-2 lg:gap-12 px-0 lg:px-0 mb-12">
+            <div className="flex flex-col mb-12">
                 <div>
                     <div className="mb-10">
-                        <h2 className="text-[16px] lg:text-[18px] font-black mb-5 flex items-center gap-2.5">
+                        <h2 className="text-[16px] font-black mb-5 flex items-center gap-2.5">
                             <Award size={18} className="text-indigo-400" /> Your Engagement
                         </h2>
                         <div className="grid grid-cols-2 gap-4">
@@ -136,7 +136,7 @@ export default function ProfileContent() {
 
                     <div className="mb-10">
                         <div className="flex items-center justify-between mb-5">
-                            <h2 className="text-[16px] lg:text-[18px] font-black flex items-center gap-2.5">
+                            <h2 className="text-[16px] font-black flex items-center gap-2.5">
                                 <Award size={18} className="text-emerald-400" /> Your Interests
                             </h2>
                             <button
@@ -188,7 +188,7 @@ export default function ProfileContent() {
 
                 <div className="flex flex-col">
                     <div className="mb-12">
-                        <h2 className="text-[16px] lg:text-[18px] font-black mb-5 flex items-center gap-2.5">
+                        <h2 className="text-[16px] font-black mb-5 flex items-center gap-2.5">
                             <Calendar size={18} className="text-blue-400" /> Event Activity
                         </h2>
 
@@ -255,27 +255,27 @@ export default function ProfileContent() {
             </div>
 
             <div className="px-0 lg:px-0 mb-12">
-                <div className="bg-gradient-to-br from-indigo-900/30 to-blue-900/20 border border-indigo-500/20 rounded-[32px] md:rounded-[40px] p-8 lg:p-12 relative overflow-hidden shadow-2xl">
+                <div className="bg-gradient-to-br from-indigo-900/30 to-blue-900/20 border border-indigo-500/20 rounded-[32px] p-8 relative overflow-hidden shadow-2xl">
                     <div className="absolute top-0 right-0 transform translate-x-1/4 -translate-y-1/4 w-60 h-60 bg-blue-500/10 blur-[100px] rounded-full" />
 
                     <div className="max-w-xl">
-                        <h3 className="font-black text-[22px] lg:text-[26px] mb-3 flex items-center gap-3">
+                        <h3 className="font-black text-[22px] mb-3 flex items-center gap-3">
                             <Award size={28} className="text-indigo-400" />
                             Campus Passport
                         </h3>
-                        <p className="text-[14px] lg:text-[16px] text-[var(--color-text-muted)] leading-relaxed mb-8 pr-6 font-medium">
+                        <p className="text-[14px] text-[var(--color-text-muted)] leading-relaxed mb-8 pr-6 font-medium">
                             Your engagement at university determines your career readiness. Track every verified attendance and skill badge here. Build an investor-grade digital identity.
                         </p>
-                        <Button className="py-4 lg:py-5 px-10 rounded-2xl bg-indigo-600 hover:bg-indigo-500 shadow-[0_15px_35px_rgba(79,70,229,0.4)] text-[15px] font-black">
+                        <Button className="py-4 px-10 rounded-2xl bg-indigo-600 shadow-[0_15px_35px_rgba(79,70,229,0.4)] text-[15px] font-black">
                             <Download size={20} className="mr-3 opacity-90" /> Export Digital Profile
                         </Button>
                     </div>
                 </div>
             </div>
 
-            <div className="px-0 lg:px-0 mb-20 max-w-2xl mx-auto w-full">
-                <h2 className="text-[18px] font-black mb-6 text-center lg:text-left">Interface & Preferences</h2>
-                <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[32px] md:rounded-[40px] overflow-hidden divide-y divide-[var(--color-border)] shadow-xl">
+            <div className="mb-20 max-w-2xl mx-auto w-full">
+                <h2 className="text-[18px] font-black mb-6 text-center">Interface & Preferences</h2>
+                <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[32px] overflow-hidden divide-y divide-[var(--color-border)] shadow-xl">
                     <div className="flex items-center justify-between p-6 px-8">
                         <div className="flex items-center gap-4">
                             <div className="w-12 h-12 rounded-2xl bg-[var(--color-surface-elevated)] flex items-center justify-center border border-[var(--color-border)]">
@@ -300,7 +300,7 @@ export default function ProfileContent() {
                                     <span className="text-[12px] text-[var(--color-text-muted)] font-medium">Manage events & campus analytics</span>
                                 </div>
                             </div>
-                            <ArrowRight size={18} className="text-[var(--color-text-muted)] lg:opacity-0 lg:group-hover:opacity-100 transition-all" />
+                            <ArrowRight size={18} className="text-[var(--color-text-muted)]" />
                         </button>
                     )}
 
@@ -367,7 +367,7 @@ function RegisteredEventCard({ event, status, onCancel }: { event: Event, status
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
-            className={`bg-[var(--color-surface)]/80 backdrop-blur-sm p-4.5 rounded-[22px] border border-[var(--color-border)] shadow-md group border-l-4 transition-all hover:bg-[var(--color-surface-elevated)] ${isAttended ? 'border-emerald-500/30' : ''}`}
+            className={`bg-[var(--color-surface)]/80 backdrop-blur-sm p-4.5 rounded-[22px] border border-[var(--color-border)] shadow-md group border-l-4 transition-all ${isAttended ? 'border-emerald-500/30' : ''}`}
             style={{ borderLeftColor: isAttended ? '#10b981' : event.categoryColor }}
         >
             <div className="flex gap-4">

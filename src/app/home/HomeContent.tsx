@@ -38,41 +38,33 @@ export default function HomeContent() {
 
     return (
         <div className="pb-28 min-h-screen selection:bg-blue-500/30">
-            <header className="px-0 lg:px-0 pt-12 lg:pt-16 pb-8 flex items-center justify-between">
-                <div className="flex items-center gap-4 lg:gap-6">
-                    <div className="lg:hidden">
-                        <BrandLogo size={44} rounded="rounded-xl" />
-                    </div>
-                    <div className="w-12 h-12 lg:w-14 lg:h-14 rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold text-lg lg:text-xl shadow-[0_4px_16px_rgba(37,99,235,0.4)] border-2 border-[var(--color-bg)] transition-transform hover:scale-105">
+            <header className="pt-12 pb-8 flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                    <BrandLogo size={44} rounded="rounded-xl" />
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold text-lg shadow-[0_4px_16px_rgba(37,99,235,0.4)] border-2 border-[var(--color-bg)]">
                         {MOCK_USER.avatar}
                     </div>
                     <div>
-                        <h1 className="text-xl lg:text-3xl font-extrabold tracking-tight">
+                        <h1 className="text-xl font-extrabold tracking-tight">
                             {getGreeting()}, {MOCK_USER.name.split(" ")[0]} <span className="inline-block origin-[70%_70%] animate-[wave_2.5s_infinite]">👋</span>
                         </h1>
-                        <p className="text-sm lg:text-base text-[var(--color-text-muted)] mt-1 lg:mt-2">
+                        <p className="text-sm text-[var(--color-text-muted)] mt-1">
                             You have <span className="text-[var(--color-text-main)] font-bold">{upcoming.length} upcoming events</span> to attend.
                         </p>
                     </div>
                 </div>
                 <div className="flex items-center gap-3">
-                    <div className="lg:hidden">
-                        <ThemeToggle />
-                    </div>
-                    <button className="w-11 h-11 lg:w-12 lg:h-12 bg-[var(--color-surface)] rounded-full flex items-center justify-center border border-[var(--color-border)] hover:bg-[var(--color-surface-elevated)] transition-all hover:scale-105 active:scale-95 relative shadow-sm group">
-                        <Bell size={20} className="text-[var(--color-text-muted)] group-hover:text-[var(--color-text-main)] transition-colors" />
+                    <ThemeToggle />
+                    <button className="w-11 h-11 bg-[var(--color-surface)] rounded-full flex items-center justify-center border border-[var(--color-border)] active:scale-95 relative shadow-sm group">
+                        <Bell size={20} className="text-[var(--color-text-muted)]" />
                         <span className="absolute top-3 right-3 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-[var(--color-surface)]" />
                     </button>
-                    <div className="hidden lg:flex items-center gap-2 bg-[var(--color-surface)] border border-[var(--color-border)] px-4 py-2.5 rounded-2xl ml-4 opacity-80 hover:opacity-100 transition-opacity cursor-pointer">
-                        <span className="text-sm text-[var(--color-text-muted)]">Search events...</span>
-                        <kbd className="bg-[var(--color-surface-elevated)] text-[10px] px-1.5 py-0.5 rounded border border-[var(--color-border)] font-bold">/</kbd>
-                    </div>
                 </div>
             </header>
 
             {recommendedEvents.length > 0 && (
-                <div className="mb-10 -mx-6 lg:mx-0">
-                    <div className="flex items-baseline justify-between px-6 lg:px-0 mb-4">
+                <div className="mb-10 -mx-6">
+                    <div className="flex items-baseline justify-between px-6 mb-4">
                         <div>
                             <h2 className="text-xl font-black tracking-tight">Recommended For You</h2>
                             <p className="text-[12px] text-[var(--color-text-muted)] font-bold">Based on your interests and activity</p>
@@ -102,14 +94,14 @@ export default function HomeContent() {
                 </div>
             )}
 
-            <div className="flex gap-3 -mx-6 lg:mx-0 px-6 lg:px-0 pb-8 overflow-x-auto hide-scrollbar snap-x snap-mandatory">
+            <div className="flex gap-3 -mx-6 px-6 pb-8 overflow-x-auto hide-scrollbar snap-x snap-mandatory">
                 {["All", ...CATEGORIES].map((cat) => (
                     <button
                         key={cat}
                         onClick={() => setActiveTab(cat)}
-                        className={`px-5 py-2.5 lg:px-6 lg:py-3 rounded-2xl text-sm lg:text-[15px] font-bold whitespace-nowrap transition-all duration-300 snap-start border ${activeTab === cat
+                        className={`px-5 py-2.5 rounded-2xl text-sm font-bold whitespace-nowrap transition-all duration-300 snap-start border ${activeTab === cat
                             ? "bg-blue-600 text-white border-blue-500 shadow-[0_8px_20px_rgba(37,99,235,0.3)] scale-105"
-                            : "bg-[var(--color-surface)] text-[var(--color-text-muted)] border-[var(--color-border)] hover:bg-[var(--color-surface-elevated)] hover:border-[var(--color-text-muted)]/30"
+                            : "bg-[var(--color-surface)] text-[var(--color-text-muted)] border-[var(--color-border)]"
                             }`}
                     >
                         {cat}
@@ -117,12 +109,12 @@ export default function HomeContent() {
                 ))}
             </div>
 
-            <div className="flex items-center justify-between px-0 lg:px-0 pb-6">
-                <h2 className="text-xl lg:text-2xl font-black tracking-tight">Upcoming Events</h2>
+            <div className="flex items-center justify-between pb-6">
+                <h2 className="text-xl font-black tracking-tight">Upcoming Events</h2>
                 <Badge variant="default" className="bg-blue-500/10 border-blue-500/20 text-blue-400">Live Campus Feed</Badge>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-0 lg:px-0 mb-16">
+            <div className="grid grid-cols-1 gap-6 mb-16">
                 <AnimatePresence mode="popLayout" initial={false}>
                     {upcoming.map((event, index) => (
                         <Link key={event.id} href={`/events/${event.id}`}>
@@ -147,10 +139,10 @@ export default function HomeContent() {
 
             {past.length > 0 && (
                 <>
-                    <div className="flex items-center justify-between px-0 lg:px-0 pb-6">
-                        <h2 className="text-xl lg:text-2xl font-black tracking-tight text-[var(--color-text-muted)]">Completed Recently</h2>
+                    <div className="flex items-center justify-between pb-6">
+                        <h2 className="text-xl font-black tracking-tight text-[var(--color-text-muted)]">Completed Recently</h2>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-0 lg:px-0">
+                    <div className="grid grid-cols-1 gap-6">
                         {past.map((event, index) => (
                             <Link key={event.id} href={`/events/${event.id}`}>
                                 <EventCard
@@ -251,31 +243,26 @@ function EventCard({ event, index, isRegistered, isPast, onToggle }: EventCardPr
             transition={{ duration: 0.4, delay: index * 0.04 }}
             className="w-full"
         >
-            <div className={`bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[28px] md:rounded-[32px] p-5 md:p-7 cursor-pointer transition-all duration-500 hover:bg-[var(--color-surface-elevated)] hover:-translate-y-1 lg:hover:-translate-y-3 hover:border-[var(--color-accent)]/30 hover:shadow-xl group relative overflow-hidden ${isPast ? 'opacity-70 grayscale-[0.3]' : ''}`}>
+            <div className={`bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[28px] p-5 cursor-pointer transition-all duration-500 group relative overflow-hidden ${isPast ? 'opacity-70 grayscale-[0.3]' : ''}`}>
 
                 {!isPast && isRegistered && (
                     <div className="absolute top-0 right-0">
-                        <div className="bg-emerald-500 text-white px-4 py-1.5 rounded-bl-2xl text-[10px] lg:text-[11px] font-black uppercase tracking-tighter shadow-lg">
+                        <div className="bg-emerald-500 text-white px-4 py-1.5 rounded-bl-2xl text-[10px] font-black uppercase tracking-tighter shadow-lg">
                             Confirmed
                         </div>
                     </div>
                 )}
 
-                {event.registered > 50 && (
-                    <div className="absolute top-6 right-6 hidden lg:block">
-                        <Badge variant="purple" className="animate-pulse">🔥 Trending</Badge>
-                    </div>
-                )}
 
                 <div className="flex gap-6">
                     <div
-                        className="w-[70px] h-[80px] lg:w-[80px] lg:h-[90px] rounded-[22px] flex flex-col items-center justify-center shrink-0 shadow-inner relative overflow-hidden transition-transform group-hover:scale-105"
+                        className="w-[70px] h-[80px] rounded-[22px] flex flex-col items-center justify-center shrink-0 shadow-inner relative overflow-hidden"
                         style={{ backgroundColor: `color-mix(in srgb, ${getCategoryColor(event.category)} 15%, transparent)` }}
                     >
-                        <span className="text-[11px] lg:text-[12px] font-black tracking-widest uppercase opacity-80" style={{ color: getCategoryColor(event.category) }}>
+                        <span className="text-[11px] font-black tracking-widest uppercase opacity-80" style={{ color: getCategoryColor(event.category) }}>
                             {dateStr.month}
                         </span>
-                        <span className="text-[32px] lg:text-[36px] font-black leading-none mt-1" style={{ color: getCategoryColor(event.category) }}>
+                        <span className="text-[32px] font-black leading-none mt-1" style={{ color: getCategoryColor(event.category) }}>
                             {dateStr.day}
                         </span>
                     </div>
@@ -286,45 +273,33 @@ function EventCard({ event, index, isRegistered, isPast, onToggle }: EventCardPr
                                 {event.category}
                             </Badge>
                         </div>
-                        <h3 className="text-lg lg:text-xl font-black leading-tight mb-3 group-hover:text-[var(--color-accent)] transition-colors line-clamp-2">
+                        <h3 className="text-lg font-black leading-tight mb-3 transition-colors line-clamp-2">
                             {event.title}
                         </h3>
-                        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-[13px] lg:text-[14px] font-bold text-[var(--color-text-muted)]">
+                        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-[13px] font-bold text-[var(--color-text-muted)]">
                             <div className="flex items-center gap-2">
                                 <Clock size={16} className="opacity-50 text-[var(--color-accent)]" />
                                 <span>{event.timeStart}</span>
                             </div>
-                            <div className="hidden lg:flex items-center gap-2">
-                                <Users size={16} className="opacity-50 text-emerald-500" />
-                                <span>{event.registered} attending</span>
-                            </div>
-                            <span className="text-[var(--color-accent)] font-black opacity-80 group-hover:opacity-100">{event.club}</span>
+                            <span className="text-[var(--color-accent)] font-black opacity-80">{event.club}</span>
                         </div>
                     </div>
                 </div>
 
-                <div className="hidden lg:block mt-6 pt-5 border-t border-[var(--color-border)]">
-                    <div className="flex items-center justify-between text-xs font-bold text-[var(--color-text-muted)]">
-                        <div className="flex items-center gap-2">
-                            <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                            {100 - (event.registered || 0)} seats remaining
-                        </div>
-                    </div>
-                </div>
 
-                <div className="flex items-center justify-between mt-6 pt-5 border-t border-[var(--color-border)] lg:border-none lg:mt-4 lg:pt-0">
+                <div className="flex items-center justify-between mt-6 pt-5 border-t border-[var(--color-border)]">
                     <div className="flex items-center">
                         <div className="flex -space-x-3">
                             {[1, 2, 3].map((i) => (
                                 <div
                                     key={i}
-                                    className="w-9 h-9 lg:w-10 lg:h-10 rounded-full border-2 border-[var(--color-surface)] bg-gradient-to-br from-indigo-500/20 to-purple-500/20 overflow-hidden ring-1 ring-white/10 transition-transform group-hover:translate-x-1"
+                                    className="w-9 h-9 rounded-full border-2 border-[var(--color-surface)] bg-gradient-to-br from-indigo-500/20 to-purple-500/20 overflow-hidden ring-1 ring-white/10"
                                 >
                                     <div className="w-full h-full bg-slate-800" />
                                 </div>
                             ))}
                         </div>
-                        <span className="ml-4 text-[13px] font-black text-[var(--color-text-muted)] lg:hidden">
+                        <span className="ml-4 text-[13px] font-black text-[var(--color-text-muted)]">
                             +{event.registered} attending
                         </span>
                     </div>

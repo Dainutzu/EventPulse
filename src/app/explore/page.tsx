@@ -61,19 +61,17 @@ export default function Explore() {
     return (
         <div className="pb-32 min-h-screen">
             {/* Header Area */}
-            <header className="px-6 pt-14 pb-4 flex items-center justify-between lg:px-0 lg:pt-16">
+            <header className="px-6 pt-14 pb-4 flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl lg:text-3xl font-black mb-1">Explore Hub</h1>
-                    <p className="text-sm lg:text-base text-[var(--color-text-muted)] font-medium">Find your next big experience on campus</p>
+                    <h1 className="text-2xl font-black mb-1">Explore Hub</h1>
+                    <p className="text-sm text-[var(--color-text-muted)] font-medium">Find your next big experience on campus</p>
                 </div>
-                <div className="lg:hidden">
-                    <BrandLogo size={44} rounded="rounded-xl" />
-                </div>
+                <BrandLogo size={44} rounded="rounded-xl" />
             </header>
 
             {/* Search Bar & Filters Area - Desktop Optimized */}
-            <div className="lg:flex lg:items-center lg:gap-4 lg:mb-10 px-6 lg:px-0">
-                <div className="flex-1 mb-5 lg:mb-0">
+            <div className="mb-10 px-6">
+                <div className="mb-5">
                     <div className="flex items-center bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl px-4 py-3.5 focus-within:border-[var(--color-accent)] focus-within:ring-2 focus-within:ring-[var(--color-accent)]/20 transition-all duration-300 shadow-sm shadow-black/20">
                         <Search size={20} className="text-[var(--color-text-muted)] mr-3 opacity-70" />
                         <input
@@ -89,37 +87,31 @@ export default function Explore() {
                     </div>
                 </div>
 
-                <div className="flex items-center gap-3">
-                    <div className="hidden lg:flex items-center gap-2 text-[var(--color-text-muted)] mr-2">
-                        <SlidersHorizontal size={14} className="opacity-60" />
-                        <span className="text-[10px] font-black uppercase tracking-widest opacity-60">Sort</span>
-                    </div>
-                    <div className="flex bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-1 shadow-inner">
-                        {SORT_OPTIONS.map((sortOption) => (
-                            <button
-                                key={sortOption}
-                                onClick={() => setActiveSort(sortOption)}
-                                className={`px-4 py-2 text-[11px] font-black uppercase tracking-tighter rounded-lg transition-all ${activeSort === sortOption
-                                    ? "bg-[var(--color-surface-elevated)] text-white shadow-md scale-105"
-                                    : "text-[var(--color-text-muted)] hover:text-white"
-                                    }`}
-                            >
-                                {sortOption}
-                            </button>
-                        ))}
-                    </div>
+                <div className="flex bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-1 shadow-inner">
+                    {SORT_OPTIONS.map((sortOption) => (
+                        <button
+                            key={sortOption}
+                            onClick={() => setActiveSort(sortOption)}
+                            className={`px-4 py-2 text-[11px] font-black uppercase tracking-tighter rounded-lg transition-all ${activeSort === sortOption
+                                ? "bg-[var(--color-surface-elevated)] text-white shadow-md scale-105"
+                                : "text-[var(--color-text-muted)]"
+                                }`}
+                        >
+                            {sortOption}
+                        </button>
+                    ))}
                 </div>
             </div>
 
             {/* Categories pills */}
-            <div className="flex gap-3 px-6 lg:px-0 pb-8 overflow-x-auto hide-scrollbar snap-x">
+            <div className="flex gap-3 px-6 pb-8 overflow-x-auto hide-scrollbar snap-x">
                 {categories.map((cat) => (
                     <button
                         key={cat}
                         onClick={() => setActiveCategory(cat)}
-                        className={`px-6 py-2.5 lg:px-8 lg:py-3.5 rounded-2xl text-[13px] lg:text-[14px] font-black whitespace-nowrap transition-all duration-300 border snap-start ${activeCategory === cat
+                        className={`px-6 py-2.5 rounded-2xl text-[13px] font-black whitespace-nowrap transition-all duration-300 border snap-start ${activeCategory === cat
                             ? "bg-blue-600 text-white border-blue-500 shadow-lg shadow-blue-500/30 scale-105"
-                            : "bg-[var(--color-surface)] text-[var(--color-text-muted)] border-[var(--color-border)] hover:bg-[var(--color-surface-elevated)] hover:text-white"
+                            : "bg-[var(--color-surface)] text-[var(--color-text-muted)] border-[var(--color-border)]"
                             }`}
                     >
                         {cat}
@@ -128,7 +120,7 @@ export default function Explore() {
             </div>
 
             {/* Main Content - Desktop Grid */}
-            <div className="px-6 lg:px-0 grid grid-cols-1 lg:grid-cols-2 gap-6 xl:gap-8 mb-16">
+            <div className="px-6 grid grid-cols-1 gap-6 mb-16">
                 <AnimatePresence mode="popLayout">
                     {isLoading ? (
                         [1, 2, 3, 4].map((i) => (
@@ -162,10 +154,10 @@ export default function Explore() {
                                     transition={{ duration: 0.4, delay: i * 0.03 }}
                                 >
                                     <Link href={`/events/${event.id}`}>
-                                        <Card className="hover:border-[var(--color-accent)]/40 transition-all duration-500 hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.3)] hover:-translate-y-2 lg:hover:-translate-y-3 overflow-hidden group rounded-[32px]">
+                                        <Card className="overflow-hidden group rounded-[32px]">
                                             {/* Preview Header */}
                                             <div
-                                                className="h-44 lg:h-52 w-full relative overflow-hidden"
+                                                className="h-44 w-full relative overflow-hidden"
                                                 style={{ backgroundColor: `color-mix(in srgb, ${event.categoryColor || '#3b82f6'} 20%, #000)` }}
                                             >
                                                 <div className="absolute inset-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay" />
@@ -194,8 +186,8 @@ export default function Explore() {
                                                 )}
                                             </div>
 
-                                            <div className="p-6 lg:p-8">
-                                                <h3 className="font-black text-[20px] lg:text-[22px] leading-tight mb-4 group-hover:text-blue-500 transition-colors line-clamp-2">{event.title}</h3>
+                                            <div className="p-6">
+                                                <h3 className="font-black text-[20px] leading-tight mb-4 transition-colors line-clamp-2">{event.title}</h3>
 
                                                 <div className="flex items-center justify-between mb-6">
                                                     <div className="flex items-center gap-3.5">
@@ -262,6 +254,6 @@ export default function Explore() {
             <BrandingFooter />
 
             <BottomNav />
-        </div>
+        </div >
     );
 }
