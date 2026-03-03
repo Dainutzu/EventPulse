@@ -42,7 +42,7 @@ export function AnalyticsWidgets({ events, registrations }: { events: any[], reg
     const checkInRate = totalRegs > 0 ? Math.round((attendedCount / totalRegs) * 100) : 0;
 
     return (
-        <div className="grid grid-cols-2 gap-4">
+        <div className="flex flex-col gap-4">
             <AnalyticsCard
                 title="Participation"
                 value="2,480"

@@ -29,7 +29,7 @@ export default function ScannerContent() {
     return (
         <div className="min-h-screen pb-28 relative flex flex-col">
             {/* Header */}
-            <header className="px-6 pt-12 pb-6 flex items-center justify-between">
+            <header className="px-4 pt-12 pb-6 flex items-center justify-between">
                 <div className="w-10 h-10 -ml-2 rounded-full flex items-center justify-center transition-colors opacity-0 pointer-events-none">
                     <ChevronLeft size={24} className="text-white" />
                 </div>
@@ -52,7 +52,7 @@ export default function ScannerContent() {
                             </div>
 
                             {/* Viewfinder Frame */}
-                            <div className="mt-16 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[24px] p-6 relative shadow-2xl overflow-hidden mx-auto w-full max-w-[320px]">
+                            <div className="mt-16 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-6 relative shadow-2xl overflow-hidden mx-auto w-full max-w-[320px]">
                                 <div className="aspect-square bg-[#0c1018] rounded-2xl relative overflow-hidden flex items-center justify-center">
                                     <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] mix-blend-overlay" />
                                     <motion.div
@@ -94,7 +94,7 @@ export default function ScannerContent() {
                                 Your presence at the <span className="text-[var(--color-accent)] font-bold">{eventToScan.title}</span> has been securely logged.
                             </p>
 
-                            <div className="w-full bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[20px] p-5 flex items-center gap-5">
+                            <div className="w-full bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-5 flex items-center gap-5">
                                 <div className="w-12 h-12 rounded-xl bg-[var(--color-surface-elevated)] flex items-center justify-center shrink-0">
                                     <Calendar size={22} className="text-[var(--color-accent)]" />
                                 </div>

@@ -54,8 +54,8 @@ export default function ExploreContent() {
     }, [activeCategory, activeSort, searchQuery]);
 
     return (
-        <div className="pb-32">
-            <header className="px-6 pt-14 pb-4 flex items-center justify-between">
+        <div className="pb-32 px-4">
+            <header className="pt-14 pb-4 flex items-center justify-between">
                 <div>
                     <h1 className="text-2xl font-black mb-1">Explore Hub</h1>
                     <p className="text-sm text-[var(--color-text-muted)] font-medium">Find your next big experience on campus</p>
@@ -63,7 +63,7 @@ export default function ExploreContent() {
                 <BrandLogo size={44} rounded="rounded-xl" />
             </header>
 
-            <div className="mb-10 px-6">
+            <div className="mb-10 px-0">
                 <div className="mb-5">
                     <div className="flex items-center bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl px-4 py-3.5 focus-within:border-[var(--color-accent)] focus-within:ring-2 focus-within:ring-[var(--color-accent)]/20 transition-all duration-300 shadow-sm shadow-black/20">
                         <Search size={20} className="text-[var(--color-text-muted)] mr-3 opacity-70" />
@@ -96,7 +96,7 @@ export default function ExploreContent() {
                 </div>
             </div>
 
-            <div className="flex gap-3 px-6 pb-8 overflow-x-auto hide-scrollbar snap-x">
+            <div className="flex gap-3 -mx-4 px-4 pb-8 overflow-x-auto hide-scrollbar snap-x">
                 {categories.map((cat) => (
                     <button
                         key={cat}
@@ -111,7 +111,7 @@ export default function ExploreContent() {
                 ))}
             </div>
 
-            <div className="px-6 grid grid-cols-1 gap-6 mb-16">
+            <div className="px-0 grid grid-cols-1 gap-6 mb-16">
                 <AnimatePresence mode="popLayout">
                     {isLoading ? (
                         [1, 2, 3].map((i) => (
@@ -120,7 +120,7 @@ export default function ExploreContent() {
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
-                                className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[32px] p-6 w-full"
+                                className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-6 w-full"
                             >
                                 <div className="w-full h-40 bg-[var(--color-surface-elevated)] rounded-2xl animate-pulse mb-6" />
                                 <div className="h-7 bg-[var(--color-surface-elevated)] rounded-full w-3/4 animate-pulse mb-5" />
@@ -145,7 +145,7 @@ export default function ExploreContent() {
                                     transition={{ duration: 0.4, delay: i * 0.03 }}
                                 >
                                     <Link href={`/events/${event.id}`}>
-                                        <Card className="overflow-hidden group rounded-[32px]">
+                                        <Card className="overflow-hidden group rounded-2xl">
                                             <div
                                                 className="h-44 w-full relative overflow-hidden"
                                                 style={{ backgroundColor: `color-mix(in srgb, ${event.categoryColor || '#3b82f6'} 20%, #000)` }}

@@ -9,9 +9,9 @@ import { formatMonthDay } from "@/lib/utils/date";
 
 export default function PortfolioContent() {
     return (
-        <div className="pb-32">
+        <div className="pb-32 px-4">
             {/* Header Area */}
-            <header className="px-6 pt-12 pb-6 flex items-center justify-between">
+            <header className="pt-12 pb-6 flex items-center justify-between">
                 <div className="w-10 h-10 -ml-2 rounded-full flex items-center justify-center transition-colors active:bg-[var(--color-surface)] group opacity-0 pointer-events-none">
                     <ChevronLeft size={24} className="text-white" />
                 </div>
@@ -24,24 +24,24 @@ export default function PortfolioContent() {
                 </button>
             </header>
 
-            {/* Stats Grid */}
-            <div className="grid grid-cols-3 gap-4 px-5 pb-12">
-                <div className="bg-blue-500/10 border border-blue-500/20 rounded-[32px] py-8 flex flex-col items-center shadow-lg">
-                    <span className="text-4xl font-black text-blue-500 mb-2">24</span>
-                    <span className="text-[10px] font-black tracking-[0.2em] text-[var(--color-text-muted)] uppercase">Attended</span>
+            {/* Stats List (Vertical to follow single-column requirement) */}
+            <div className="flex flex-col gap-4 px-0 pb-12">
+                <div className="bg-blue-500/10 border border-blue-500/20 rounded-2xl py-6 flex items-center justify-between px-8 shadow-lg">
+                    <span className="text-[14px] font-black tracking-widest text-[var(--color-text-muted)] uppercase">Attended Events</span>
+                    <span className="text-4xl font-black text-blue-500">24</span>
                 </div>
-                <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[32px] py-8 flex flex-col items-center shadow-md">
-                    <span className="text-4xl font-black mb-2">05</span>
-                    <span className="text-[10px] font-black tracking-[0.2em] text-[var(--color-text-muted)] uppercase">Organized</span>
+                <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl py-6 flex items-center justify-between px-8 shadow-md">
+                    <span className="text-[14px] font-black tracking-widest text-[var(--color-text-muted)] uppercase">Organized</span>
+                    <span className="text-4xl font-black">05</span>
                 </div>
-                <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[32px] py-8 flex flex-col items-center shadow-md">
-                    <span className="text-4xl font-black mb-2">1.2k</span>
-                    <span className="text-[10px] font-black tracking-[0.2em] text-[var(--color-text-muted)] uppercase">Points</span>
+                <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl py-6 flex items-center justify-between px-8 shadow-md">
+                    <span className="text-[14px] font-black tracking-widest text-[var(--color-text-muted)] uppercase">Impact Points</span>
+                    <span className="text-4xl font-black">1.2k</span>
                 </div>
             </div>
 
             {/* Timeline Section */}
-            <div className="px-6 relative">
+            <div className="relative">
                 <div className="flex items-center justify-between mb-8">
                     <h2 className="text-[18px] font-extrabold">Activity Timeline</h2>
                     <div className="bg-[var(--color-accent)]/15 text-[var(--color-accent)] px-3 py-1.5 rounded-full text-[11px] font-bold tracking-wider">
@@ -94,8 +94,8 @@ export default function PortfolioContent() {
                 </div>
             </div>
 
-            <div className="mb-20 px-6">
-                <div className="p-8 bg-gradient-to-br from-blue-900/40 to-indigo-900/30 backdrop-blur-3xl border border-white/10 rounded-[40px] shadow-2xl relative overflow-hidden text-center">
+            <div className="mb-20 px-0">
+                <div className="p-8 bg-gradient-to-br from-blue-900/40 to-indigo-900/30 backdrop-blur-3xl border border-white/10 rounded-2xl shadow-2xl relative overflow-hidden text-center">
                     <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/20 blur-[100px] rounded-full -translate-y-1/2 translate-x-1/2" />
 
                     <div className="relative z-10">
@@ -104,11 +104,11 @@ export default function PortfolioContent() {
                             Generate a certified PDF summary of your university engagements, skills acquired, and impact points. Perfect for internships and job applications.
                         </p>
                         <div className="flex flex-col gap-4">
-                            <button className="py-5 bg-blue-600 text-white font-black rounded-[24px] flex items-center justify-center gap-3 active:scale-95 shadow-[0_20px_40px_rgba(37,99,235,0.4)]">
+                            <button className="py-5 bg-blue-600 text-white font-black rounded-2xl flex items-center justify-center gap-3 active:scale-95 shadow-[0_20px_40px_rgba(37,99,235,0.4)]">
                                 <Download size={22} />
                                 Download PDF Portrait
                             </button>
-                            <button className="py-5 bg-white/10 text-white font-black rounded-[24px] flex items-center justify-center gap-3 active:scale-95">
+                            <button className="py-5 bg-white/10 text-white font-black rounded-2xl flex items-center justify-center gap-3 active:scale-95">
                                 <Share2 size={22} />
                                 Share Public Link
                             </button>

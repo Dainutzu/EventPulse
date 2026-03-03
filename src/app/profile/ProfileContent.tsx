@@ -49,7 +49,7 @@ export default function ProfileContent() {
     }, [registrations]);
 
     return (
-        <div className="pb-32 min-h-screen selection:bg-purple-500/30">
+        <div className="pb-32 min-h-screen selection:bg-purple-500/30 px-4">
             {/* Header Area */}
             <header className="px-0 pt-14 pb-8 flex flex-col items-center relative overflow-hidden transition-colors duration-300">
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-40 bg-gradient-to-b from-blue-600/5 to-transparent pointer-events-none" />
@@ -128,7 +128,7 @@ export default function ProfileContent() {
                         <h2 className="text-[16px] font-black mb-5 flex items-center gap-2.5">
                             <Award size={18} className="text-indigo-400" /> Your Engagement
                         </h2>
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="flex flex-col gap-4">
                             <StatCard label="Events Joined" value={impactStats.registrations} color="blue" />
                             <StatCard label="Attended" value={impactStats.attended} color="purple" />
                         </div>
@@ -147,7 +147,7 @@ export default function ProfileContent() {
                             </button>
                         </div>
 
-                        <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[28px] p-6 shadow-sm">
+                        <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-6 shadow-sm">
                             <div className="flex flex-wrap gap-2.5">
                                 {isEditingInterests ? (
                                     CATEGORIES.map(cat => {
@@ -254,8 +254,8 @@ export default function ProfileContent() {
                 </div>
             </div>
 
-            <div className="px-0 lg:px-0 mb-12">
-                <div className="bg-gradient-to-br from-indigo-900/30 to-blue-900/20 border border-indigo-500/20 rounded-[32px] p-8 relative overflow-hidden shadow-2xl">
+            <div className="px-0 mb-12">
+                <div className="bg-gradient-to-br from-indigo-900/30 to-blue-900/20 border border-indigo-500/20 rounded-2xl p-8 relative overflow-hidden shadow-2xl">
                     <div className="absolute top-0 right-0 transform translate-x-1/4 -translate-y-1/4 w-60 h-60 bg-blue-500/10 blur-[100px] rounded-full" />
 
                     <div className="max-w-xl">
@@ -273,9 +273,9 @@ export default function ProfileContent() {
                 </div>
             </div>
 
-            <div className="mb-20 max-w-2xl mx-auto w-full">
+            <div className="mb-20 w-full">
                 <h2 className="text-[18px] font-black mb-6 text-center">Interface & Preferences</h2>
-                <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[32px] overflow-hidden divide-y divide-[var(--color-border)] shadow-xl">
+                <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden divide-y divide-[var(--color-border)] shadow-xl">
                     <div className="flex items-center justify-between p-6 px-8">
                         <div className="flex items-center gap-4">
                             <div className="w-12 h-12 rounded-2xl bg-[var(--color-surface-elevated)] flex items-center justify-center border border-[var(--color-border)]">

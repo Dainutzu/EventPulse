@@ -64,7 +64,7 @@ Button.displayName = "Button";
 export const Card = ({ className, children, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
     <div
         className={cn(
-            "bg-[var(--color-surface)] rounded-3xl border border-[var(--color-border)] overflow-hidden",
+            "bg-[var(--color-surface)] rounded-2xl border border-[var(--color-border)] overflow-hidden",
             className
         )}
         {...props}

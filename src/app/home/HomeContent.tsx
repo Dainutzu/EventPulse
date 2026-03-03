@@ -40,7 +40,7 @@ export default function HomeContent({ initialEvents }: HomeContentProps) {
     const { upcoming, past } = useMemo(() => processEvents(filteredEvents), [filteredEvents]);
 
     return (
-        <div className="pb-28 min-h-screen selection:bg-blue-500/30">
+        <div className="pb-28 min-h-screen selection:bg-blue-500/30 px-4">
             <header className="pt-12 pb-8 flex items-center justify-between">
                 <div className="flex items-center gap-4">
                     <BrandLogo size={44} rounded="rounded-xl" />
@@ -69,7 +69,7 @@ export default function HomeContent({ initialEvents }: HomeContentProps) {
                 <Recommendations initialEvents={initialEvents} />
             </Suspense>
 
-            <div className="flex gap-3 -mx-6 px-6 pb-8 overflow-x-auto hide-scrollbar snap-x snap-mandatory">
+            <div className="flex gap-3 -mx-4 px-4 pb-8 overflow-x-auto hide-scrollbar snap-x snap-mandatory">
                 {["All", ...CATEGORIES].map((cat) => (
                     <button
                         key={cat}
@@ -112,26 +112,28 @@ export default function HomeContent({ initialEvents }: HomeContentProps) {
                 )}
             </div>
 
-            {past.length > 0 && (
-                <>
-                    <div className="flex items-center justify-between pb-6">
-                        <h2 className="text-xl font-black tracking-tight text-[var(--color-text-muted)]">Completed Recently</h2>
-                    </div>
-                    <div className="grid grid-cols-1 gap-6">
-                        {past.map((event, index) => (
-                            <Link key={event.id} href={`/events/${event.id}`}>
-                                <EventCard
-                                    event={event}
-                                    index={index}
-                                    isRegistered={isRegistered(event.id)}
-                                    isPast
-                                    onToggle={() => { }}
-                                />
-                            </Link>
-                        ))}
-                    </div>
-                </>
-            )}
+            {
+                past.length > 0 && (
+                    <>
+                        <div className="flex items-center justify-between pb-6">
+                            <h2 className="text-xl font-black tracking-tight text-[var(--color-text-muted)]">Completed Recently</h2>
+                        </div>
+                        <div className="grid grid-cols-1 gap-6">
+                            {past.map((event, index) => (
+                                <Link key={event.id} href={`/events/${event.id}`}>
+                                    <EventCard
+                                        event={event}
+                                        index={index}
+                                        isRegistered={isRegistered(event.id)}
+                                        isPast
+                                        onToggle={() => { }}
+                                    />
+                                </Link>
+                            ))}
+                        </div>
+                    </>
+                )
+            }
 
             <BrandingFooter />
 
@@ -194,7 +196,7 @@ export default function HomeContent({ initialEvents }: HomeContentProps) {
                     </div>
                 )}
             </AnimatePresence>
-        </div>
+        </div >
     );
 }
 
@@ -218,7 +220,7 @@ function EventCard({ event, index, isRegistered, isPast, onToggle }: EventCardPr
             transition={{ duration: 0.4, delay: index * 0.04 }}
             className="w-full"
         >
-            <div className={`bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[28px] p-5 cursor-pointer transition-all duration-500 group relative overflow-hidden ${isPast ? 'opacity-70 grayscale-[0.3]' : ''}`}>
+            <div className={`bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-4 cursor-pointer transition-all duration-300 group relative overflow-hidden ${isPast ? 'opacity-70 grayscale-[0.3]' : ''}`}>
 
                 {!isPast && isRegistered && (
                     <div className="absolute top-0 right-0">

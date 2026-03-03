@@ -37,8 +37,8 @@ export function Recommendations({ initialEvents }: RecommendationsProps) {
     if (recommendedEvents.length === 0) return null;
 
     return (
-        <div className="mb-10 -mx-6">
-            <div className="flex items-baseline justify-between px-6 mb-4">
+        <div className="mb-10 px-4">
+            <div className="flex items-baseline justify-between mb-4">
                 <div>
                     <h2 className="text-xl font-black tracking-tight">Recommended For You</h2>
                     <p className="text-[12px] text-[var(--color-text-muted)] font-bold">
@@ -46,15 +46,15 @@ export function Recommendations({ initialEvents }: RecommendationsProps) {
                     </p>
                 </div>
             </div>
-            <div className="flex gap-4 px-6 overflow-x-auto hide-scrollbar snap-x pb-4">
+            <div className="flex flex-col gap-4">
                 <AnimatePresence mode="popLayout">
                     {recommendedEvents.map((event, index) => (
                         <motion.div
                             key={`rec-${event.id}`}
-                            initial={isLoaded ? { opacity: 0, x: 20 } : false}
-                            animate={{ opacity: 1, x: 0 }}
+                            initial={isLoaded ? { opacity: 0, y: 10 } : false}
+                            animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.4, delay: index * 0.05 }}
-                            className="snap-start shrink-0 w-[280px]"
+                            className="w-full"
                         >
                             <Link href={`/events/${event.id}`}>
                                 <div className="relative group">
@@ -82,10 +82,10 @@ function EventCardSmall({ event, isRegistered, onToggle }: { event: Event; isReg
     const dateStr = formatDateBlock(event.date);
 
     return (
-        <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[28px] p-5 cursor-pointer transition-all duration-500 group relative overflow-hidden h-full">
-            <div className="flex gap-5">
+        <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-4 cursor-pointer transition-all duration-300 group relative overflow-hidden w-full">
+            <div className="flex gap-4">
                 <div
-                    className="w-[60px] h-[70px] rounded-[18px] flex flex-col items-center justify-center shrink-0 shadow-inner relative overflow-hidden"
+                    className="w-[60px] h-[70px] rounded-xl flex flex-col items-center justify-center shrink-0 shadow-inner relative overflow-hidden"
                     style={{ backgroundColor: `color-mix(in srgb, ${getCategoryColor(event.category)} 15%, transparent)` }}
                 >
                     <span className="text-[10px] font-black tracking-widest uppercase opacity-80" style={{ color: getCategoryColor(event.category) }}>
@@ -102,13 +102,14 @@ function EventCardSmall({ event, isRegistered, onToggle }: { event: Event; isReg
                             {event.category}
                         </Badge>
                     </div>
-                    <h3 className="text-md font-black leading-tight mb-2 line-clamp-2">
+                    <h3 className="text-md font-black leading-tight mb-2 line-clamp-1">
                         {event.title}
                     </h3>
+                    <p className="text-[11px] text-[var(--color-text-muted)] font-medium line-clamp-1">{event.club}</p>
                 </div>
             </div>
 
-            <div className="flex items-center justify-between mt-4 pt-4 border-t border-[var(--color-border)]">
+            <div className="flex items-center justify-between mt-3 pt-3 border-t border-[var(--color-border)]">
                 <div className="flex items-center gap-1.5 text-[12px] font-bold text-[var(--color-text-muted)]">
                     <Clock size={14} className="opacity-50 text-[var(--color-accent)]" />
                     <span>{event.timeStart}</span>
@@ -120,7 +121,7 @@ function EventCardSmall({ event, isRegistered, onToggle }: { event: Event; isReg
                         e.stopPropagation();
                         onToggle();
                     }}
-                    className={`px-4 py-2 rounded-xl text-[12px] font-black transition-all duration-300 active:scale-90 ${isRegistered
+                    className={`px-4 py-1.5 rounded-lg text-[12px] font-black transition-all duration-300 active:scale-90 ${isRegistered
                         ? "bg-[var(--color-surface-elevated)] text-[var(--color-accent)] border border-[var(--color-accent)]/30"
                         : "bg-blue-600 text-white shadow-lg"
                         }`}
