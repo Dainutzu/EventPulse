@@ -51,7 +51,7 @@ export default function ProfileContent() {
     return (
         <div className="pb-32 min-h-screen selection:bg-purple-500/30">
             {/* Header Area */}
-            <header className="px-6 pt-14 pb-8 flex flex-col items-center relative overflow-hidden transition-colors duration-300">
+            <header className="px-0 pt-14 pb-8 flex flex-col items-center relative overflow-hidden transition-colors duration-300">
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-40 bg-gradient-to-b from-blue-600/5 to-transparent pointer-events-none" />
 
                 <div className="mb-6 z-10 flex flex-col items-center lg:hidden">
@@ -122,7 +122,7 @@ export default function ProfileContent() {
                 </Badge>
             </header>
 
-            <div className="lg:grid lg:grid-cols-2 lg:gap-12 px-6 lg:px-0 mb-12">
+            <div className="lg:grid lg:grid-cols-2 lg:gap-12 px-0 lg:px-0 mb-12">
                 <div>
                     <div className="mb-10">
                         <h2 className="text-[16px] lg:text-[18px] font-black mb-5 flex items-center gap-2.5">
@@ -141,7 +141,7 @@ export default function ProfileContent() {
                             </h2>
                             <button
                                 onClick={() => setIsEditingInterests(!isEditingInterests)}
-                                className="text-[11px] font-black uppercase tracking-widest text-[var(--color-accent)] bg-blue-500/10 px-3 py-1.5 rounded-lg border border-blue-500/20 active:scale-95 transition-all"
+                                className="text-[11px] font-black uppercase tracking-widest text-[var(--color-accent)] bg-blue-500/10 px-3 py-1.5 rounded-lg border border-blue-500/20 active:scale-95 transition-all outline-none"
                             >
                                 {isEditingInterests ? "Save Profile" : "Edit Preferences"}
                             </button>
@@ -254,8 +254,8 @@ export default function ProfileContent() {
                 </div>
             </div>
 
-            <div className="px-6 lg:px-0 mb-12">
-                <div className="bg-gradient-to-br from-indigo-900/30 to-blue-900/20 border border-indigo-500/20 rounded-[40px] p-8 lg:p-12 relative overflow-hidden shadow-2xl">
+            <div className="px-0 lg:px-0 mb-12">
+                <div className="bg-gradient-to-br from-indigo-900/30 to-blue-900/20 border border-indigo-500/20 rounded-[32px] md:rounded-[40px] p-8 lg:p-12 relative overflow-hidden shadow-2xl">
                     <div className="absolute top-0 right-0 transform translate-x-1/4 -translate-y-1/4 w-60 h-60 bg-blue-500/10 blur-[100px] rounded-full" />
 
                     <div className="max-w-xl">
@@ -273,9 +273,9 @@ export default function ProfileContent() {
                 </div>
             </div>
 
-            <div className="px-6 lg:px-0 mb-20 max-w-2xl mx-auto w-full">
+            <div className="px-0 lg:px-0 mb-20 max-w-2xl mx-auto w-full">
                 <h2 className="text-[18px] font-black mb-6 text-center lg:text-left">Interface & Preferences</h2>
-                <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[40px] overflow-hidden divide-y divide-[var(--color-border)] shadow-xl">
+                <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[32px] md:rounded-[40px] overflow-hidden divide-y divide-[var(--color-border)] shadow-xl">
                     <div className="flex items-center justify-between p-6 px-8">
                         <div className="flex items-center gap-4">
                             <div className="w-12 h-12 rounded-2xl bg-[var(--color-surface-elevated)] flex items-center justify-center border border-[var(--color-border)]">

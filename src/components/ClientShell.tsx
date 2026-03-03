@@ -22,7 +22,7 @@ export function ClientShell({ children }: { children: React.ReactNode }) {
 
                 {/* Main Content Area */}
                 <main className="flex-1 flex flex-col min-w-0">
-                    <div className="mx-auto w-full max-w-[430px] lg:max-w-[1200px] xl:max-w-[1400px] min-h-screen bg-[var(--color-bg)] text-[var(--color-text-main)] relative shadow-2xl lg:shadow-none shadow-black/50 overflow-x-hidden transition-all duration-300 px-0 lg:px-12">
+                    <div className="mx-auto w-full max-w-screen-2xl min-h-screen bg-[var(--color-bg)] text-[var(--color-text-main)] relative shadow-2xl lg:shadow-none shadow-black/50 overflow-x-hidden transition-all duration-300 px-6 lg:px-12">
                         <AnimatePresence mode="wait">
                             <motion.div
                                 key={pathname}
@@ -30,7 +30,7 @@ export function ClientShell({ children }: { children: React.ReactNode }) {
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -5 }}
                                 transition={{ duration: 0.15 }}
-                                className="w-full h-full"
+                                className="w-full h-full pb-24 lg:pb-12"
                             >
                                 {children}
                             </motion.div>

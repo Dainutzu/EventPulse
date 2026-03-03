@@ -38,7 +38,7 @@ export default function HomeContent() {
 
     return (
         <div className="pb-28 min-h-screen selection:bg-blue-500/30">
-            <header className="px-6 lg:px-0 pt-12 lg:pt-16 pb-8 flex items-center justify-between">
+            <header className="px-0 lg:px-0 pt-12 lg:pt-16 pb-8 flex items-center justify-between">
                 <div className="flex items-center gap-4 lg:gap-6">
                     <div className="lg:hidden">
                         <BrandLogo size={44} rounded="rounded-xl" />
@@ -71,8 +71,8 @@ export default function HomeContent() {
             </header>
 
             {recommendedEvents.length > 0 && (
-                <div className="mb-10">
-                    <div className="flex items-baseline justify-between px-6 mb-4">
+                <div className="mb-10 -mx-6 lg:mx-0">
+                    <div className="flex items-baseline justify-between px-6 lg:px-0 mb-4">
                         <div>
                             <h2 className="text-xl font-black tracking-tight">Recommended For You</h2>
                             <p className="text-[12px] text-[var(--color-text-muted)] font-bold">Based on your interests and activity</p>
@@ -102,7 +102,7 @@ export default function HomeContent() {
                 </div>
             )}
 
-            <div className="flex gap-3 px-6 lg:px-0 pb-8 overflow-x-auto hide-scrollbar snap-x snap-mandatory">
+            <div className="flex gap-3 -mx-6 lg:mx-0 px-6 lg:px-0 pb-8 overflow-x-auto hide-scrollbar snap-x snap-mandatory">
                 {["All", ...CATEGORIES].map((cat) => (
                     <button
                         key={cat}
@@ -117,12 +117,12 @@ export default function HomeContent() {
                 ))}
             </div>
 
-            <div className="flex items-center justify-between px-6 lg:px-0 pb-6">
+            <div className="flex items-center justify-between px-0 lg:px-0 pb-6">
                 <h2 className="text-xl lg:text-2xl font-black tracking-tight">Upcoming Events</h2>
                 <Badge variant="default" className="bg-blue-500/10 border-blue-500/20 text-blue-400">Live Campus Feed</Badge>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 px-6 lg:px-0 mb-16">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-0 lg:px-0 mb-16">
                 <AnimatePresence mode="popLayout" initial={false}>
                     {upcoming.map((event, index) => (
                         <Link key={event.id} href={`/events/${event.id}`}>
@@ -147,10 +147,10 @@ export default function HomeContent() {
 
             {past.length > 0 && (
                 <>
-                    <div className="flex items-center justify-between px-6 lg:px-0 pb-6">
+                    <div className="flex items-center justify-between px-0 lg:px-0 pb-6">
                         <h2 className="text-xl lg:text-2xl font-black tracking-tight text-[var(--color-text-muted)]">Completed Recently</h2>
                     </div>
-                    <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 px-6 lg:px-0">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-0 lg:px-0">
                         {past.map((event, index) => (
                             <Link key={event.id} href={`/events/${event.id}`}>
                                 <EventCard
@@ -249,8 +249,9 @@ function EventCard({ event, index, isRegistered, isPast, onToggle }: EventCardPr
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.4, delay: index * 0.04 }}
+            className="w-full"
         >
-            <div className={`bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[32px] p-6 lg:p-7 cursor-pointer transition-all duration-500 hover:bg-[var(--color-surface-elevated)] hover:-translate-y-2 lg:hover:-translate-y-3 hover:border-[var(--color-accent)]/30 hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)] dark:hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.6)] group relative overflow-hidden ${isPast ? 'opacity-70 grayscale-[0.3]' : ''}`}>
+            <div className={`bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[28px] md:rounded-[32px] p-5 md:p-7 cursor-pointer transition-all duration-500 hover:bg-[var(--color-surface-elevated)] hover:-translate-y-1 lg:hover:-translate-y-3 hover:border-[var(--color-accent)]/30 hover:shadow-xl group relative overflow-hidden ${isPast ? 'opacity-70 grayscale-[0.3]' : ''}`}>
 
                 {!isPast && isRegistered && (
                     <div className="absolute top-0 right-0">

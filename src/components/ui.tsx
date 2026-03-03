@@ -117,11 +117,11 @@ export const BottomNav = () => {
     const isActive = (path: string) => pathname?.startsWith(path);
 
     return (
-        <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] z-50">
+        <div className="fixed bottom-0 left-0 right-0 w-full z-50">
             {/* Gradient fade above nav */}
-            <div className="h-24 w-full bg-gradient-to-t from-[#0A0F1E] to-transparent pointer-events-none absolute bottom-0 -z-10" />
+            <div className="h-24 w-full bg-gradient-to-t from-[var(--color-bg)] to-transparent pointer-events-none absolute bottom-0 -z-10" />
 
-            <div className="bg-[#0D0F14]/90 backdrop-blur-xl border-t border-[var(--color-border)] px-2 pt-3 pb-6 flex items-center justify-around relative">
+            <div className="bg-[var(--color-surface)]/80 backdrop-blur-xl border-t border-[var(--color-border)] px-4 pt-3 pb-safe-bottom flex items-center justify-around relative">
                 <NavItem href="/home" icon={<Home size={24} />} label="Home" active={isActive("/home")} />
                 <NavItem href="/explore" icon={<Compass size={24} />} label="Explore" active={isActive("/explore")} />
 
@@ -129,7 +129,7 @@ export const BottomNav = () => {
                 <div className="relative -top-8 flex flex-col items-center">
                     <Link
                         href="/scanner"
-                        className="w-14 h-14 bg-[var(--color-accent)] rounded-full flex items-center justify-center text-white shadow-[0_4px_20px_rgba(59,130,246,0.5)] border-4 border-[#0D0F14] transition-transform hover:scale-110 active:scale-95 z-10"
+                        className="w-14 h-14 bg-[var(--color-accent)] rounded-full flex items-center justify-center text-white shadow-[0_4px_20px_rgba(59,130,246,0.5)] border-4 border-[var(--color-bg)] transition-transform hover:scale-110 active:scale-95 z-10"
                     >
                         <QrCode size={26} />
                     </Link>
