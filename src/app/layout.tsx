@@ -70,9 +70,7 @@ export default function RootLayout({
       <body className="antialiased selection:bg-blue-500/30 bg-black transition-colors duration-300 min-h-screen flex justify-center overflow-x-hidden">
         <Providers>
           <div className="w-full max-w-[430px] bg-[var(--color-bg)] min-h-screen relative shadow-[0_0_100px_rgba(0,0,0,0.5)] overflow-x-hidden">
-            <ClientShell>
-              {children}
-            </ClientShell>
+            {children}
           </div>
         </Providers>
       </body>

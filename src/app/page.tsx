@@ -2,15 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import SplashContent from "./SplashContent";
-import HomeContent from "./home/HomeContent";
-import ExploreContent from "./explore/ExploreContent";
-import PortfolioContent from "./portfolio/PortfolioContent";
-import ProfileContent from "./profile/ProfileContent";
-import ScannerContent from "./scanner/ScannerContent";
 import { useEventStore } from "@/state/useEventStore";
 import { BottomNav } from "@/components/ui";
 import { MOCK_EVENTS } from "@/lib/mockData";
+
+// Instant Import of SPA Sections
+import HomeSection from "@/components/spa/HomeSection";
+import ExploreSection from "@/components/spa/ExploreSection";
+import PortfolioSection from "@/components/spa/PortfolioSection";
+import ProfileSection from "@/components/spa/ProfileSection";
+import ScannerSection from "@/components/spa/ScannerSection";
 
 export default function Page() {
   const { activeTab, setActiveTab, isHydrated } = useEventStore();
@@ -37,7 +38,6 @@ export default function Page() {
         exit={{ opacity: 0, scale: 1.1 }}
         transition={{ duration: 0.5 }}
       >
-        {/* We override SplashContent's Link with a button action */}
         <SplashContainer onEnter={handleEnterApp} />
       </motion.div>
     );
@@ -55,11 +55,11 @@ export default function Page() {
             transition={{ duration: 0.2, ease: "easeInOut" }}
             className="w-full h-full pb-20"
           >
-            {activeTab === "home" && <HomeContent initialEvents={MOCK_EVENTS} />}
-            {activeTab === "explore" && <ExploreContent />}
-            {activeTab === "scanner" && <ScannerContent />}
-            {activeTab === "portfolio" && <PortfolioContent />}
-            {activeTab === "profile" && <ProfileContent />}
+            {activeTab === "home" && <HomeSection initialEvents={MOCK_EVENTS} />}
+            {activeTab === "explore" && <ExploreSection />}
+            {activeTab === "scanner" && <ScannerSection onBack={() => setActiveTab("home")} />}
+            {activeTab === "portfolio" && <PortfolioSection />}
+            {activeTab === "profile" && <ProfileSection />}
           </motion.div>
         </AnimatePresence>
       </main>
@@ -72,13 +72,13 @@ export default function Page() {
 // Wrapper to hijack SplashContent's Link behavior
 function SplashContainer({ onEnter }: { onEnter: () => void }) {
   return (
-    <div className="flex flex-col items-center justify-between h-screen py-16 px-7 relative">
+    <div className="flex flex-col items-center justify-between h-screen py-16 px-7 relative bg-black text-white">
       <div className="text-center z-10 flex flex-col items-center pt-20">
         <div className="w-20 h-20 bg-blue-600 rounded-3xl flex items-center justify-center mb-6 shadow-2xl">
-          <span className="text-4xl text-white">⚡</span>
+          <span className="text-4xl">⚡</span>
         </div>
-        <h1 className="text-4xl font-extrabold tracking-tight mb-2">Event Pulse</h1>
-        <p className="text-[var(--color-text-muted)] text-base">Your Campus. Connected.</p>
+        <h1 className="text-4xl font-extrabold tracking-tight mb-2">EventPulse</h1>
+        <p className="text-gray-400 text-base">Your Campus. Connected.</p>
       </div>
 
       <div className="w-full h-40 flex items-center justify-center">
@@ -87,7 +87,7 @@ function SplashContainer({ onEnter }: { onEnter: () => void }) {
             className="h-full bg-blue-600"
             initial={{ width: "0%" }}
             animate={{ width: "100%" }}
-            transition={{ duration: 1.5, ease: "easeInOut" }}
+            transition={{ duration: 1.8, ease: "easeInOut" }}
           />
         </div>
       </div>
@@ -100,13 +100,12 @@ function SplashContainer({ onEnter }: { onEnter: () => void }) {
       >
         <button
           onClick={onEnter}
-          className="w-full py-4.5 bg-blue-600 text-white font-bold rounded-2xl shadow-xl active:scale-95 transition-all"
+          className="w-full py-5 bg-blue-600 text-white font-black rounded-2xl shadow-[0_15px_30px_rgba(37,99,235,0.4)] active:scale-95 transition-all"
         >
-          <div className="inline-block mr-2">🎓</div>
           Sign in with University Email
         </button>
-        <p className="text-[13px] text-[var(--color-text-muted)] text-center mt-2 px-6">
-          Investor Presentation Mode • Mobile SPA
+        <p className="text-[13px] text-gray-500 text-center mt-2 px-6">
+          Investor Launch • Mobile SPA Only
         </p>
       </motion.div>
     </div>

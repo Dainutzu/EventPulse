@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { playSound } from "@/lib/sounds";
 import { useEventStore } from "@/state/useEventStore";
 
-export default function ScannerContent() {
+export default function ScannerSection({ onBack }: { onBack: () => void }) {
     const { events, updateAttendance } = useEventStore();
     const [scanState, setScanState] = useState<"scanning" | "success">("scanning");
 
@@ -27,17 +27,16 @@ export default function ScannerContent() {
     }, [scanState, eventToScan.id, updateAttendance]);
 
     return (
-        <div className="min-h-screen pb-28 relative flex flex-col">
-            {/* Header */}
-            <header className="px-4 pt-12 pb-6 flex items-center justify-between">
-                <div className="w-10 h-10 -ml-2 rounded-full flex items-center justify-center transition-colors opacity-0 pointer-events-none">
-                    <ChevronLeft size={24} className="text-white" />
-                </div>
+        <div className="min-h-screen pb-28 relative flex flex-col px-4">
+            <header className="pt-12 pb-6 flex items-center justify-between">
+                <button onClick={onBack} className="w-10 h-10 -ml-2 rounded-full flex items-center justify-center transition-colors active:bg-[var(--color-surface)] group">
+                    <ChevronLeft size={24} className="text-white group-hover:text-blue-500" />
+                </button>
                 <span className="font-extrabold text-[18px]">QR Attendance</span>
                 <div className="w-10" />
             </header>
 
-            <div className="flex-1 px-5 flex flex-col pt-4">
+            <div className="flex-1 flex flex-col pt-4">
                 <AnimatePresence mode="wait">
                     {scanState === "scanning" ? (
                         <motion.div
@@ -51,7 +50,6 @@ export default function ScannerContent() {
                                 Position the QR code within the frame to record your attendance.
                             </div>
 
-                            {/* Viewfinder Frame */}
                             <div className="mt-16 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-6 relative shadow-2xl overflow-hidden mx-auto w-full max-w-[320px]">
                                 <div className="aspect-square bg-[#0c1018] rounded-2xl relative overflow-hidden flex items-center justify-center">
                                     <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] mix-blend-overlay" />
@@ -98,7 +96,7 @@ export default function ScannerContent() {
                                 <div className="w-12 h-12 rounded-xl bg-[var(--color-surface-elevated)] flex items-center justify-center shrink-0">
                                     <Calendar size={22} className="text-[var(--color-accent)]" />
                                 </div>
-                                <div>
+                                <div className="text-left">
                                     <p className="text-[11px] font-black uppercase tracking-widest text-[var(--color-text-muted)] mb-1">
                                         Today&apos;s Session
                                     </p>
@@ -107,6 +105,13 @@ export default function ScannerContent() {
                                     </p>
                                 </div>
                             </div>
+
+                            <button
+                                onClick={onBack}
+                                className="mt-12 w-full py-4 bg-[var(--color-surface-elevated)] border border-[var(--color-border)] rounded-2xl font-black text-[15px] active:scale-95 transition-all"
+                            >
+                                Return to Dashboard
+                            </button>
                         </motion.div>
                     )}
                 </AnimatePresence>

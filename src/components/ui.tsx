@@ -23,6 +23,10 @@ export {
     CheckCircle,
     Users,
     TrendingUp,
+    Search,
+    Star,
+    Award,
+    QrCode,
 } from "lucide-react";
 
 // --- Button ---
