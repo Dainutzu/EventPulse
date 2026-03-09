@@ -21,6 +21,30 @@ import { useEventStore } from "@/state/useEventStore";
 import { formatDateBlock } from "@/utils/dateUtils";
 import { playSound } from "@/lib/sounds";
 
+// ─── Helpers ───────────────────────────────────────────────────────────────────
+function getEventEmoji(faculty: string, subcategory: string): string {
+    if (subcategory === "Sports") return "🏆";
+    if (subcategory === "Music") return "🎵";
+    if (subcategory === "Cultural") return "🎭";
+    if (subcategory === "Workshop" || subcategory === "Workshops") return "🛠️";
+    if (subcategory === "Clubs & Societies") return "🤝";
+    if (subcategory === "Competition") return "🏅";
+    if (subcategory === "Seminar") return "📡";
+    if (subcategory === "Lecture" || subcategory === "Guest Lecture") return "📚";
+    if (faculty === "Faculty of Computing") return "💻";
+    if (faculty === "School of Business") return "💼";
+    if (faculty === "School of Architecture") return "🏛️";
+    if (faculty === "Faculty of Humanities and Sciences") return "🔬";
+    if (faculty === "School of Law") return "⚖️";
+    if (faculty === "School of Hospitality Management") return "🍽️";
+    return "🎓";
+}
+
+function getShortFaculty(faculty: string): string {
+    if (faculty === "Miscellaneous") return "Misc";
+    return faculty.replace("Faculty of ", "").replace("School of ", "");
+}
+
 // ─── Toast Notification Component ─────────────────────────────────────────────
 interface ToastProps {
     message: string;
@@ -38,8 +62,8 @@ function Toast({ message, type, visible }: ToastProps) {
                     exit={{ opacity: 0, y: -20, scale: 0.95 }}
                     transition={{ duration: 0.2, ease: "easeOut" }}
                     className={`fixed top-5 left-1/2 -translate-x-1/2 z-[300] flex items-center gap-2.5 px-5 py-3 rounded-2xl shadow-2xl border backdrop-blur-xl text-sm font-black whitespace-nowrap ${type === "success"
-                            ? "bg-emerald-500/20 border-emerald-500/30 text-emerald-400"
-                            : "bg-blue-500/20 border-blue-500/30 text-blue-400"
+                        ? "bg-emerald-500/20 border-emerald-500/30 text-emerald-400"
+                        : "bg-blue-500/20 border-blue-500/30 text-blue-400"
                         }`}
                 >
                     {type === "success" ? (
@@ -108,6 +132,8 @@ export default function EventDetailsSection() {
     const progress = Math.min((event.registered / event.maxParticipants) * 100, 100);
     const isAlmostFull = seatsLeft <= 5 && seatsLeft > 0;
     const isFull = seatsLeft <= 0;
+    const shortFaculty = getShortFaculty(event.faculty);
+    const isClubEvent = event.subcategory === "Clubs & Societies" && !!event.organizer;
 
     const handleToggleRegistration = () => {
         if (isFull && !registered) {
@@ -157,7 +183,7 @@ export default function EventDetailsSection() {
                 {/* ── Scrollable Content ────────────────────────────────────────── */}
                 <div className="flex-1 overflow-y-auto overscroll-contain pb-36 hide-scrollbar scroll-smooth">
                     {/* Banner */}
-                    <div className="relative h-[280px] w-full shrink-0 overflow-hidden">
+                    <div className="relative h-[260px] w-full shrink-0 overflow-hidden">
                         <div
                             className="absolute inset-0"
                             style={{
@@ -183,55 +209,61 @@ export default function EventDetailsSection() {
                                 style={{ backgroundColor: `${event.categoryColor}25` }}
                             >
                                 <span className="text-5xl select-none">
-                                    {event.category === "Tech" ? "💻" :
-                                        event.category === "Sports" ? "🏆" :
-                                            event.category === "Cultural" ? "🎭" :
-                                                event.category === "Academic" ? "📚" : "💼"}
+                                    {getEventEmoji(event.faculty, event.subcategory)}
                                 </span>
                             </div>
                         </div>
                     </div>
 
-                    {/* Content Card */}
-                    <div className="px-5 -mt-4 flex flex-col gap-6">
-                        {/* Badges Row */}
-                        <div className="flex items-center gap-2 flex-wrap">
-                            <Badge
-                                className="px-3 py-1.5 rounded-xl text-[11px] font-black border"
-                                style={{
-                                    backgroundColor: `${event.categoryColor}18`,
-                                    borderColor: `${event.categoryColor}35`,
-                                    color: event.categoryColor
-                                }}
-                            >
-                                {event.category}
-                            </Badge>
-                            {event.trending && (
-                                <Badge className="px-3 py-1.5 rounded-xl text-[11px] font-black bg-amber-500/15 border-amber-500/30 text-amber-400 flex items-center gap-1.5 border">
-                                    <Flame size={11} />
-                                    Trending
-                                </Badge>
-                            )}
-                            {registered && (
-                                <Badge className="px-3 py-1.5 rounded-xl text-[11px] font-black bg-emerald-500/15 border-emerald-500/30 text-emerald-400 flex items-center gap-1.5 border">
-                                    <Sparkles size={11} />
-                                    Registered
-                                </Badge>
-                            )}
-                        </div>
-
-                        {/* Title & Club */}
+                    {/* Content */}
+                    <div className="px-5 -mt-4 flex flex-col gap-5">
+                        {/* Title & Details */}
                         <div>
-                            <h1 className="text-[22px] font-black leading-tight tracking-tight text-[var(--color-text-main)] mb-2">
+                            <h1 className="text-[28px] font-black leading-tight tracking-tight text-[var(--color-text-main)] mb-3">
                                 {event.title}
                             </h1>
-                            <div className="flex items-center gap-2">
-                                <ShieldCheck size={14} className="text-blue-500 shrink-0" />
-                                <span className="text-[13px] font-bold text-[var(--color-text-muted)]">
-                                    {event.club}
+
+                            <div className="flex flex-col gap-2">
+                                <span className="text-[15px] font-black text-blue-500/80 uppercase tracking-widest">
+                                    {event.faculty === "Miscellaneous" && event.subcategory === "Clubs & Societies" ? "Misc • Clubs" : `${shortFaculty} • ${event.subcategory}`}
                                 </span>
+
+                                {isClubEvent && (
+                                    <div className="flex items-center gap-2">
+                                        <ShieldCheck size={16} className="text-emerald-500 shrink-0" />
+                                        <span className="text-[14px] font-bold text-[var(--color-text-muted)]">
+                                            Organised by <span className="text-emerald-400 font-black">{event.organizer}</span>
+                                        </span>
+                                    </div>
+                                )}
+                                {event.organizer && !isClubEvent && (
+                                    <div className="flex items-center gap-2">
+                                        <ShieldCheck size={16} className="text-blue-500 shrink-0" />
+                                        <span className="text-[14px] font-bold text-[var(--color-text-muted)]">
+                                            {event.organizer}
+                                        </span>
+                                    </div>
+                                )}
                             </div>
                         </div>
+
+                        {/* Status Badges Row */}
+                        {(event.trending || registered) && (
+                            <div className="flex items-center gap-2 flex-wrap mt-1">
+                                {event.trending && (
+                                    <Badge className="px-3 py-1.5 rounded-xl text-[11px] font-black bg-amber-500/15 border-amber-500/30 text-amber-400 flex items-center gap-1.5 border">
+                                        <Flame size={11} />
+                                        Trending
+                                    </Badge>
+                                )}
+                                {registered && (
+                                    <Badge className="px-3 py-1.5 rounded-xl text-[11px] font-black bg-emerald-500/15 border-emerald-500/30 text-emerald-400 flex items-center gap-1.5 border">
+                                        <Sparkles size={11} />
+                                        Registered
+                                    </Badge>
+                                )}
+                            </div>
+                        )}
 
                         {/* Seats Progress */}
                         <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-4">
@@ -243,7 +275,7 @@ export default function EventDetailsSection() {
                                     </span>
                                 </div>
                                 <span className={`text-[12px] font-black ${isFull ? "text-red-400" :
-                                        isAlmostFull ? "text-amber-400" : "text-emerald-400"
+                                    isAlmostFull ? "text-amber-400" : "text-emerald-400"
                                     }`}>
                                     {isFull ? "FULL" : isAlmostFull ? `Only ${seatsLeft} left!` : `${seatsLeft} available`}
                                 </span>
@@ -254,7 +286,7 @@ export default function EventDetailsSection() {
                                     animate={{ width: `${progress}%` }}
                                     transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
                                     className={`h-full rounded-full ${isFull ? "bg-red-500" :
-                                            isAlmostFull ? "bg-amber-500" : "bg-emerald-500"
+                                        isAlmostFull ? "bg-amber-500" : "bg-emerald-500"
                                         }`}
                                 />
                             </div>
@@ -290,7 +322,7 @@ export default function EventDetailsSection() {
                                 <InfoRow
                                     icon={<MapPin size={18} className="text-emerald-500" />}
                                     iconBg="bg-emerald-500/10 border border-emerald-500/20"
-                                    label={event.venue}
+                                    label={event.location}
                                     sublabel="University Campus"
                                 />
                             </div>
@@ -339,10 +371,10 @@ export default function EventDetailsSection() {
                         transition={{ duration: 0.15 }}
                         disabled={isFull && !registered}
                         className={`w-full py-[18px] rounded-2xl font-black text-[17px] transition-all duration-200 shadow-2xl flex items-center justify-center gap-3 active:brightness-90 disabled:opacity-50 disabled:cursor-not-allowed ${registered
-                                ? "bg-emerald-500/12 text-emerald-400 border border-emerald-500/30"
-                                : isFull
-                                    ? "bg-[var(--color-surface)] text-[var(--color-text-muted)] border border-[var(--color-border)]"
-                                    : "bg-blue-600 text-white shadow-[0_12px_30px_rgba(37,99,235,0.35)]"
+                            ? "bg-emerald-500/12 text-emerald-400 border border-emerald-500/30"
+                            : isFull
+                                ? "bg-[var(--color-surface)] text-[var(--color-text-muted)] border border-[var(--color-border)]"
+                                : "bg-blue-600 text-white shadow-[0_12px_30px_rgba(37,99,235,0.35)]"
                             }`}
                     >
                         {registered ? (
@@ -353,7 +385,7 @@ export default function EventDetailsSection() {
                         ) : isFull ? (
                             "Event Full"
                         ) : (
-                            "Confirm Registration"
+                            "Register for Event"
                         )}
                     </motion.button>
                     <p className="text-[11px] text-[var(--color-text-muted)] text-center mt-3 font-semibold uppercase tracking-[0.15em] opacity-40">

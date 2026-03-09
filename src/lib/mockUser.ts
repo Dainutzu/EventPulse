@@ -36,4 +36,12 @@ export const MOCK_PORTFOLIO: PortfolioItem[] = [
     },
 ];
 
-export const CATEGORIES = ["Academic", "Tech", "Sports", "Cultural", "Career"];
+export const CATEGORIES = [
+    "Faculty of Computing",
+    "School of Business",
+    "School of Architecture",
+    "Faculty of Humanities and Sciences",
+    "School of Law",
+    "School of Hospitality Management",
+    "Miscellaneous"
+];

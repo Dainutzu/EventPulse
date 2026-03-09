@@ -33,7 +33,7 @@ export default function HomeSection({ initialEvents }: HomeSectionProps) {
         const currentEvents = isHydrated && events.length > 0 ? events : initialEvents;
         return activeCategory === "All"
             ? currentEvents
-            : currentEvents.filter((e) => e.category === activeCategory);
+            : currentEvents.filter((e) => e.faculty === activeCategory);
     }, [events, initialEvents, activeCategory, isHydrated]);
 
     const { upcoming, past } = useMemo(() => processEvents(filteredEvents), [filteredEvents]);
@@ -64,18 +64,21 @@ export default function HomeSection({ initialEvents }: HomeSectionProps) {
             </Suspense>
 
             <div className="flex gap-3 -mx-4 px-4 pb-8 overflow-x-auto hide-scrollbar snap-x snap-mandatory">
-                {["All", ...CATEGORIES].map((cat) => (
-                    <button
-                        key={cat}
-                        onClick={() => setActiveCategory(cat)}
-                        className={`px-5 py-2.5 rounded-2xl text-sm font-bold whitespace-nowrap transition-all duration-300 snap-start border ${activeCategory === cat
-                            ? "bg-blue-600 text-white border-blue-500 shadow-[0_8px_20px_rgba(37,99,235,0.3)] scale-105"
-                            : "bg-[var(--color-surface)] text-[var(--color-text-muted)] border-[var(--color-border)]"
-                            }`}
-                    >
-                        {cat}
-                    </button>
-                ))}
+                {["All", ...CATEGORIES].map((cat) => {
+                    const label = cat === "All" ? "All" : cat === "Miscellaneous" ? "Misc" : cat.replace("Faculty of ", "").replace("School of ", "");
+                    return (
+                        <button
+                            key={cat}
+                            onClick={() => setActiveCategory(cat)}
+                            className={`px-5 py-2.5 rounded-2xl text-sm font-bold whitespace-nowrap transition-all duration-300 snap-start border ${activeCategory === cat
+                                ? "bg-blue-600 text-white border-blue-500 shadow-[0_8px_20px_rgba(37,99,235,0.3)] scale-105"
+                                : "bg-[var(--color-surface)] text-[var(--color-text-muted)] border-[var(--color-border)]"
+                                }`}
+                        >
+                            {label}
+                        </button>
+                    );
+                })}
             </div>
 
             <div className="flex items-center justify-between pb-6">
@@ -216,27 +219,45 @@ function EventCard({ event, index, isRegistered, isPast, onToggle, onSelect }: E
                 <div className="flex gap-6">
                     <div
                         className="w-[70px] h-[80px] rounded-xl flex flex-col items-center justify-center shrink-0 shadow-inner relative overflow-hidden"
-                        style={{ backgroundColor: `color-mix(in srgb, ${getCategoryColor(event.category)} 15%, transparent)` }}
+                        style={{ backgroundColor: `color-mix(in srgb, ${getCategoryColor(event.faculty)} 15%, transparent)` }}
                     >
-                        <span className="text-[11px] font-black tracking-widest uppercase opacity-80" style={{ color: getCategoryColor(event.category) }}>
+                        <span className="text-[11px] font-black tracking-widest uppercase opacity-80" style={{ color: getCategoryColor(event.faculty) }}>
                             {dateStr.month}
                         </span>
-                        <span className="text-[32px] font-black leading-none mt-1" style={{ color: getCategoryColor(event.category) }}>
+                        <span className="text-[32px] font-black leading-none mt-1" style={{ color: getCategoryColor(event.faculty) }}>
                             {dateStr.day}
                         </span>
                     </div>
 
                     <div className="flex-1 py-1">
-                        <Badge variant="outline" className="text-[10px] py-1 px-3 rounded-lg font-black border-[var(--color-border)] mb-3">
-                            {event.category}
-                        </Badge>
-                        <h3 className="text-lg font-black leading-tight mb-3 line-clamp-2">
+                        <h3 className="text-lg font-black leading-tight text-[var(--color-text-main)] mb-2.5 line-clamp-2">
                             {event.title}
                         </h3>
+                        {/* Badge row */}
+                        <div className="flex flex-wrap items-center gap-1.5 mb-2.5">
+                            {event.faculty === "Miscellaneous" && event.subcategory === "Clubs & Societies" ? (
+                                <span className="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-blue-500/10 text-blue-500 border border-blue-500/20">
+                                    Misc • Clubs
+                                </span>
+                            ) : (
+                                <>
+                                    <span className="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-blue-500/10 text-blue-500 border border-blue-500/20">
+                                        {event.faculty === "Miscellaneous" ? "Misc" : event.faculty}
+                                    </span>
+                                    <span className="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                                        {event.subcategory}
+                                    </span>
+                                </>
+                            )}
+                            {event.organizer && event.subcategory === "Clubs & Societies" && (
+                                <span className="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                                    {event.organizer}
+                                </span>
+                            )}
+                        </div>
                         <div className="flex items-center gap-2 text-[13px] font-bold text-[var(--color-text-muted)]">
                             <Clock size={16} className="opacity-50 text-[var(--color-accent)]" />
                             <span>{event.timeStart}</span>
-                            <span className="ml-2 text-[var(--color-accent)]">{event.club}</span>
                         </div>
                     </div>
                 </div>

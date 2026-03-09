@@ -179,7 +179,7 @@ export default function ProfileSection() {
 
                 <div className="mb-12">
                     <h2 className="text-[16px] font-black mb-5 flex items-center gap-2.5">
-                        <Calendar size={18} className="text-blue-400" /> Event Activity
+                        <Calendar size={18} className="text-blue-400" /> Registered Events
                     </h2>
 
                     <div className="flex bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-1.5 mb-6 shadow-inner">
@@ -190,7 +190,7 @@ export default function ProfileSection() {
                                 : "text-[var(--color-text-muted)] hover:text-white"
                                 }`}
                         >
-                            Joined ({registeredEvents.length})
+                            Registered ({registeredEvents.length})
                         </button>
                         <button
                             onClick={() => setActiveTab("attended")}
@@ -329,6 +329,7 @@ interface RegisteredEventCardProps {
 function RegisteredEventCard({ event, status, onCancel, onSelect }: RegisteredEventCardProps) {
     const dateStr = formatDateBlock(event.date);
     const isAttended = status === "attended";
+    const facultyDisplay = event.faculty === "Miscellaneous" ? "Miscellaneous" : event.faculty;
 
     return (
         <motion.div
@@ -340,25 +341,17 @@ function RegisteredEventCard({ event, status, onCancel, onSelect }: RegisteredEv
             onClick={onSelect}
             style={{ borderLeftColor: isAttended ? '#10b981' : event.categoryColor }}
         >
-            <div className="flex gap-4">
-                <div className="flex-1 flex gap-4 pr-2 overflow-hidden">
-                    <div className="w-13 h-13 bg-[var(--color-bg)] rounded-xl flex flex-col items-center justify-center border border-[var(--color-border)] shrink-0 shadow-inner">
-                        <span className="text-[10px] font-black text-blue-400 uppercase leading-none">{dateStr.month}</span>
-                        <span className="text-[18px] font-black mt-0.5 leading-none">{dateStr.day}</span>
+            <div className="flex gap-4 items-center">
+                <div className="flex-1 flex gap-4 overflow-hidden">
+                    <div className="w-14 h-14 bg-[var(--color-bg)] rounded-xl flex flex-col items-center justify-center border border-[var(--color-border)] shrink-0 shadow-inner">
+                        <span className="text-[11px] font-black text-blue-400 uppercase leading-none">{dateStr.month}</span>
+                        <span className="text-[20px] font-black mt-1 leading-none">{dateStr.day}</span>
                     </div>
-                    <div className="flex-1 min-w-0 text-left">
-                        <div className="flex items-center gap-2 mb-1">
-                            {isAttended ? (
-                                <Badge variant="success" className="text-[8px] py-0 px-2 font-black leading-tight border-emerald-500/30">Verified</Badge>
-                            ) : (
-                                <Badge variant="default" className="text-[8px] py-0 px-2 font-black leading-tight border-blue-500/30">Spot Secured</Badge>
-                            )}
-                        </div>
-                        <h4 className="font-black text-[15px] leading-snug mb-2 truncate">{event.title}</h4>
-                        <div className="flex items-center gap-3 text-[11px] font-bold text-[var(--color-text-muted)]">
-                            <Clock size={12} className="opacity-50" />
-                            <span>{event.timeStart}</span>
-                        </div>
+                    <div className="flex-1 min-w-0 text-left flex flex-col justify-center">
+                        <h4 className="font-black text-[16px] leading-tight mb-1 truncate text-[var(--color-text-main)]">{event.title}</h4>
+                        <span className="text-[13px] font-bold text-[var(--color-text-muted)]">
+                            {facultyDisplay}
+                        </span>
                     </div>
                 </div>
                 {!isAttended && (

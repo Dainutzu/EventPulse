@@ -80,7 +80,7 @@ export function EventProvider({ children }: { children: React.ReactNode }) {
         const attendedEventIds = Object.keys(registrations).filter(id => registrations[id].status === "attended");
         const categories = events
             .filter(e => attendedEventIds.includes(e.id))
-            .map(e => e.category);
+            .map(e => e.faculty);
         return Array.from(new Set(categories));
     }, [registrations, events]);
 

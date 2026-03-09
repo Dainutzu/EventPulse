@@ -3,12 +3,13 @@ export type AttendanceStatus = "none" | "registered" | "attended";
 export interface Event {
     id: string;
     title: string;
-    category: "Academic" | "Tech" | "Sports" | "Cultural" | "Career";
     date: string;
     timeStart: string;
     timeEnd: string;
-    venue: string;
-    club: string;
+    location: string;
+    faculty: string;
+    subcategory: string;
+    organizer?: string;
     maxParticipants: number;
     registered: number;
     banner: string | null;
