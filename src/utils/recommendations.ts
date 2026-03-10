@@ -20,12 +20,12 @@ export function getRecommendedEvents(
         let score = 0;
 
         // +3 if category matches user interest
-        if (userInterests.includes(event.category)) {
+        if (userInterests.includes(event.faculty)) {
             score += 3;
         }
 
         // +2 if category matches previously attended events
-        if (attendedCategories.includes(event.category)) {
+        if (attendedCategories.includes(event.faculty)) {
             score += 2;
         }
 

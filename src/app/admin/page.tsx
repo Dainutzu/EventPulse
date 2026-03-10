@@ -46,7 +46,8 @@ export default function AdminDashboard() {
     const filteredEvents = useMemo(() => {
         return events.filter(e =>
             e.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            e.club.toLowerCase().includes(searchQuery.toLowerCase())
+            (e.organizer && e.organizer.toLowerCase().includes(searchQuery.toLowerCase())) ||
+            e.faculty.toLowerCase().includes(searchQuery.toLowerCase())
         );
     }, [events, searchQuery]);
 

@@ -65,7 +65,7 @@ export function Recommendations({ initialEvents }: RecommendationsProps) {
                                 />
                                 <div className="absolute top-4 left-4 z-20">
                                     <span className="bg-blue-600/90 backdrop-blur-md text-white text-[10px] font-black px-2.5 py-1 rounded-lg uppercase tracking-wider shadow-lg">
-                                        ✨ {interests.includes(event.category) ? "Match" : "Trending"}
+                                        ✨ {interests.includes(event.faculty) ? "Match" : "Trending"}
                                     </span>
                                 </div>
                             </div>
@@ -85,26 +85,29 @@ function EventCardSmall({ event, isRegistered, onToggle }: { event: Event; isReg
             <div className="flex gap-4">
                 <div
                     className="w-[60px] h-[70px] rounded-xl flex flex-col items-center justify-center shrink-0 shadow-inner relative overflow-hidden"
-                    style={{ backgroundColor: `color-mix(in srgb, ${getCategoryColor(event.category)} 15%, transparent)` }}
+                    style={{ backgroundColor: `color-mix(in srgb, ${getCategoryColor(event.faculty)} 15%, transparent)` }}
                 >
-                    <span className="text-[10px] font-black tracking-widest uppercase opacity-80" style={{ color: getCategoryColor(event.category) }}>
+                    <span className="text-[10px] font-black tracking-widest uppercase opacity-80" style={{ color: getCategoryColor(event.faculty) }}>
                         {dateStr.month}
                     </span>
-                    <span className="text-[28px] font-black leading-none mt-1" style={{ color: getCategoryColor(event.category) }}>
+                    <span className="text-[28px] font-black leading-none mt-1" style={{ color: getCategoryColor(event.faculty) }}>
                         {dateStr.day}
                     </span>
                 </div>
 
                 <div className="flex-1 py-1">
-                    <div className="flex items-center gap-2 mb-2">
+                    <div className="flex items-center gap-1.5 mb-2">
+                        <Badge variant="outline" className="text-[9px] py-0.5 px-2 rounded-md opacity-80 font-black border-[var(--color-border)] whitespace-nowrap">
+                            {event.faculty === "Miscellaneous" ? "Misc" : event.faculty.replace("Faculty of ", "").replace("School of ", "")}
+                        </Badge>
                         <Badge variant="outline" className="text-[9px] py-0.5 px-2 rounded-md opacity-80 font-black border-[var(--color-border)]">
-                            {event.category}
+                            {event.subcategory === "Clubs & Societies" ? "Clubs" : event.subcategory}
                         </Badge>
                     </div>
                     <h3 className="text-md font-black leading-tight mb-2 line-clamp-1">
                         {event.title}
                     </h3>
-                    <p className="text-[11px] text-[var(--color-text-muted)] font-medium line-clamp-1">{event.club}</p>
+                    <p className="text-[11px] text-[var(--color-text-muted)] font-medium line-clamp-1">{event.organizer || "Join us!"}</p>
                 </div>
             </div>
 

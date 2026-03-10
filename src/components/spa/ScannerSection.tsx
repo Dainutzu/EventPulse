@@ -11,7 +11,7 @@ export default function ScannerSection({ onBack }: { onBack: () => void }) {
     const [scanState, setScanState] = useState<"scanning" | "success">("scanning");
 
     // For demo, we'll scan the first upcoming tech event
-    const eventToScan = events.find(e => e.category === "Tech") || events[0];
+    const eventToScan = events.find(e => e.faculty === "Faculty of Computing") || events[0];
 
     useEffect(() => {
         if (scanState === "scanning") {

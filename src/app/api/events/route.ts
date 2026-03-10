@@ -10,14 +10,15 @@ export async function GET(request: Request) {
     let events = [...MOCK_EVENTS];
 
     if (category && category !== "All") {
-        events = events.filter((e) => e.category === category);
+        events = events.filter((e) => e.faculty === category);
     }
 
     if (query) {
         const q = query.toLowerCase();
         events = events.filter((e) =>
             e.title.toLowerCase().includes(q) ||
-            e.club.toLowerCase().includes(q) ||
+            (e.organizer && e.organizer.toLowerCase().includes(q)) ||
+            e.faculty.toLowerCase().includes(q) ||
             e.description.toLowerCase().includes(q)
         );
     }
