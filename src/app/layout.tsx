@@ -67,9 +67,9 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="antialiased selection:bg-blue-500/30 bg-black transition-colors duration-300 min-h-screen flex justify-center overflow-x-hidden">
+      <body className="antialiased selection:bg-blue-500/30 bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-white transition-colors duration-300 min-h-screen flex justify-center overflow-x-hidden">
         <Providers>
-          <div className="w-full max-w-[430px] bg-[var(--color-bg)] min-h-screen relative shadow-[0_0_100px_rgba(0,0,0,0.5)] overflow-x-hidden">
+          <div className="w-full max-w-[430px] bg-white dark:bg-neutral-900 min-h-screen relative shadow-[0_0_100px_rgba(0,0,0,0.5)] overflow-x-hidden">
             {children}
           </div>
         </Providers>
