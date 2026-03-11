@@ -93,8 +93,8 @@ function InfoRow({ icon, iconBg, label, sublabel }: InfoRowProps) {
                 {icon}
             </div>
             <div>
-                <p className="text-[15px] font-black leading-snug text-gray-900 dark:text-white">{label}</p>
-                <p className="text-[12px] text-gray-500 dark:text-gray-400 font-semibold mt-0.5">{sublabel}</p>
+                <p className="text-[15px] font-black leading-snug text-neutral-900 dark:text-white">{label}</p>
+                <p className="text-[12px] text-neutral-600 dark:text-neutral-400 font-semibold mt-0.5">{sublabel}</p>
             </div>
         </div>
     );
@@ -196,7 +196,7 @@ export default function EventDetailsSection() {
                         <div className="px-4 py-6 flex flex-col space-y-4">
                             {/* Title & Details */}
                             <div>
-                                <h1 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+                                <h1 className="text-lg font-semibold text-neutral-900 dark:text-white mb-1">
                                     {event.title}
                                 </h1>
 
@@ -208,7 +208,7 @@ export default function EventDetailsSection() {
                                     {isClubEvent && (
                                         <div className="flex items-center gap-1.5">
                                             <ShieldCheck size={14} className="text-emerald-500 shrink-0" />
-                                            <span className="text-xs font-medium text-gray-600 dark:text-gray-300">
+                                            <span className="text-xs font-medium text-neutral-600 dark:text-neutral-400">
                                                 Organised by <span className="text-emerald-600 dark:text-emerald-400 font-semibold">{event.organizer}</span>
                                             </span>
                                         </div>
@@ -216,7 +216,7 @@ export default function EventDetailsSection() {
                                     {event.organizer && !isClubEvent && (
                                         <div className="flex items-center gap-1.5">
                                             <ShieldCheck size={14} className="text-blue-500 shrink-0" />
-                                            <span className="text-xs font-medium text-gray-600 dark:text-gray-300">
+                                            <span className="text-xs font-medium text-neutral-600 dark:text-neutral-400">
                                                 {event.organizer}
                                             </span>
                                         </div>
@@ -243,7 +243,7 @@ export default function EventDetailsSection() {
                             )}
 
                              {/* Info Rows */}
-                            <div className="bg-gray-50 dark:bg-neutral-800/50 border border-gray-100 dark:border-neutral-700/50 rounded-xl p-4 flex flex-col divide-y divide-gray-100 dark:divide-neutral-700/50">
+                            <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl p-4 flex flex-col divide-y divide-neutral-200 dark:divide-neutral-800">
                                 <div className="pb-3">
                                     <InfoRow
                                         icon={<Calendar size={18} className="text-blue-500" />}
@@ -271,11 +271,11 @@ export default function EventDetailsSection() {
                             </div>
 
                              {/* Seats Progress */}
-                            <div className="bg-gray-50 dark:bg-neutral-800 border border-gray-100 dark:border-neutral-700 rounded-xl p-4">
+                            <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl p-4">
                                 <div className="flex items-center justify-between mb-2">
                                     <div className="flex items-center gap-1.5">
-                                        <Users size={14} className="text-gray-500 dark:text-gray-400" />
-                                        <span className="text-xs font-bold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                                        <Users size={14} className="text-neutral-600 dark:text-neutral-400" />
+                                        <span className="text-xs font-bold uppercase tracking-wide text-neutral-600 dark:text-neutral-400">
                                             Seats
                                         </span>
                                     </div>
@@ -285,7 +285,7 @@ export default function EventDetailsSection() {
                                         {isFull ? "FULL" : isAlmostFull ? `Only ${seatsLeft} left!` : `${seatsLeft} available`}
                                     </span>
                                 </div>
-                                 <div className="h-1.5 w-full bg-gray-200 dark:bg-neutral-700 rounded-full overflow-hidden">
+                                 <div className="h-1.5 w-full bg-neutral-200 dark:bg-neutral-800 rounded-full overflow-hidden">
                                     <motion.div
                                         initial={{ width: 0 }}
                                         animate={{ width: `${progress}%` }}
@@ -296,10 +296,10 @@ export default function EventDetailsSection() {
                                     />
                                 </div>
                                  <div className="flex items-center justify-between mt-2">
-                                    <span className="text-[11px] font-semibold text-gray-500 dark:text-gray-400">
+                                    <span className="text-[11px] font-semibold text-neutral-600 dark:text-neutral-400">
                                         {event.registered} attending
                                     </span>
-                                    <span className="text-[11px] font-semibold text-gray-500 dark:text-gray-400">
+                                    <span className="text-[11px] font-semibold text-neutral-600 dark:text-neutral-400">
                                         {event.maxParticipants} max
                                     </span>
                                 </div>
@@ -307,11 +307,11 @@ export default function EventDetailsSection() {
 
                              {/* Description */}
                             <div className="flex flex-col gap-2 pt-2">
-                                <h2 className="text-sm font-semibold flex items-center gap-1.5 text-gray-900 dark:text-white">
+                                <h2 className="text-sm font-semibold flex items-center gap-1.5 text-neutral-900 dark:text-white">
                                     <Info size={15} className="text-blue-500 shrink-0" />
                                     About this Event
                                 </h2>
-                                <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+                                <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
                                     {event.description}
                                 </p>
                             </div>
@@ -319,14 +319,14 @@ export default function EventDetailsSection() {
                     </div>
 
                      {/* ── Absolute Bottom CTA ──────────────────────────────────────────── */}
-                    <div className="absolute bottom-0 left-0 right-0 z-[160] bg-gradient-to-t from-white dark:from-neutral-900 via-white/95 dark:via-neutral-900/95 to-transparent pt-10 px-4 pb-6 border-t border-gray-100/50 dark:border-neutral-800">
+                    <div className="absolute bottom-0 left-0 right-0 z-[160] bg-gradient-to-t from-white dark:from-neutral-900 via-white/95 dark:via-neutral-900/95 to-transparent pt-10 px-4 pb-6 border-t border-neutral-200 dark:border-neutral-800">
                         <button
                             onClick={handleToggleRegistration}
                             disabled={isFull && !registered}
                             className={`w-full py-3 rounded-xl font-medium text-base transition-all duration-200 flex items-center justify-center gap-2 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 ${registered
                                 ? "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20"
                                 : isFull
-                                    ? "bg-gray-100 dark:bg-neutral-800 text-gray-400 dark:text-neutral-500"
+                                    ? "bg-neutral-100 dark:bg-neutral-800 text-neutral-400 dark:text-neutral-500"
                                     : "bg-black text-white dark:bg-white dark:text-black"
                                 }`}
                         >
@@ -341,7 +341,7 @@ export default function EventDetailsSection() {
                                 "Register Event"
                             )}
                          </button>
-                        <p className="text-[10px] text-gray-400 dark:text-neutral-500 text-center mt-2 font-medium uppercase tracking-widest">
+                        <p className="text-[10px] text-neutral-400 dark:text-neutral-500 text-center mt-2 font-medium uppercase tracking-widest">
                             {registered ? "Tap to cancel registration" : "Free • Verified with Pulse ID"}
                         </p>
                     </div>
