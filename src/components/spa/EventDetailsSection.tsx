@@ -93,8 +93,8 @@ function InfoRow({ icon, iconBg, label, sublabel }: InfoRowProps) {
                 {icon}
             </div>
             <div>
-                <p className="text-[15px] font-black leading-snug text-[var(--color-text-main)]">{label}</p>
-                <p className="text-[12px] text-[var(--color-text-muted)] font-semibold mt-0.5">{sublabel}</p>
+                <p className="text-[15px] font-black leading-snug text-gray-900 dark:text-white">{label}</p>
+                <p className="text-[12px] text-gray-500 dark:text-gray-400 font-semibold mt-0.5">{sublabel}</p>
             </div>
         </div>
     );
@@ -161,9 +161,9 @@ export default function EventDetailsSection() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: "100%" }}
                 transition={{ duration: 0.22, ease: [0.32, 0.72, 0, 1] }}
-                className="fixed inset-0 z-[150] bg-neutral-50 flex justify-center"
+                className="fixed inset-0 z-[150] bg-neutral-50 dark:bg-neutral-950 flex justify-center"
             >
-                <div className="w-full max-w-md bg-white min-h-screen relative flex flex-col overflow-x-hidden shadow-2xl">
+                <div className="w-full max-w-md bg-white dark:bg-neutral-900 min-h-screen relative flex flex-col overflow-x-hidden shadow-2xl">
                     {/* ── Absolute Back Button ─────────────────────────────────────────── */}
                     <div className="absolute top-0 left-0 right-0 z-[200] flex items-center justify-between px-4 pt-12 pb-2 pointer-events-none">
                         <button
@@ -196,7 +196,7 @@ export default function EventDetailsSection() {
                         <div className="px-4 py-6 flex flex-col space-y-4">
                             {/* Title & Details */}
                             <div>
-                                <h1 className="text-lg font-semibold text-gray-900 mb-1">
+                                <h1 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
                                     {event.title}
                                 </h1>
 
@@ -208,15 +208,15 @@ export default function EventDetailsSection() {
                                     {isClubEvent && (
                                         <div className="flex items-center gap-1.5">
                                             <ShieldCheck size={14} className="text-emerald-500 shrink-0" />
-                                            <span className="text-xs font-medium text-gray-600">
-                                                Organised by <span className="text-emerald-600 font-semibold">{event.organizer}</span>
+                                            <span className="text-xs font-medium text-gray-600 dark:text-gray-300">
+                                                Organised by <span className="text-emerald-600 dark:text-emerald-400 font-semibold">{event.organizer}</span>
                                             </span>
                                         </div>
                                     )}
                                     {event.organizer && !isClubEvent && (
                                         <div className="flex items-center gap-1.5">
                                             <ShieldCheck size={14} className="text-blue-500 shrink-0" />
-                                            <span className="text-xs font-medium text-gray-600">
+                                            <span className="text-xs font-medium text-gray-600 dark:text-gray-300">
                                                 {event.organizer}
                                             </span>
                                         </div>
@@ -228,13 +228,13 @@ export default function EventDetailsSection() {
                             {(event.trending || registered) && (
                                 <div className="flex items-center gap-2 flex-wrap">
                                     {event.trending && (
-                                        <Badge className="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-amber-50 text-amber-600 flex items-center gap-1 border border-amber-200">
+                                        <Badge className="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 flex items-center gap-1 border border-amber-200 dark:border-amber-900/50">
                                             <Flame size={10} />
                                             Trending
                                         </Badge>
                                     )}
                                     {registered && (
-                                        <Badge className="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-emerald-50 text-emerald-600 flex items-center gap-1 border border-emerald-200">
+                                        <Badge className="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 flex items-center gap-1 border border-emerald-200 dark:border-emerald-900/50">
                                             <Sparkles size={10} />
                                             Registered
                                         </Badge>
@@ -242,12 +242,12 @@ export default function EventDetailsSection() {
                                 </div>
                             )}
 
-                            {/* Info Rows */}
-                            <div className="bg-gray-50 border border-gray-100 rounded-xl p-4 flex flex-col divide-y divide-gray-100">
+                             {/* Info Rows */}
+                            <div className="bg-gray-50 dark:bg-neutral-800/50 border border-gray-100 dark:border-neutral-700/50 rounded-xl p-4 flex flex-col divide-y divide-gray-100 dark:divide-neutral-700/50">
                                 <div className="pb-3">
                                     <InfoRow
                                         icon={<Calendar size={18} className="text-blue-500" />}
-                                        iconBg="bg-blue-100/50"
+                                        iconBg="bg-blue-100/50 dark:bg-blue-900/20"
                                         label={`${dateStr.weekday}, ${dateStr.month} ${dateStr.day}`}
                                         sublabel="Upcoming"
                                     />
@@ -255,7 +255,7 @@ export default function EventDetailsSection() {
                                 <div className="py-3">
                                     <InfoRow
                                         icon={<Clock size={18} className="text-indigo-500" />}
-                                        iconBg="bg-indigo-100/50"
+                                        iconBg="bg-indigo-100/50 dark:bg-indigo-900/20"
                                         label={`${event.timeStart} – ${event.timeEnd}`}
                                         sublabel="Standard Time"
                                     />
@@ -263,19 +263,19 @@ export default function EventDetailsSection() {
                                 <div className="pt-3">
                                     <InfoRow
                                         icon={<MapPin size={18} className="text-emerald-500" />}
-                                        iconBg="bg-emerald-100/50"
+                                        iconBg="bg-emerald-100/50 dark:bg-emerald-900/20"
                                         label={event.location}
                                         sublabel="University Campus"
                                     />
                                 </div>
                             </div>
 
-                            {/* Seats Progress */}
-                            <div className="bg-gray-50 border border-gray-100 rounded-xl p-4">
+                             {/* Seats Progress */}
+                            <div className="bg-gray-50 dark:bg-neutral-800 border border-gray-100 dark:border-neutral-700 rounded-xl p-4">
                                 <div className="flex items-center justify-between mb-2">
                                     <div className="flex items-center gap-1.5">
-                                        <Users size={14} className="text-gray-500" />
-                                        <span className="text-xs font-bold uppercase tracking-wide text-gray-500">
+                                        <Users size={14} className="text-gray-500 dark:text-gray-400" />
+                                        <span className="text-xs font-bold uppercase tracking-wide text-gray-500 dark:text-gray-400">
                                             Seats
                                         </span>
                                     </div>
@@ -285,7 +285,7 @@ export default function EventDetailsSection() {
                                         {isFull ? "FULL" : isAlmostFull ? `Only ${seatsLeft} left!` : `${seatsLeft} available`}
                                     </span>
                                 </div>
-                                <div className="h-1.5 w-full bg-gray-200 rounded-full overflow-hidden">
+                                 <div className="h-1.5 w-full bg-gray-200 dark:bg-neutral-700 rounded-full overflow-hidden">
                                     <motion.div
                                         initial={{ width: 0 }}
                                         animate={{ width: `${progress}%` }}
@@ -295,39 +295,39 @@ export default function EventDetailsSection() {
                                             }`}
                                     />
                                 </div>
-                                <div className="flex items-center justify-between mt-2">
-                                    <span className="text-[11px] font-semibold text-gray-500">
+                                 <div className="flex items-center justify-between mt-2">
+                                    <span className="text-[11px] font-semibold text-gray-500 dark:text-gray-400">
                                         {event.registered} attending
                                     </span>
-                                    <span className="text-[11px] font-semibold text-gray-500">
+                                    <span className="text-[11px] font-semibold text-gray-500 dark:text-gray-400">
                                         {event.maxParticipants} max
                                     </span>
                                 </div>
                             </div>
 
-                            {/* Description */}
+                             {/* Description */}
                             <div className="flex flex-col gap-2 pt-2">
-                                <h2 className="text-sm font-semibold flex items-center gap-1.5 text-gray-900">
+                                <h2 className="text-sm font-semibold flex items-center gap-1.5 text-gray-900 dark:text-white">
                                     <Info size={15} className="text-blue-500 shrink-0" />
                                     About this Event
                                 </h2>
-                                <p className="text-sm text-gray-600 leading-relaxed">
+                                <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
                                     {event.description}
                                 </p>
                             </div>
                         </div>
                     </div>
 
-                    {/* ── Absolute Bottom CTA ──────────────────────────────────────────── */}
-                    <div className="absolute bottom-0 left-0 right-0 z-[160] bg-gradient-to-t from-white via-white/95 to-transparent pt-10 px-4 pb-6 border-t border-gray-100/50">
+                     {/* ── Absolute Bottom CTA ──────────────────────────────────────────── */}
+                    <div className="absolute bottom-0 left-0 right-0 z-[160] bg-gradient-to-t from-white dark:from-neutral-900 via-white/95 dark:via-neutral-900/95 to-transparent pt-10 px-4 pb-6 border-t border-gray-100/50 dark:border-neutral-800">
                         <button
                             onClick={handleToggleRegistration}
                             disabled={isFull && !registered}
                             className={`w-full py-3 rounded-xl font-medium text-base transition-all duration-200 flex items-center justify-center gap-2 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 ${registered
-                                ? "bg-emerald-50 text-emerald-600 border border-emerald-200"
+                                ? "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20"
                                 : isFull
-                                    ? "bg-gray-100 text-gray-400"
-                                    : "bg-black text-white"
+                                    ? "bg-gray-100 dark:bg-neutral-800 text-gray-400 dark:text-neutral-500"
+                                    : "bg-black text-white dark:bg-white dark:text-black"
                                 }`}
                         >
                             {registered ? (
@@ -340,8 +340,8 @@ export default function EventDetailsSection() {
                             ) : (
                                 "Register Event"
                             )}
-                        </button>
-                        <p className="text-[10px] text-gray-400 text-center mt-2 font-medium uppercase tracking-widest">
+                         </button>
+                        <p className="text-[10px] text-gray-400 dark:text-neutral-500 text-center mt-2 font-medium uppercase tracking-widest">
                             {registered ? "Tap to cancel registration" : "Free • Verified with Pulse ID"}
                         </p>
                     </div>
