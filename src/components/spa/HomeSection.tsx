@@ -1,14 +1,14 @@
 "use client";
 
-import { useState, useMemo, useEffect, Suspense } from "react";
+import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Clock, Calendar } from "lucide-react";
 import { MOCK_USER, CATEGORIES } from "@/lib/mockUser";
-import { getGreeting, getCategoryColor } from "@/lib/utils/ui";
+import { getGreeting } from "@/lib/utils/ui";
 import { formatDateBlock, processEvents } from "@/utils/dateUtils";
 import { useEventStore } from "@/state/useEventStore";
-import { ThemeToggle } from "@/components/ThemeToggle";
 import { Event } from "@/types";
+import Link from "next/link";
 
 interface HomeSectionProps {
     initialEvents: Event[];
@@ -16,7 +16,7 @@ interface HomeSectionProps {
 
 export default function HomeSection({ initialEvents }: HomeSectionProps) {
     const [activeCategory, setActiveCategory] = useState("All");
-    const { events, unregisterEvent, registerEvent, isRegistered, isHydrated, setSelectedEventId } = useEventStore();
+    const { events, isRegistered, isHydrated, setSelectedEventId } = useEventStore();
 
     const filteredEvents = useMemo(() => {
         const currentEvents = isHydrated && events.length > 0 ? events : initialEvents;
@@ -66,8 +66,6 @@ export default function HomeSection({ initialEvents }: HomeSectionProps) {
                                 event={event}
                                 index={index}
                                 isRegistered={isRegistered(event.id)}
-                                onToggle={() => isRegistered(event.id) ? unregisterEvent(event.id) : registerEvent(event.id)}
-                                onSelect={() => setSelectedEventId(event.id)}
                             />
                         ))}
                     </AnimatePresence>
@@ -91,8 +89,6 @@ export default function HomeSection({ initialEvents }: HomeSectionProps) {
                                 index={index}
                                 isRegistered={isRegistered(event.id)}
                                 isPast
-                                onToggle={() => { }}
-                                onSelect={() => setSelectedEventId(event.id)}
                             />
                         ))}
                     </div>
@@ -102,16 +98,8 @@ export default function HomeSection({ initialEvents }: HomeSectionProps) {
     );
 }
 
-interface EventCardProps {
-    event: Event;
-    index: number;
-    isRegistered: boolean;
-    isPast?: boolean;
-    onToggle: () => void;
-    onSelect: () => void;
-}
-
-function EventCard({ event, index, isRegistered, isPast, onSelect }: EventCardProps) {
+function EventCard({ event, index, isRegistered, isPast }: { event: Event; index: number; isRegistered: boolean; isPast?: boolean }) {
+    const { setSelectedEventId } = useEventStore();
     const dateStr = formatDateBlock(event.date);
 
     return (
@@ -122,9 +110,12 @@ function EventCard({ event, index, isRegistered, isPast, onSelect }: EventCardPr
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2, delay: index * 0.02 }}
             className="w-full"
-            onClick={onSelect}
         >
-            <div className={`bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-4 cursor-pointer transition-all active:scale-[0.98] ${isPast ? 'opacity-50' : ''}`}>
+            <Link 
+                href={`/events/${event.id}`}
+                onClick={() => setSelectedEventId(event.id)}
+                className={`block bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-4 transition-all active:scale-[0.98] ${isPast ? 'opacity-50' : ''}`}
+            >
                 <div className="flex justify-between items-start mb-3">
                     <div className="flex-1 min-w-0">
                         <h3 className="text-base font-bold text-neutral-900 dark:text-white truncate">
@@ -153,18 +144,11 @@ function EventCard({ event, index, isRegistered, isPast, onSelect }: EventCardPr
                         </div>
                     </div>
 
-                    <button
-                        onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            onSelect();
-                        }}
-                        className="text-xs font-bold text-blue-600 dark:text-blue-400"
-                    >
+                    <span className="text-xs font-bold text-blue-600 dark:text-blue-400">
                         View Details
-                    </button>
+                    </span>
                 </div>
-            </div>
+            </Link>
         </motion.div>
     );
 }

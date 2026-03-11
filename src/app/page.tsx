@@ -14,62 +14,27 @@ import ScannerSection from "@/components/spa/ScannerSection";
 import EventDetailsSection from "@/components/spa/EventDetailsSection";
 
 export default function Page() {
-  const { activeTab, setActiveTab, selectedEventId, setSelectedEventId, isHydrated } = useEventStore();
+  const { activeTab, setActiveTab, isHydrated } = useEventStore();
   const [showSplash, setShowSplash] = useState(true);
-
-  // Initial state handling
-  useEffect(() => {
-    // If we want a splash screen delay
-    const timer = setTimeout(() => {
-      // setShowSplash(false);
-    }, 2000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  const handleEnterApp = () => {
-    setShowSplash(false);
-    setActiveTab("home");
-  };
 
   if (showSplash) {
     return (
       <motion.div
         initial={{ opacity: 1 }}
-        exit={{ opacity: 0, scale: 1.1 }}
+        exit={{ opacity: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <SplashContainer onEnter={handleEnterApp} />
+        <SplashContainer onEnter={() => setShowSplash(false)} />
       </motion.div>
     );
   }
 
   return (
     <div className="flex flex-col min-h-screen">
-      <main className="flex-1 overflow-x-hidden">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeTab}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2, ease: "easeInOut" }}
-            className="w-full h-full pb-20"
-          >
-            {activeTab === "home" && <HomeSection initialEvents={MOCK_EVENTS} />}
-            {activeTab === "explore" && <ExploreSection />}
-            {activeTab === "scanner" && <ScannerSection onBack={() => setActiveTab("home")} />}
-            {activeTab === "profile" && <ProfileSection />}
-          </motion.div>
-        </AnimatePresence>
-
-        <AnimatePresence>
-          {selectedEventId && (
-            <EventDetailsSection />
-          )}
-        </AnimatePresence>
+      <main className="flex-1 overflow-x-hidden pb-20">
+        <HomeSection initialEvents={MOCK_EVENTS} />
       </main>
-
-      <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
+      <BottomNav activeTab="home" />
     </div>
   );
 }

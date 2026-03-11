@@ -1,48 +1,28 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Search, MapPin, Clock } from "@/components/ui";
+import { Search, MapPin, Clock, Calendar } from "@/components/ui";
 import { MOCK_EVENTS } from "@/lib/mockData";
 import { CATEGORIES } from "@/lib/mockUser";
 import { motion, AnimatePresence } from "framer-motion";
-import { getCategoryColor } from "@/lib/utils/ui";
 import { formatDateBlock } from "@/utils/dateUtils";
 import { useEventStore } from "@/state/useEventStore";
 import { Event } from "@/types";
-
-const MISC_SUBCATEGORIES = ["Sports", "Music", "Social", "Cultural", "Community", "Clubs & Societies"];
-const CLUBS = ["Leo Club", "Rotaract Club", "Gavel Club", "Debating Society", "Entrepreneurship Club"];
+import Link from "next/link";
 
 export default function ExploreSection() {
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedFaculty, setSelectedFaculty] = useState("All");
-    const [selectedSub, setSelectedSub] = useState("All");
-    const [selectedClub, setSelectedClub] = useState("All");
-
-    const { setSelectedEventId } = useEventStore();
 
     const filteredEvents = useMemo(() => {
         return MOCK_EVENTS.filter(event => {
             const matchesSearch = event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 (event.organizer && event.organizer.toLowerCase().includes(searchQuery.toLowerCase()));
-
             const matchesFaculty = selectedFaculty === "All" || event.faculty === selectedFaculty;
-
-            let matchesSub = true;
-            if (selectedFaculty === "Miscellaneous" && selectedSub !== "All") {
-                matchesSub = event.subcategory === selectedSub;
-            }
-
-            let matchesClub = true;
-            if (selectedFaculty === "Miscellaneous" && selectedSub === "Clubs & Societies" && selectedClub !== "All") {
-                matchesClub = event.organizer === selectedClub;
-            }
-
-            return matchesSearch && matchesFaculty && matchesSub && matchesClub;
+            return matchesSearch && matchesFaculty;
         });
-    }, [searchQuery, selectedFaculty, selectedSub, selectedClub]);
+    }, [searchQuery, selectedFaculty]);
 
-    // Format faculty names for the filter pills
     const formatFacultyName = (name: string) => {
         if (name === "All") return "All";
         if (name === "Faculty of Humanities and Sciences") return "Humanities";
@@ -87,13 +67,8 @@ export default function ExploreSection() {
 
             <div className="flex flex-col gap-4">
                 <AnimatePresence mode="popLayout">
-                    {filteredEvents.map((event, index) => (
-                        <ExploreCard
-                            key={event.id}
-                            event={event}
-                            index={index}
-                            onSelect={() => setSelectedEventId(event.id)}
-                        />
+                    {filteredEvents.map((event) => (
+                        <ExploreCard key={event.id} event={event} />
                     ))}
                 </AnimatePresence>
 
@@ -107,45 +82,50 @@ export default function ExploreSection() {
     );
 }
 
-interface ExploreCardProps {
-    event: Event;
-    index: number;
-    onSelect: () => void;
-}
+function ExploreCard({ event }: { event: any }) {
+    const { setSelectedEventId } = useEventStore();
 
-function ExploreCard({ event, index, onSelect }: ExploreCardProps) {
     return (
-        <motion.div
-            layout
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.02 }}
-            className="w-full"
-            onClick={onSelect}
+        <Link
+            href={`/events/${event.id}`}
+            onClick={() => setSelectedEventId(event.id)}
+            className="block w-full bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-4 transition-all active:scale-[0.98] group"
         >
-            <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg p-4 cursor-pointer transition-all hover:bg-neutral-50 dark:hover:bg-neutral-800/50">
-                <div className="flex justify-between items-start mb-2">
-                    <div>
-                        <h3 className="text-base font-bold text-neutral-900 dark:text-white line-clamp-1">
-                            {event.title}
-                        </h3>
-                        <p className="text-xs text-neutral-500 font-medium mt-0.5">
-                            {event.date} • {event.faculty === "Miscellaneous" ? "Miscellaneous" : event.faculty}
-                        </p>
-                    </div>
-                </div>
-
-                <div className="flex items-center justify-between mt-4">
-                    <div className="flex items-center gap-1.5 text-xs text-neutral-600 dark:text-neutral-400">
-                        <Clock size={14} className="opacity-50" />
-                        <span>{event.timeStart}</span>
-                    </div>
-
-                    <button className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline px-3 py-1.5 bg-blue-500/10 rounded-lg transition-colors">
-                        View Details
-                    </button>
+            <div className="flex justify-between items-start mb-3">
+                <div className="flex flex-col">
+                    <h3 className="text-lg font-bold text-neutral-900 dark:text-white group-hover:text-blue-500 transition-colors">
+                        {event.title}
+                    </h3>
+                    <p className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 mt-1">
+                        {event.faculty === "Miscellaneous" ? "Miscellaneous" : event.faculty} • {event.subcategory}
+                    </p>
                 </div>
             </div>
-        </motion.div>
+
+            <div className="flex items-center gap-4 text-neutral-500 dark:text-neutral-400">
+                <div className="flex items-center gap-1.5">
+                    <Calendar size={14} className="text-blue-500" />
+                    <span className="text-xs font-bold uppercase tracking-wider">
+                        {new Date(event.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                    </span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                    <Clock size={14} className="text-blue-500" />
+                    <span className="text-xs font-bold">{event.timeStart}</span>
+                </div>
+            </div>
+
+            <div className="mt-4 pt-4 border-t border-neutral-100 dark:border-neutral-800 flex justify-between items-center">
+                <div className="flex items-center gap-1.5 text-neutral-400">
+                    <MapPin size={14} />
+                    <span className="text-[10px] font-bold uppercase tracking-widest leading-none pt-0.5">
+                        {event.location}
+                    </span>
+                </div>
+                <span className="text-blue-500 text-[10px] font-black uppercase tracking-widest">
+                    View Details
+                </span>
+            </div>
+        </Link>
     );
 }

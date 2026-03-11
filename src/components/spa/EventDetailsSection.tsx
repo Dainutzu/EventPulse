@@ -20,6 +20,7 @@ import { Badge } from "@/components/ui";
 import { useEventStore } from "@/state/useEventStore";
 import { formatDateBlock } from "@/utils/dateUtils";
 import { playSound } from "@/lib/sounds";
+import Link from "next/link";
 
 // ─── Helpers ───────────────────────────────────────────────────────────────────
 function getEventEmoji(faculty: string, subcategory: string): string {
@@ -158,24 +159,17 @@ export default function EventDetailsSection() {
                     {/* Toast */}
                     {toast && <Toast message={toast.message} type={toast.type} visible={toastVisible} />}
 
-                    <motion.div
-                        layout
-                        initial={{ opacity: 0, x: "100%" }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: "100%" }}
-                        transition={{ duration: 0.25, ease: "easeOut" }}
-                        className="fixed inset-0 z-[150] bg-white dark:bg-neutral-950 flex justify-center"
-                    >
-                        <div className="w-full max-w-md bg-white dark:bg-neutral-900 min-h-screen relative flex flex-col overflow-x-hidden shadow-2xl">
+                    <div className="bg-white dark:bg-neutral-900 min-h-screen relative flex flex-col overflow-x-hidden">
                             {/* Back Button */}
-                            <div className="absolute top-0 left-0 right-0 z-[200] px-4 pt-12 pb-2">
-                                <button
+                            <div className="px-4 pt-12 pb-2">
+                                <Link
+                                    href="/"
                                     onClick={() => setSelectedEventId(null)}
                                     className="w-10 h-10 rounded-full bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center text-neutral-900 dark:text-white transition-all shadow-sm"
                                     aria-label="Go back"
                                 >
                                     <ChevronLeft size={20} />
-                                </button>
+                                </Link>
                             </div>
 
                             <div className="flex-1 overflow-y-auto pt-28 pb-32 px-6">
@@ -246,8 +240,7 @@ export default function EventDetailsSection() {
                                     {registered ? "Tap to cancel registration" : "Free • Verified with Pulse ID"}
                                 </p>
                             </div>
-                        </div>
-                    </motion.div>
+                    </div>
                 </>
             )}
         </AnimatePresence>

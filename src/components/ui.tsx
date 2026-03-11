@@ -122,41 +122,44 @@ export const BottomNav = ({
     activeTab,
     onTabChange
 }: {
-    activeTab: string;
-    onTabChange: (tab: string) => void
+    activeTab?: string;
+    onTabChange?: (tab: string) => void
 }) => {
+    const pathname = usePathname();
+    const currentTab = activeTab || (pathname === "/explore" ? "explore" : pathname === "/profile" ? "profile" : "home");
+
     return (
         <div className="fixed bottom-0 left-0 right-0 w-full z-[100]">
             {/* Gradient fade above nav */}
             <div className="h-24 w-full bg-gradient-to-t from-[var(--color-bg)] to-transparent pointer-events-none absolute bottom-0 -z-10" />
 
             <div className="bg-[var(--color-surface)]/80 backdrop-blur-xl border-t border-[var(--color-border)] px-4 pt-3 pb-safe-bottom flex items-center justify-around relative max-w-md mx-auto">
-                <NavItem icon={<Home size={24} />} label="Home" active={activeTab === "home"} onClick={() => onTabChange("home")} />
-                <NavItem icon={<Compass size={24} />} label="Explore" active={activeTab === "explore"} onClick={() => onTabChange("explore")} />
+                <NavItem href="/" icon={<Home size={24} />} label="Home" active={currentTab === "home"} onClick={() => onTabChange?.("home")} />
+                <NavItem href="/explore" icon={<Compass size={24} />} label="Explore" active={currentTab === "explore"} onClick={() => onTabChange?.("explore")} />
 
-                {/* Center QR Scanner Button */}
+                {/* Center QR Scanner Button - Keep SPA behavior for scanner since it's a tool */}
                 <div className="relative -top-8 flex flex-col items-center">
                     <button
-                        onClick={() => onTabChange("scanner")}
+                        onClick={() => onTabChange?.("scanner")}
                         className="w-14 h-14 bg-[var(--color-accent)] rounded-full flex items-center justify-center text-white shadow-[0_4px_20px_rgba(59,130,246,0.5)] border-4 border-[var(--color-bg)] transition-transform hover:scale-110 active:scale-95 z-10"
                     >
                         <QrCode size={26} />
                     </button>
                 </div>
 
-                <NavItem icon={<User size={24} />} label="Profile" active={activeTab === "profile"} onClick={() => onTabChange("profile")} />
+                <NavItem href="/profile" icon={<User size={24} />} label="Profile" active={currentTab === "profile"} onClick={() => onTabChange?.("profile")} />
             </div>
         </div>
     );
 };
 
-const NavItem = ({ icon, label, active, onClick }: { icon: React.ReactNode; label: string; active: boolean; onClick: () => void }) => (
-    <button onClick={onClick} className="flex flex-col items-center gap-1.5 p-2 rounded-xl transition-colors hover:bg-[var(--color-surface-elevated)] group">
+const NavItem = ({ href, icon, label, active, onClick }: { href: string; icon: React.ReactNode; label: string; active: boolean; onClick?: () => void }) => (
+    <Link href={href} onClick={onClick} className="flex flex-col items-center gap-1.5 p-2 rounded-xl transition-colors hover:bg-[var(--color-surface-elevated)] group">
         <div className={cn("transition-colors duration-200", active ? "text-[var(--color-accent)]" : "text-[var(--color-text-muted)] group-hover:text-[var(--color-text-main)]")}>
             {icon}
         </div>
         <span className={cn("text-[10px] font-bold uppercase tracking-wider transition-colors duration-200", active ? "text-[var(--color-accent)]" : "text-[var(--color-text-muted)] group-hover:text-[var(--color-text-main)]")}>
             {label}
         </span>
-    </button>
+    </Link>
 );
