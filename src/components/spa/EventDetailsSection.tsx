@@ -152,202 +152,104 @@ export default function EventDetailsSection() {
     };
 
     return (
-        <>
-            {/* Toast */}
-            {toast && <Toast message={toast.message} type={toast.type} visible={toastVisible} />}
+        <AnimatePresence>
+            {event && (
+                <>
+                    {/* Toast */}
+                    {toast && <Toast message={toast.message} type={toast.type} visible={toastVisible} />}
 
-            <motion.div
-                layout
-                initial={{ opacity: 0, x: "100%" }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: "100%" }}
-                transition={{ duration: 0.22, ease: [0.32, 0.72, 0, 1] }}
-                className="fixed inset-0 z-[150] bg-neutral-50 dark:bg-neutral-950 flex justify-center transition-colors duration-300"
-            >
-                <div className="w-full max-w-md bg-white dark:bg-neutral-900 min-h-screen relative flex flex-col overflow-x-hidden shadow-2xl text-neutral-900 dark:text-white">
-                    {/* ── Absolute Back Button ─────────────────────────────────────────── */}
-                    <div className="absolute top-0 left-0 right-0 z-[200] flex items-center justify-between px-4 pt-12 pb-2 pointer-events-none">
-                        <button
-                            onClick={() => setSelectedEventId(null)}
-                            className="pointer-events-auto w-10 h-10 rounded-full bg-black/40 backdrop-blur-xl border border-white/15 flex items-center justify-center text-white active:scale-90 transition-all shadow-lg"
-                            aria-label="Go back"
-                        >
-                            <ChevronLeft size={22} strokeWidth={2.5} />
-                        </button>
-                        <button
-                            className="pointer-events-auto w-10 h-10 rounded-full bg-black/40 backdrop-blur-xl border border-white/15 flex items-center justify-center text-white active:scale-90 transition-all shadow-lg"
-                            aria-label="Share event"
-                        >
-                            <Share2 size={18} />
-                        </button>
-                    </div>
-
-                    {/* ── Scrollable Content ────────────────────────────────────────── */}
-                    <div className="flex-1 overflow-y-auto overscroll-contain pb-36 hide-scrollbar scroll-smooth">
-                        {/* Banner */}
-                        <div className="relative w-full shrink-0 overflow-hidden px-4 pt-20">
-                            <img 
-                                src={event.banner || "https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=2070&auto=format&fit=crop"} 
-                                alt={event.title}
-                                className="w-full h-48 object-cover rounded-xl shadow-sm"
-                            />
-                        </div>
-
-                        {/* Content */}
-                        <div className="px-4 py-6 flex flex-col space-y-4">
-                            {/* Title & Details */}
-                            <div>
-                                <h1 className="text-lg font-semibold text-neutral-900 dark:text-white mb-1">
-                                    {event.title}
-                                </h1>
-
-                                <div className="flex flex-col gap-1.5">
-                                    <span className="text-sm font-semibold text-blue-600 uppercase tracking-wide">
-                                        {event.faculty === "Miscellaneous" && event.subcategory === "Clubs & Societies" ? "Misc • Clubs" : `${shortFaculty} • ${event.subcategory}`}
-                                    </span>
-
-                                    {isClubEvent && (
-                                        <div className="flex items-center gap-1.5">
-                                            <ShieldCheck size={14} className="text-emerald-500 shrink-0" />
-                                            <span className="text-xs font-medium text-neutral-600 dark:text-neutral-400">
-                                                Organised by <span className="text-emerald-600 dark:text-emerald-400 font-semibold">{event.organizer}</span>
-                                            </span>
-                                        </div>
-                                    )}
-                                    {event.organizer && !isClubEvent && (
-                                        <div className="flex items-center gap-1.5">
-                                            <ShieldCheck size={14} className="text-blue-500 shrink-0" />
-                                            <span className="text-xs font-medium text-neutral-600 dark:text-neutral-400">
-                                                {event.organizer}
-                                            </span>
-                                        </div>
-                                    )}
-                                </div>
+                    <motion.div
+                        layout
+                        initial={{ opacity: 0, x: "100%" }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: "100%" }}
+                        transition={{ duration: 0.25, ease: "easeOut" }}
+                        className="fixed inset-0 z-[150] bg-white dark:bg-neutral-950 flex justify-center"
+                    >
+                        <div className="w-full max-w-md bg-white dark:bg-neutral-900 min-h-screen relative flex flex-col overflow-x-hidden shadow-2xl">
+                            {/* Back Button */}
+                            <div className="absolute top-0 left-0 right-0 z-[200] px-4 pt-12 pb-2">
+                                <button
+                                    onClick={() => setSelectedEventId(null)}
+                                    className="w-10 h-10 rounded-full bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center text-neutral-900 dark:text-white transition-all shadow-sm"
+                                    aria-label="Go back"
+                                >
+                                    <ChevronLeft size={20} />
+                                </button>
                             </div>
 
-                            {/* Status Badges Row */}
-                            {(event.trending || registered) && (
-                                <div className="flex items-center gap-2 flex-wrap">
-                                    {event.trending && (
-                                        <Badge className="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 flex items-center gap-1 border border-amber-200 dark:border-amber-900/50">
-                                            <Flame size={10} />
-                                            Trending
-                                        </Badge>
-                                    )}
-                                    {registered && (
-                                        <Badge className="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 flex items-center gap-1 border border-emerald-200 dark:border-emerald-900/50">
-                                            <Sparkles size={10} />
-                                            Registered
-                                        </Badge>
-                                    )}
+                            <div className="flex-1 overflow-y-auto pt-28 pb-32 px-6">
+                                <div className="mb-6">
+                                    <h1 className="text-2xl font-bold text-neutral-900 dark:text-white mb-2">
+                                        {event.title}
+                                    </h1>
+                                    <p className="text-sm font-semibold text-blue-600 uppercase tracking-wide">
+                                        {event.faculty === "Miscellaneous" ? "Miscellaneous" : event.faculty} • {event.subcategory}
+                                    </p>
                                 </div>
-                            )}
 
-                             {/* Info Rows */}
-                            <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl p-4 flex flex-col divide-y divide-neutral-200 dark:divide-neutral-800">
-                                <div className="pb-3">
-                                    <InfoRow
-                                        icon={<Calendar size={18} className="text-blue-500" />}
-                                        iconBg="bg-blue-100/50 dark:bg-blue-900/20"
-                                        label={`${dateStr.weekday}, ${dateStr.month} ${dateStr.day}`}
-                                        sublabel="Upcoming"
-                                    />
-                                </div>
-                                <div className="py-3">
-                                    <InfoRow
-                                        icon={<Clock size={18} className="text-indigo-500" />}
-                                        iconBg="bg-indigo-100/50 dark:bg-indigo-900/20"
-                                        label={`${event.timeStart} – ${event.timeEnd}`}
-                                        sublabel="Standard Time"
-                                    />
-                                </div>
-                                <div className="pt-3">
-                                    <InfoRow
-                                        icon={<MapPin size={18} className="text-emerald-500" />}
-                                        iconBg="bg-emerald-100/50 dark:bg-emerald-900/20"
-                                        label={event.location}
-                                        sublabel="University Campus"
-                                    />
-                                </div>
-                            </div>
-
-                             {/* Seats Progress */}
-                            <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl p-4">
-                                <div className="flex items-center justify-between mb-2">
-                                    <div className="flex items-center gap-1.5">
-                                        <Users size={14} className="text-neutral-600 dark:text-neutral-400" />
-                                        <span className="text-xs font-bold uppercase tracking-wide text-neutral-600 dark:text-neutral-400">
-                                            Seats
-                                        </span>
+                                <div className="space-y-6">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 rounded-full bg-neutral-50 dark:bg-neutral-800 flex items-center justify-center text-neutral-500">
+                                            <Calendar size={18} />
+                                        </div>
+                                        <div>
+                                            <p className="text-sm font-bold">{dateStr.weekday}, {dateStr.month} {dateStr.day}</p>
+                                            <p className="text-xs text-neutral-500">{event.timeStart} – {event.timeEnd}</p>
+                                        </div>
                                     </div>
-                                    <span className={`text-xs font-bold ${isFull ? "text-red-500" :
-                                        isAlmostFull ? "text-amber-500" : "text-emerald-500"
-                                        }`}>
-                                        {isFull ? "FULL" : isAlmostFull ? `Only ${seatsLeft} left!` : `${seatsLeft} available`}
-                                    </span>
-                                </div>
-                                 <div className="h-1.5 w-full bg-neutral-200 dark:bg-neutral-800 rounded-full overflow-hidden">
-                                    <motion.div
-                                        initial={{ width: 0 }}
-                                        animate={{ width: `${progress}%` }}
-                                        transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-                                        className={`h-full rounded-full ${isFull ? "bg-red-500" :
-                                            isAlmostFull ? "bg-amber-500" : "bg-emerald-500"
-                                            }`}
-                                    />
-                                </div>
-                                 <div className="flex items-center justify-between mt-2">
-                                    <span className="text-[11px] font-semibold text-neutral-600 dark:text-neutral-400">
-                                        {event.registered} attending
-                                    </span>
-                                    <span className="text-[11px] font-semibold text-neutral-600 dark:text-neutral-400">
-                                        {event.maxParticipants} max
-                                    </span>
+
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 rounded-full bg-neutral-50 dark:bg-neutral-800 flex items-center justify-center text-neutral-500">
+                                            <MapPin size={18} />
+                                        </div>
+                                        <div>
+                                            <p className="text-sm font-bold">{event.location}</p>
+                                            <p className="text-xs text-neutral-500">University Campus</p>
+                                        </div>
+                                    </div>
+
+                                    <div className="pt-4 border-t border-neutral-100 dark:border-neutral-800">
+                                        <h2 className="text-sm font-bold mb-3 flex items-center gap-2">
+                                            <Info size={16} />
+                                            About Event
+                                        </h2>
+                                        <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                                            {event.description}
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
 
-                             {/* Description */}
-                            <div className="flex flex-col gap-2 pt-2">
-                                <h2 className="text-sm font-semibold flex items-center gap-1.5 text-neutral-900 dark:text-white">
-                                    <Info size={15} className="text-blue-500 shrink-0" />
-                                    About this Event
-                                </h2>
-                                <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                                    {event.description}
+                            {/* Bottom CTA */}
+                            <div className="absolute bottom-0 left-0 right-0 p-6 bg-white dark:bg-neutral-900 border-t border-neutral-100 dark:border-neutral-800">
+                                <button
+                                    onClick={handleToggleRegistration}
+                                    disabled={isFull && !registered}
+                                    className={`w-full py-4 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 active:scale-95 disabled:opacity-30 ${registered
+                                        ? "bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white"
+                                        : "bg-black dark:bg-white text-white dark:text-black"
+                                        }`}
+                                >
+                                    {registered ? (
+                                        <>
+                                            <CheckCircle size={18} />
+                                            Registered
+                                        </>
+                                    ) : isFull ? (
+                                        "Event Full"
+                                    ) : (
+                                        "Register Event"
+                                    )}
+                                </button>
+                                <p className="text-[10px] text-neutral-400 text-center mt-3 font-medium">
+                                    {registered ? "Tap to cancel registration" : "Free • Verified with Pulse ID"}
                                 </p>
                             </div>
                         </div>
-                    </div>
-
-                     {/* ── Absolute Bottom CTA ──────────────────────────────────────────── */}
-                    <div className="absolute bottom-0 left-0 right-0 z-[160] bg-gradient-to-t from-white dark:from-neutral-900 via-white/95 dark:via-neutral-900/95 to-transparent pt-10 px-4 pb-6 border-t border-neutral-200 dark:border-neutral-800">
-                        <button
-                            onClick={handleToggleRegistration}
-                            disabled={isFull && !registered}
-                            className={`w-full py-3 rounded-xl font-medium text-base transition-all duration-200 flex items-center justify-center gap-2 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 ${registered
-                                ? "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20"
-                                : isFull
-                                    ? "bg-neutral-100 dark:bg-neutral-800 text-neutral-400 dark:text-neutral-500"
-                                    : "bg-black text-white dark:bg-white dark:text-black"
-                                }`}
-                        >
-                            {registered ? (
-                                <>
-                                    <CheckCircle size={18} />
-                                    Registered ✓
-                                </>
-                            ) : isFull ? (
-                                "Event Full"
-                            ) : (
-                                "Register Event"
-                            )}
-                         </button>
-                        <p className="text-[10px] text-neutral-400 dark:text-neutral-500 text-center mt-2 font-medium uppercase tracking-widest">
-                            {registered ? "Tap to cancel registration" : "Free • Verified with Pulse ID"}
-                        </p>
-                    </div>
-                </div>
-            </motion.div>
-        </>
+                    </motion.div>
+                </>
+            )}
+        </AnimatePresence>
     );
 }

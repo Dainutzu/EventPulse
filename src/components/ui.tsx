@@ -116,7 +116,7 @@ export const Badge = ({
 // --- Bottom Navigation ---
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Compass, Home, QrCode, Ticket, User } from "lucide-react";
+import { Compass, Home, QrCode, User } from "lucide-react";
 
 export const BottomNav = ({
     activeTab,
@@ -130,7 +130,7 @@ export const BottomNav = ({
             {/* Gradient fade above nav */}
             <div className="h-24 w-full bg-gradient-to-t from-[var(--color-bg)] to-transparent pointer-events-none absolute bottom-0 -z-10" />
 
-            <div className="bg-[var(--color-surface)]/80 backdrop-blur-xl border-t border-[var(--color-border)] px-4 pt-3 pb-safe-bottom flex items-center justify-around relative max-w-[430px] mx-auto">
+            <div className="bg-[var(--color-surface)]/80 backdrop-blur-xl border-t border-[var(--color-border)] px-4 pt-3 pb-safe-bottom flex items-center justify-around relative max-w-md mx-auto">
                 <NavItem icon={<Home size={24} />} label="Home" active={activeTab === "home"} onClick={() => onTabChange("home")} />
                 <NavItem icon={<Compass size={24} />} label="Explore" active={activeTab === "explore"} onClick={() => onTabChange("explore")} />
 
@@ -144,7 +144,6 @@ export const BottomNav = ({
                     </button>
                 </div>
 
-                <NavItem icon={<Ticket size={24} />} label="Portfolio" active={activeTab === "portfolio"} onClick={() => onTabChange("portfolio")} />
                 <NavItem icon={<User size={24} />} label="Profile" active={activeTab === "profile"} onClick={() => onTabChange("profile")} />
             </div>
         </div>

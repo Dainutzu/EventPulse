@@ -51,101 +51,41 @@ export default function ExploreSection() {
     };
 
     return (
-        <div className="pb-28 min-h-screen selection:bg-blue-500/30 px-4">
+        <div className="pb-28 min-h-screen px-4">
             <header className="pt-12 pb-8">
-                <h1 className="text-3xl font-black tracking-tight mb-2">Explore</h1>
-                <p className="text-[15px] text-[var(--color-text-muted)] font-medium">Discover what&apos;s happening on campus today.</p>
+                <h1 className="text-2xl font-bold tracking-tight mb-1">Explore</h1>
+                <p className="text-sm text-neutral-500 font-medium">Find happenings on campus.</p>
             </header>
 
             <div className="relative mb-6">
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] group-focus-within:text-blue-500 transition-colors">
-                    <Search size={20} />
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400">
+                    <Search size={18} />
                 </div>
                 <input
                     type="text"
-                    placeholder="Search events, clubs, or venues..."
+                    placeholder="Search events..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl py-4 pl-12 pr-4 text-[15px] font-bold outline-none focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/10 transition-all placeholder:text-[var(--color-text-dim)]"
+                    className="w-full bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl py-3 pl-11 pr-4 text-sm font-medium outline-none focus:border-neutral-400 dark:focus:border-neutral-500 transition-all"
                 />
             </div>
 
-            <div className="flex flex-col gap-3 mb-8">
-                {/* Tier 1: Faculties */}
-                <div className="flex gap-2.5 -mx-4 px-4 overflow-x-auto hide-scrollbar">
-                    {["All", ...CATEGORIES].map((cat) => (
-                        <button
-                            key={cat}
-                            onClick={() => {
-                                setSelectedFaculty(cat);
-                                setSelectedSub("All");
-                                setSelectedClub("All");
-                            }}
-                            className={`px-5 py-2 rounded-xl text-[13px] font-black whitespace-nowrap transition-all border ${selectedFaculty === cat
-                                ? "bg-blue-600 text-white border-blue-500 shadow-lg scale-105"
-                                : "bg-[var(--color-surface)] text-[var(--color-text-muted)] border-[var(--color-border)] hover:border-[var(--color-text-muted)]/30"
-                                }`}
-                        >
-                            {formatFacultyName(cat)}
-                        </button>
-                    ))}
-                </div>
-
-                {/* Tier 2: Misc Subcategories */}
-                <AnimatePresence>
-                    {selectedFaculty === "Miscellaneous" && (
-                        <motion.div
-                            initial={{ opacity: 0, height: 0, marginTop: -12 }}
-                            animate={{ opacity: 1, height: "auto", marginTop: 0 }}
-                            exit={{ opacity: 0, height: 0, marginTop: -12 }}
-                            className="flex gap-2.5 -mx-4 px-4 overflow-x-auto hide-scrollbar"
-                        >
-                            {["All", ...MISC_SUBCATEGORIES].map((sub) => (
-                                <button
-                                    key={sub}
-                                    onClick={() => {
-                                        setSelectedSub(sub);
-                                        setSelectedClub("All");
-                                    }}
-                                    className={`px-4 py-1.5 rounded-xl text-[12px] font-bold whitespace-nowrap transition-all border ${selectedSub === sub
-                                        ? "bg-indigo-600 text-white border-indigo-500 shadow-md scale-105"
-                                        : "bg-[var(--color-surface-elevated)] text-[var(--color-text-muted)] border-[var(--color-border)]"
-                                        }`}
-                                >
-                                    {sub === "Clubs & Societies" ? "Clubs" : sub}
-                                </button>
-                            ))}
-                        </motion.div>
-                    )}
-                </AnimatePresence>
-
-                {/* Tier 3: Clubs */}
-                <AnimatePresence>
-                    {selectedFaculty === "Miscellaneous" && selectedSub === "Clubs & Societies" && (
-                        <motion.div
-                            initial={{ opacity: 0, height: 0, marginTop: -12 }}
-                            animate={{ opacity: 1, height: "auto", marginTop: 0 }}
-                            exit={{ opacity: 0, height: 0, marginTop: -12 }}
-                            className="flex gap-2.5 -mx-4 px-4 overflow-x-auto hide-scrollbar"
-                        >
-                            {["All", ...CLUBS].map((club) => (
-                                <button
-                                    key={club}
-                                    onClick={() => setSelectedClub(club)}
-                                    className={`px-4 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-wider whitespace-nowrap transition-all border ${selectedClub === club
-                                        ? "bg-emerald-600 text-white border-emerald-500 shadow-md scale-105"
-                                        : "bg-[var(--color-surface-elevated)] text-[var(--color-text-muted)] border-[var(--color-border)]"
-                                        }`}
-                                >
-                                    {club}
-                                </button>
-                            ))}
-                        </motion.div>
-                    )}
-                </AnimatePresence>
+            <div className="flex gap-2.5 -mx-4 px-4 mb-8 overflow-x-auto hide-scrollbar">
+                {["All", ...CATEGORIES].map((cat) => (
+                    <button
+                        key={cat}
+                        onClick={() => setSelectedFaculty(cat)}
+                        className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all border ${selectedFaculty === cat
+                            ? "bg-black dark:bg-white text-white dark:text-black border-transparent shadow-sm"
+                            : "bg-neutral-50 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border-neutral-200 dark:border-neutral-700"
+                            }`}
+                    >
+                        {formatFacultyName(cat)}
+                    </button>
+                ))}
             </div>
 
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-4">
                 <AnimatePresence mode="popLayout">
                     {filteredEvents.map((event, index) => (
                         <ExploreCard
@@ -158,8 +98,8 @@ export default function ExploreSection() {
                 </AnimatePresence>
 
                 {filteredEvents.length === 0 && (
-                    <div className="text-center py-20 bg-[var(--color-surface)]/30 rounded-2xl border border-dashed border-[var(--color-border)]">
-                        <p className="font-bold text-[var(--color-text-muted)] uppercase tracking-widest text-xs">No Results Found</p>
+                    <div className="text-center py-12 bg-neutral-50 dark:bg-neutral-800/50 rounded-xl border border-dashed border-neutral-200 dark:border-neutral-700">
+                        <p className="font-medium text-neutral-500 text-sm">No Results Found</p>
                     </div>
                 )}
             </div>
@@ -174,72 +114,34 @@ interface ExploreCardProps {
 }
 
 function ExploreCard({ event, index, onSelect }: ExploreCardProps) {
-    const isMisc = event.faculty === "Miscellaneous";
-    const shortFaculty = isMisc ? "Misc" : event.faculty.replace("Faculty of ", "").replace("School of ", "");
-
     return (
         <motion.div
             layout
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.05 }}
-            className="group"
+            transition={{ delay: index * 0.02 }}
+            className="w-full"
             onClick={onSelect}
         >
-            <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all active:scale-[0.98]">
-                <div className="p-5 flex flex-col gap-3">
-                    <h3 className="text-lg font-black leading-tight text-[var(--color-text-main)] mb-2.5">
-                        {event.title}
-                    </h3>
-
-                    <div className="flex flex-wrap items-center gap-2">
-                        {event.faculty === "Miscellaneous" && event.subcategory === "Clubs & Societies" ? (
-                            <span className="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-blue-500/10 text-blue-500 border border-blue-500/20">
-                                Misc • Clubs
-                            </span>
-                        ) : (
-                            <>
-                                <span className="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-blue-500/10 text-blue-500 border border-blue-500/20">
-                                    {event.faculty === "Miscellaneous" ? "Misc" : event.faculty}
-                                </span>
-                                <span className="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
-                                    {event.subcategory}
-                                </span>
-                            </>
-                        )}
-
-                        {event.organizer && event.subcategory === "Clubs & Societies" && (
-                            <span className="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                                {event.organizer}
-                            </span>
-                        )}
-                    </div>
-
-                    <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-[12px] font-bold text-[var(--color-text-muted)] mt-1">
-                        <div className="flex items-center gap-1.5">
-                            <Clock size={14} className="opacity-60 text-blue-400" />
-                            <span>{event.date} • {event.timeStart}</span>
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                            <MapPin size={14} className="opacity-60 text-emerald-400" />
-                            <span className="truncate max-w-[150px]">{event.location}</span>
-                        </div>
+            <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg p-4 cursor-pointer transition-all hover:bg-neutral-50 dark:hover:bg-neutral-800/50">
+                <div className="flex justify-between items-start mb-2">
+                    <div>
+                        <h3 className="text-base font-bold text-neutral-900 dark:text-white line-clamp-1">
+                            {event.title}
+                        </h3>
+                        <p className="text-xs text-neutral-500 font-medium mt-0.5">
+                            {event.date} • {event.faculty === "Miscellaneous" ? "Miscellaneous" : event.faculty}
+                        </p>
                     </div>
                 </div>
 
-                <div className="px-5 py-4 bg-[var(--color-surface-elevated)] border-t border-[var(--color-border)] flex items-center justify-between">
-                    <div className="flex -space-x-2.5">
-                        {[1, 2, 3].map((i) => (
-                            <div key={i} className="w-7 h-7 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] flex items-center justify-center text-[10px]">
-                                {String.fromCodePoint(0x1F642 + i)}
-                            </div>
-                        ))}
-                        <div className="w-7 h-7 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] flex items-center justify-center text-[9px] font-black">
-                            +{event.registered}
-                        </div>
+                <div className="flex items-center justify-between mt-4">
+                    <div className="flex items-center gap-1.5 text-xs text-neutral-600 dark:text-neutral-400">
+                        <Clock size={14} className="opacity-50" />
+                        <span>{event.timeStart}</span>
                     </div>
 
-                    <button className="text-blue-500 font-black text-[12px] uppercase tracking-wider px-4 py-2 bg-blue-500/10 rounded-xl active:scale-95 transition-all">
+                    <button className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline px-3 py-1.5 bg-blue-500/10 rounded-lg transition-colors">
                         View Details
                     </button>
                 </div>

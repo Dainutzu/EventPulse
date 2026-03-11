@@ -9,7 +9,6 @@ import { MOCK_EVENTS } from "@/lib/mockData";
 // Instant Import of SPA Sections
 import HomeSection from "@/components/spa/HomeSection";
 import ExploreSection from "@/components/spa/ExploreSection";
-import PortfolioSection from "@/components/spa/PortfolioSection";
 import ProfileSection from "@/components/spa/ProfileSection";
 import ScannerSection from "@/components/spa/ScannerSection";
 import EventDetailsSection from "@/components/spa/EventDetailsSection";
@@ -59,7 +58,6 @@ export default function Page() {
             {activeTab === "home" && <HomeSection initialEvents={MOCK_EVENTS} />}
             {activeTab === "explore" && <ExploreSection />}
             {activeTab === "scanner" && <ScannerSection onBack={() => setActiveTab("home")} />}
-            {activeTab === "portfolio" && <PortfolioSection />}
             {activeTab === "profile" && <ProfileSection />}
           </motion.div>
         </AnimatePresence>
