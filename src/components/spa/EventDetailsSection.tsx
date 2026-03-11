@@ -161,236 +161,190 @@ export default function EventDetailsSection() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: "100%" }}
                 transition={{ duration: 0.22, ease: [0.32, 0.72, 0, 1] }}
-                className="fixed inset-0 z-[150] bg-[var(--color-bg)] flex flex-col overflow-hidden"
+                className="fixed inset-0 z-[150] bg-neutral-50 flex justify-center"
             >
-                {/* ── Fixed Back Button ─────────────────────────────────────────── */}
-                <div className="absolute top-0 left-0 right-0 z-[200] flex items-center justify-between px-4 pt-12 pb-2 pointer-events-none">
-                    <button
-                        onClick={() => setSelectedEventId(null)}
-                        className="pointer-events-auto w-10 h-10 rounded-full bg-black/30 backdrop-blur-xl border border-white/15 flex items-center justify-center text-white active:scale-90 transition-all shadow-lg"
-                        aria-label="Go back"
-                    >
-                        <ChevronLeft size={22} strokeWidth={2.5} />
-                    </button>
-                    <button
-                        className="pointer-events-auto w-10 h-10 rounded-full bg-black/30 backdrop-blur-xl border border-white/15 flex items-center justify-center text-white active:scale-90 transition-all shadow-lg"
-                        aria-label="Share event"
-                    >
-                        <Share2 size={18} />
-                    </button>
-                </div>
-
-                {/* ── Scrollable Content ────────────────────────────────────────── */}
-                <div className="flex-1 overflow-y-auto overscroll-contain pb-36 hide-scrollbar scroll-smooth">
-                    {/* Banner */}
-                    <div className="relative h-[260px] w-full shrink-0 overflow-hidden">
-                        <div
-                            className="absolute inset-0"
-                            style={{
-                                background: `linear-gradient(135deg, ${event.categoryColor}33 0%, ${event.categoryColor}18 50%, ${event.categoryColor}08 100%)`
-                            }}
-                        />
-                        {/* Decorative circles */}
-                        <div
-                            className="absolute -top-16 -right-16 w-72 h-72 rounded-full opacity-20 blur-3xl"
-                            style={{ backgroundColor: event.categoryColor }}
-                        />
-                        <div
-                            className="absolute -bottom-8 -left-8 w-48 h-48 rounded-full opacity-10 blur-2xl"
-                            style={{ backgroundColor: event.categoryColor }}
-                        />
-                        {/* Gradient overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-[var(--color-bg)]" />
-
-                        {/* Category Icon */}
-                        <div className="absolute inset-0 flex items-center justify-center z-10">
-                            <div
-                                className="w-24 h-24 rounded-3xl flex items-center justify-center shadow-2xl border-2 border-white/10"
-                                style={{ backgroundColor: `${event.categoryColor}25` }}
-                            >
-                                <span className="text-5xl select-none">
-                                    {getEventEmoji(event.faculty, event.subcategory)}
-                                </span>
-                            </div>
-                        </div>
+                <div className="w-full max-w-md bg-white min-h-screen relative flex flex-col overflow-x-hidden shadow-2xl">
+                    {/* ── Absolute Back Button ─────────────────────────────────────────── */}
+                    <div className="absolute top-0 left-0 right-0 z-[200] flex items-center justify-between px-4 pt-12 pb-2 pointer-events-none">
+                        <button
+                            onClick={() => setSelectedEventId(null)}
+                            className="pointer-events-auto w-10 h-10 rounded-full bg-black/40 backdrop-blur-xl border border-white/15 flex items-center justify-center text-white active:scale-90 transition-all shadow-lg"
+                            aria-label="Go back"
+                        >
+                            <ChevronLeft size={22} strokeWidth={2.5} />
+                        </button>
+                        <button
+                            className="pointer-events-auto w-10 h-10 rounded-full bg-black/40 backdrop-blur-xl border border-white/15 flex items-center justify-center text-white active:scale-90 transition-all shadow-lg"
+                            aria-label="Share event"
+                        >
+                            <Share2 size={18} />
+                        </button>
                     </div>
 
-                    {/* Content */}
-                    <div className="px-5 -mt-4 flex flex-col gap-5">
-                        {/* Title & Details */}
-                        <div>
-                            <h1 className="text-[28px] font-black leading-tight tracking-tight text-[var(--color-text-main)] mb-3">
-                                {event.title}
-                            </h1>
-
-                            <div className="flex flex-col gap-2">
-                                <span className="text-[15px] font-black text-blue-500/80 uppercase tracking-widest">
-                                    {event.faculty === "Miscellaneous" && event.subcategory === "Clubs & Societies" ? "Misc • Clubs" : `${shortFaculty} • ${event.subcategory}`}
-                                </span>
-
-                                {isClubEvent && (
-                                    <div className="flex items-center gap-2">
-                                        <ShieldCheck size={16} className="text-emerald-500 shrink-0" />
-                                        <span className="text-[14px] font-bold text-[var(--color-text-muted)]">
-                                            Organised by <span className="text-emerald-400 font-black">{event.organizer}</span>
-                                        </span>
-                                    </div>
-                                )}
-                                {event.organizer && !isClubEvent && (
-                                    <div className="flex items-center gap-2">
-                                        <ShieldCheck size={16} className="text-blue-500 shrink-0" />
-                                        <span className="text-[14px] font-bold text-[var(--color-text-muted)]">
-                                            {event.organizer}
-                                        </span>
-                                    </div>
-                                )}
-                            </div>
+                    {/* ── Scrollable Content ────────────────────────────────────────── */}
+                    <div className="flex-1 overflow-y-auto overscroll-contain pb-36 hide-scrollbar scroll-smooth">
+                        {/* Banner */}
+                        <div className="relative w-full shrink-0 overflow-hidden px-4 pt-20">
+                            <img 
+                                src={event.banner || "https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=2070&auto=format&fit=crop"} 
+                                alt={event.title}
+                                className="w-full h-48 object-cover rounded-xl shadow-sm"
+                            />
                         </div>
 
-                        {/* Status Badges Row */}
-                        {(event.trending || registered) && (
-                            <div className="flex items-center gap-2 flex-wrap mt-1">
-                                {event.trending && (
-                                    <Badge className="px-3 py-1.5 rounded-xl text-[11px] font-black bg-amber-500/15 border-amber-500/30 text-amber-400 flex items-center gap-1.5 border">
-                                        <Flame size={11} />
-                                        Trending
-                                    </Badge>
-                                )}
-                                {registered && (
-                                    <Badge className="px-3 py-1.5 rounded-xl text-[11px] font-black bg-emerald-500/15 border-emerald-500/30 text-emerald-400 flex items-center gap-1.5 border">
-                                        <Sparkles size={11} />
-                                        Registered
-                                    </Badge>
-                                )}
-                            </div>
-                        )}
+                        {/* Content */}
+                        <div className="px-4 py-6 flex flex-col space-y-4">
+                            {/* Title & Details */}
+                            <div>
+                                <h1 className="text-lg font-semibold text-gray-900 mb-1">
+                                    {event.title}
+                                </h1>
 
-                        {/* Seats Progress */}
-                        <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-4">
-                            <div className="flex items-center justify-between mb-2.5">
-                                <div className="flex items-center gap-2">
-                                    <Users size={14} className="text-[var(--color-text-muted)]" />
-                                    <span className="text-[12px] font-black uppercase tracking-wider text-[var(--color-text-muted)]">
-                                        Seats
+                                <div className="flex flex-col gap-1.5">
+                                    <span className="text-sm font-semibold text-blue-600 uppercase tracking-wide">
+                                        {event.faculty === "Miscellaneous" && event.subcategory === "Clubs & Societies" ? "Misc • Clubs" : `${shortFaculty} • ${event.subcategory}`}
+                                    </span>
+
+                                    {isClubEvent && (
+                                        <div className="flex items-center gap-1.5">
+                                            <ShieldCheck size={14} className="text-emerald-500 shrink-0" />
+                                            <span className="text-xs font-medium text-gray-600">
+                                                Organised by <span className="text-emerald-600 font-semibold">{event.organizer}</span>
+                                            </span>
+                                        </div>
+                                    )}
+                                    {event.organizer && !isClubEvent && (
+                                        <div className="flex items-center gap-1.5">
+                                            <ShieldCheck size={14} className="text-blue-500 shrink-0" />
+                                            <span className="text-xs font-medium text-gray-600">
+                                                {event.organizer}
+                                            </span>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Status Badges Row */}
+                            {(event.trending || registered) && (
+                                <div className="flex items-center gap-2 flex-wrap">
+                                    {event.trending && (
+                                        <Badge className="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-amber-50 text-amber-600 flex items-center gap-1 border border-amber-200">
+                                            <Flame size={10} />
+                                            Trending
+                                        </Badge>
+                                    )}
+                                    {registered && (
+                                        <Badge className="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-emerald-50 text-emerald-600 flex items-center gap-1 border border-emerald-200">
+                                            <Sparkles size={10} />
+                                            Registered
+                                        </Badge>
+                                    )}
+                                </div>
+                            )}
+
+                            {/* Info Rows */}
+                            <div className="bg-gray-50 border border-gray-100 rounded-xl p-4 flex flex-col divide-y divide-gray-100">
+                                <div className="pb-3">
+                                    <InfoRow
+                                        icon={<Calendar size={18} className="text-blue-500" />}
+                                        iconBg="bg-blue-100/50"
+                                        label={`${dateStr.weekday}, ${dateStr.month} ${dateStr.day}`}
+                                        sublabel="Upcoming"
+                                    />
+                                </div>
+                                <div className="py-3">
+                                    <InfoRow
+                                        icon={<Clock size={18} className="text-indigo-500" />}
+                                        iconBg="bg-indigo-100/50"
+                                        label={`${event.timeStart} – ${event.timeEnd}`}
+                                        sublabel="Standard Time"
+                                    />
+                                </div>
+                                <div className="pt-3">
+                                    <InfoRow
+                                        icon={<MapPin size={18} className="text-emerald-500" />}
+                                        iconBg="bg-emerald-100/50"
+                                        label={event.location}
+                                        sublabel="University Campus"
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Seats Progress */}
+                            <div className="bg-gray-50 border border-gray-100 rounded-xl p-4">
+                                <div className="flex items-center justify-between mb-2">
+                                    <div className="flex items-center gap-1.5">
+                                        <Users size={14} className="text-gray-500" />
+                                        <span className="text-xs font-bold uppercase tracking-wide text-gray-500">
+                                            Seats
+                                        </span>
+                                    </div>
+                                    <span className={`text-xs font-bold ${isFull ? "text-red-500" :
+                                        isAlmostFull ? "text-amber-500" : "text-emerald-500"
+                                        }`}>
+                                        {isFull ? "FULL" : isAlmostFull ? `Only ${seatsLeft} left!` : `${seatsLeft} available`}
                                     </span>
                                 </div>
-                                <span className={`text-[12px] font-black ${isFull ? "text-red-400" :
-                                    isAlmostFull ? "text-amber-400" : "text-emerald-400"
-                                    }`}>
-                                    {isFull ? "FULL" : isAlmostFull ? `Only ${seatsLeft} left!` : `${seatsLeft} available`}
-                                </span>
+                                <div className="h-1.5 w-full bg-gray-200 rounded-full overflow-hidden">
+                                    <motion.div
+                                        initial={{ width: 0 }}
+                                        animate={{ width: `${progress}%` }}
+                                        transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+                                        className={`h-full rounded-full ${isFull ? "bg-red-500" :
+                                            isAlmostFull ? "bg-amber-500" : "bg-emerald-500"
+                                            }`}
+                                    />
+                                </div>
+                                <div className="flex items-center justify-between mt-2">
+                                    <span className="text-[11px] font-semibold text-gray-500">
+                                        {event.registered} attending
+                                    </span>
+                                    <span className="text-[11px] font-semibold text-gray-500">
+                                        {event.maxParticipants} max
+                                    </span>
+                                </div>
                             </div>
-                            <div className="h-2 w-full bg-[var(--color-bg)] rounded-full overflow-hidden border border-[var(--color-border)]">
-                                <motion.div
-                                    initial={{ width: 0 }}
-                                    animate={{ width: `${progress}%` }}
-                                    transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-                                    className={`h-full rounded-full ${isFull ? "bg-red-500" :
-                                        isAlmostFull ? "bg-amber-500" : "bg-emerald-500"
-                                        }`}
-                                />
-                            </div>
-                            <div className="flex items-center justify-between mt-2.5">
-                                <span className="text-[11px] font-bold text-[var(--color-text-muted)]">
-                                    {event.registered} attending
-                                </span>
-                                <span className="text-[11px] font-bold text-[var(--color-text-muted)]">
-                                    {event.maxParticipants} max
-                                </span>
-                            </div>
-                        </div>
 
-                        {/* Info Rows */}
-                        <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-5 flex flex-col divide-y divide-[var(--color-border)]">
-                            <div className="pb-4">
-                                <InfoRow
-                                    icon={<Calendar size={18} className="text-blue-500" />}
-                                    iconBg="bg-blue-500/10 border border-blue-500/20"
-                                    label={`${dateStr.weekday}, ${dateStr.month} ${dateStr.day}`}
-                                    sublabel="Upcoming"
-                                />
-                            </div>
-                            <div className="py-4">
-                                <InfoRow
-                                    icon={<Clock size={18} className="text-indigo-500" />}
-                                    iconBg="bg-indigo-500/10 border border-indigo-500/20"
-                                    label={`${event.timeStart} – ${event.timeEnd}`}
-                                    sublabel="Standard Time"
-                                />
-                            </div>
-                            <div className="pt-4">
-                                <InfoRow
-                                    icon={<MapPin size={18} className="text-emerald-500" />}
-                                    iconBg="bg-emerald-500/10 border border-emerald-500/20"
-                                    label={event.location}
-                                    sublabel="University Campus"
-                                />
-                            </div>
-                        </div>
-
-                        {/* Description */}
-                        <div className="flex flex-col gap-3">
-                            <h2 className="text-[15px] font-black flex items-center gap-2 text-[var(--color-text-main)]">
-                                <Info size={16} className="text-blue-500 shrink-0" />
-                                About this Event
-                            </h2>
-                            <p className="text-[15px] text-[var(--color-text-muted)] leading-[1.7] font-medium">
-                                {event.description}
-                            </p>
-                        </div>
-
-                        {/* Avatar Crowd */}
-                        <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-5 flex items-center gap-4">
-                            <div className="flex -space-x-2.5 shrink-0">
-                                {[0x1F642, 0x1F600, 0x1F601, 0x1F604, 0x1F609].map((cp, i) => (
-                                    <div
-                                        key={i}
-                                        className="w-9 h-9 rounded-full border-2 border-[var(--color-surface)] bg-[var(--color-surface-elevated)] flex items-center justify-center text-[14px]"
-                                    >
-                                        {String.fromCodePoint(cp)}
-                                    </div>
-                                ))}
-                            </div>
-                            <div>
-                                <p className="text-[14px] font-black text-[var(--color-text-main)]">
-                                    +{event.registered} students going
-                                </p>
-                                <p className="text-[11px] font-semibold text-[var(--color-text-muted)] mt-0.5">
-                                    Secure your spot before it fills up
+                            {/* Description */}
+                            <div className="flex flex-col gap-2 pt-2">
+                                <h2 className="text-sm font-semibold flex items-center gap-1.5 text-gray-900">
+                                    <Info size={15} className="text-blue-500 shrink-0" />
+                                    About this Event
+                                </h2>
+                                <p className="text-sm text-gray-600 leading-relaxed">
+                                    {event.description}
                                 </p>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                {/* ── Fixed Bottom CTA ──────────────────────────────────────────── */}
-                <div className="absolute bottom-0 left-0 right-0 z-[160] bg-gradient-to-t from-[var(--color-bg)] from-60% via-[var(--color-bg)]/90 to-transparent pt-8 px-5 pb-8">
-                    <motion.button
-                        onClick={handleToggleRegistration}
-                        whileTap={{ scale: 0.97 }}
-                        transition={{ duration: 0.15 }}
-                        disabled={isFull && !registered}
-                        className={`w-full py-[18px] rounded-2xl font-black text-[17px] transition-all duration-200 shadow-2xl flex items-center justify-center gap-3 active:brightness-90 disabled:opacity-50 disabled:cursor-not-allowed ${registered
-                            ? "bg-emerald-500/12 text-emerald-400 border border-emerald-500/30"
-                            : isFull
-                                ? "bg-[var(--color-surface)] text-[var(--color-text-muted)] border border-[var(--color-border)]"
-                                : "bg-blue-600 text-white shadow-[0_12px_30px_rgba(37,99,235,0.35)]"
-                            }`}
-                    >
-                        {registered ? (
-                            <>
-                                <CheckCircle size={22} />
-                                Registered ✓
-                            </>
-                        ) : isFull ? (
-                            "Event Full"
-                        ) : (
-                            "Register for Event"
-                        )}
-                    </motion.button>
-                    <p className="text-[11px] text-[var(--color-text-muted)] text-center mt-3 font-semibold uppercase tracking-[0.15em] opacity-40">
-                        {registered ? "Tap to cancel registration" : "Free • Verified with Pulse ID"}
-                    </p>
+                    {/* ── Absolute Bottom CTA ──────────────────────────────────────────── */}
+                    <div className="absolute bottom-0 left-0 right-0 z-[160] bg-gradient-to-t from-white via-white/95 to-transparent pt-10 px-4 pb-6 border-t border-gray-100/50">
+                        <button
+                            onClick={handleToggleRegistration}
+                            disabled={isFull && !registered}
+                            className={`w-full py-3 rounded-xl font-medium text-base transition-all duration-200 flex items-center justify-center gap-2 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 ${registered
+                                ? "bg-emerald-50 text-emerald-600 border border-emerald-200"
+                                : isFull
+                                    ? "bg-gray-100 text-gray-400"
+                                    : "bg-black text-white"
+                                }`}
+                        >
+                            {registered ? (
+                                <>
+                                    <CheckCircle size={18} />
+                                    Registered ✓
+                                </>
+                            ) : isFull ? (
+                                "Event Full"
+                            ) : (
+                                "Register Event"
+                            )}
+                        </button>
+                        <p className="text-[10px] text-gray-400 text-center mt-2 font-medium uppercase tracking-widest">
+                            {registered ? "Tap to cancel registration" : "Free • Verified with Pulse ID"}
+                        </p>
+                    </div>
                 </div>
             </motion.div>
         </>
